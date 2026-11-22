@@ -1,0 +1,5 @@
+node_modules/
+dist/
+coverage/
+.phase1-qa/
+*.tsbuildinfo
