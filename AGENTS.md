@@ -8,6 +8,12 @@
 - MVP 首先接入 Pi，其他三个项目先登记。前端采用 React + TypeScript，后端采用 Node.js + TypeScript 和 SQLite。阅读器使用 Monaco，流程图使用 Mermaid。Git 提供版本事实，ripgrep 用于固定版本上的文本查询。
 - 新增页面或接口前核对 PRD 与架构；新增持久化同时核对数据模型、迁移与旧记录恢复。维持单用户本地部署，先用已有组件解决已出现的问题。
 
+## 前端设计技能
+
+- 设计学习中心、章节页、源码阅读器或复习页时，先用 `ui-ux-pro-max` 选取适合长时间中文阅读的字号、行距、色彩和响应式布局。结合 React 与 Monaco 的实际交互，保留键盘焦点和清晰的证据行标记。
+- 用 `impeccable` 评审实现后的页面。沿“章节 → 源码证据 → 返回章节”走一遍，在宽屏和窄屏核对阅读层级、焦点恢复和侧栏收放，再检查加载、空数据与证据缺失时的反馈。
+- 两个技能使用 Codex 本机安装目录。运行配套工具时以各自 `SKILL.md` 所在目录解析脚本路径，工作目录保持为项目根目录。安装基线见 [UI/UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/tree/f76d1653d7467fc11fb9d9d79295a421c92ab958/.claude/skills/ui-ux-pro-max) 和 [Impeccable](https://github.com/pbakaus/impeccable/tree/b49177d32788f2dc585c42831d845dacf1ebed2c/.agents/skills/impeccable)。
+
 ## 课程和证据
 
 - 以完整 SHA 读取 Git 对象，记录原路径、符号、行区间、blob OID 和选区摘要。源码结论要能回到该项目和该版。升级提交或教材内容时保留旧版和原学习记录。
