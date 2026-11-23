@@ -1,0 +1,42 @@
+[
+  {
+    "id": "sdk-overview",
+    "version": 1,
+    "projectId": "claude",
+    "sourceKind": "official-doc",
+    "title": "Agent SDK 与其他 Claude 工具的边界",
+    "url": "https://code.claude.com/docs/en/agent-sdk/overview.md",
+    "accessedAt": "2026-11-23T11:57:02.242Z",
+    "sha256": "6bf994e5897cbf228f19e17b177036fe23cdbd02b790944f72a090f07e80258d",
+    "locator": "## Compare the Agent SDK to other Claude tools",
+    "excerpt": "The Agent SDK, the CLI, the Client SDK, and Managed Agents differ in who runs the agent, what comes built in, and how you",
+    "excerptSha256": "6a33e8748110962aca4a02a6b230438a381f3ab41fec723ef44cc0e001d13161",
+    "summary": [
+      "文档按“谁运行 Agent、内置能力、如何接入”区分 Agent SDK、CLI、Client SDK 与托管服务。",
+      "本卡只记录公开接口说明；SDK 源码课程固定在另一个 Git 版次，二者不相互代替。"
+    ],
+    "questions": [
+      "文档说明的能力在具体 SDK 版本中由哪些调用点接入？"
+    ]
+  },
+  {
+    "id": "hooks-guide",
+    "version": 1,
+    "projectId": "claude",
+    "sourceKind": "official-doc",
+    "title": "Hook 的公开用法与实现证据边界",
+    "url": "https://code.claude.com/docs/en/hooks-guide.md",
+    "accessedAt": "2026-11-23T11:57:02.246Z",
+    "sha256": "b3139b7a8e1e8057122ee300f8e907667856b43dd97f5e8de862724be9cd19a1",
+    "locator": "# Automate actions with hooks",
+    "excerpt": "Hooks are user-defined shell commands. Claude Code runs them at specific points in its lifecycle, which gives you deterministic control: certain actions always happen",
+    "excerptSha256": "86f3a43d1a34efa285cf8b0118bf45ad1cfb7675ba51c9acc7ce327ac3c96c53",
+    "summary": [
+      "官方指南介绍在生命周期事件上运行用户定义的 Hook，并链接配置和协议参考。",
+      "公开示例课程可以验证脚本自身的输入输出；文档不能代替 CLI 内部如何调度 Hook 的源码证据。"
+    ],
+    "questions": [
+      "产品接收退出码后的内部调用路径是否有公开源码？"
+    ]
+  }
+]

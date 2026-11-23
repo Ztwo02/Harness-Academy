@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "官方文档阅读卡 v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "version",
+    "projectId",
+    "sourceKind",
+    "title",
+    "url",
+    "accessedAt",
+    "sha256",
+    "locator",
+    "excerpt",
+    "excerptSha256",
+    "summary",
+    "questions"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "projectId": {
+      "const": "claude"
+    },
+    "sourceKind": {
+      "const": "official-doc"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "url": {
+      "enum": [
+        "https://code.claude.com/docs/en/agent-sdk/overview.md",
+        "https://code.claude.com/docs/en/hooks-guide.md"
+      ]
+    },
+    "accessedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "locator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "excerpt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "excerptSha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "summary": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}
