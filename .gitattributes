@@ -1,0 +1,2 @@
+# Raw official responses are content-addressed; preserve their original bytes on every OS.
+materials/claude/*.txt -text
