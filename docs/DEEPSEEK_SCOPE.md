@@ -18,7 +18,7 @@
 假设本机 headless profile 挂载默认 base、使用新会话、模型返回一个普通原生工具调用，且没有自定义插件改写流程。沿下列调用点和消费端阅读：
 
 1. headless `run` 读取模型选择，通过 `agents.create` 建立会话，`agent.followup` 送入教学任务。
-2. `AgentRegistry.create` 转交已登记工厂，`AgentLoop.createAgent` 调用 `initializeAgent`，后者构造 `ReactLoopAgent`。AgentLoop 构造函数登记工厂。
+2. `AgentRegistry.create` 转交已登记工厂，`AgentLoop.createAgent` 调用 `initializeAgent`，后者构造 `ReactLoopAgent`。AgentLoop 的服务初始化方法登记工厂。
 3. `followup` 调用 `send(next-turn, true)`；`send` 插入 inbox 并唤醒，`wakeDriver` 在空闲时启动 `kick`；`kick` 消费 `turn`。
 4. `turn` 先记 turn/start，`preStep` 认领输入、解析工具并组装提示，接受输入后进入 `step`。`step` 准备调用、记录消息，`buildRequest` 用 `session.deriveMessages()` 取模型可见历史。
 5. 流消费后记 assistant/message。存在工具调用时调用 `ToolsService.execute` → 所选 `NativeToolExecutor.execute` → `executeToolBatch` → pipeline prepare/dispatch/complete → 工具体。

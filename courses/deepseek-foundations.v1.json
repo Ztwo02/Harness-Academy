@@ -1,0 +1,1103 @@
+{
+  "schemaVersion": 1,
+  "projectId": "deepseek",
+  "repositoryId": "deepseek-harness",
+  "commit": "2e39e70496aa02986ca6a820c5d497e816b69d7e",
+  "courseId": "deepseek-foundations",
+  "version": 1,
+  "title": "DeepSeek Harness 插件架构与执行路径",
+  "sourceEvidence": {
+    "base-services": {
+      "path": "packages/bundle/base/cordis.patch.yml",
+      "symbol": null,
+      "startLine": 31,
+      "endLine": 47,
+      "blobOid": "00f495153afbf7ef67de28ccc3c6cbcb1f7715a1",
+      "excerptSha256": "bb37d5cbe910cb9406493df83912794794a16cf5cd58b287eaba9b02c34cc2f8"
+    },
+    "base-executor": {
+      "path": "packages/bundle/base/cordis.patch.yml",
+      "symbol": null,
+      "startLine": 530,
+      "endLine": 549,
+      "blobOid": "00f495153afbf7ef67de28ccc3c6cbcb1f7715a1",
+      "excerptSha256": "d02d31ec4ccda036ef44a35f9d8e3d6e25b5ce31d746237794a550e90a7ceb5e"
+    },
+    "headless-config": {
+      "path": "packages/bundle/headless/cordis.patch.yml",
+      "symbol": null,
+      "startLine": 14,
+      "endLine": 25,
+      "blobOid": "0a0ea09b7fb5f41433fa80596f0ef1242b523ccd",
+      "excerptSha256": "563fba4918e7ed80c2505c3a2a6c9cb829a75ed6f9b740b28aca0c869688f2e5"
+    },
+    "entry": {
+      "path": "packages/bundle/headless/src/index.ts",
+      "symbol": "run",
+      "startLine": 320,
+      "endLine": 394,
+      "blobOid": "69b40ac06a64012b79a747fd4c9a3dd0176fe2ae",
+      "excerptSha256": "32aa17470f35332b50385be5855d2f281e23c1b44e4bce23988a229b7241f1c9"
+    },
+    "submit": {
+      "path": "packages/bundle/headless/src/index.ts",
+      "symbol": "followup",
+      "startLine": 405,
+      "endLine": 433,
+      "blobOid": "69b40ac06a64012b79a747fd4c9a3dd0176fe2ae",
+      "excerptSha256": "aba1104773b4fd4f8bcb05355c8d987e017794b41d669b120a35a49c85ef3385"
+    },
+    "registry": {
+      "path": "packages/core/agent/src/index.ts",
+      "symbol": "create",
+      "startLine": 421,
+      "endLine": 431,
+      "blobOid": "433ee9b167ae10897c189cda8373d6bb134f5510",
+      "excerptSha256": "a64aeefd7bfb905a21b544b170ba9bda699f9e106929d5b4b30b4c6dead22599"
+    },
+    "factory-register": {
+      "path": "packages/core/agent-loop/src/index.ts",
+      "symbol": "AgentLoop",
+      "startLine": 290,
+      "endLine": 335,
+      "blobOid": "a280f83231bdce3cce24ae16fe0d36d90f2a8321",
+      "excerptSha256": "253ceb06d9d5991d38f887cafb4762636e7be29050876c7d32cd00673a8e43cc"
+    },
+    "factory-create": {
+      "path": "packages/core/agent-loop/src/index.ts",
+      "symbol": "createAgent",
+      "startLine": 725,
+      "endLine": 754,
+      "blobOid": "a280f83231bdce3cce24ae16fe0d36d90f2a8321",
+      "excerptSha256": "aad068630fa609b76bc943bbb9125cf808f16ef9a610274040b136c191129806"
+    },
+    "factory-machine": {
+      "path": "packages/core/agent-loop/src/index.ts",
+      "symbol": "initializeAgent",
+      "startLine": 464,
+      "endLine": 578,
+      "blobOid": "a280f83231bdce3cce24ae16fe0d36d90f2a8321",
+      "excerptSha256": "0d439d7d818f279257ca0fc71af3a89e3ec4fd13e8610f3da8837fcb0e9ca60e"
+    },
+    "input": {
+      "path": "packages/core/agent-loop/src/agent.ts",
+      "symbol": "followup",
+      "startLine": 171,
+      "endLine": 189,
+      "blobOid": "7ec43dd1323edc6e2b488d7c9d35fdd2d323abbd",
+      "excerptSha256": "b49c9a37b7078389a9239777a48af80fb806e7bd8e46e68b8595d30198222791"
+    },
+    "wake": {
+      "path": "packages/core/agent-loop/src/agent.ts",
+      "symbol": "wakeDriver",
+      "startLine": 235,
+      "endLine": 257,
+      "blobOid": "7ec43dd1323edc6e2b488d7c9d35fdd2d323abbd",
+      "excerptSha256": "302bfb37dc2c72a272856f0fa5330fba3488559cb60de444dc4799e3a13257fd"
+    },
+    "driver": {
+      "path": "packages/core/agent-loop/src/agent.ts",
+      "symbol": "kick",
+      "startLine": 274,
+      "endLine": 287,
+      "blobOid": "7ec43dd1323edc6e2b488d7c9d35fdd2d323abbd",
+      "excerptSha256": "84304ea46e3e70e928f24390da360b881e9774f4fa80d44ca22e7ff07ff5576e"
+    },
+    "prepare-step": {
+      "path": "packages/core/agent-loop/src/agent.ts",
+      "symbol": "preStep",
+      "startLine": 289,
+      "endLine": 322,
+      "blobOid": "7ec43dd1323edc6e2b488d7c9d35fdd2d323abbd",
+      "excerptSha256": "ccfd06238c5021ea3c56bfb17f0e51e99621ed65db053d47e1fd87a1591762cd"
+    },
+    "turn-open": {
+      "path": "packages/core/agent-loop/src/agent.ts",
+      "symbol": "turn",
+      "startLine": 333,
+      "endLine": 368,
+      "blobOid": "7ec43dd1323edc6e2b488d7c9d35fdd2d323abbd",
+      "excerptSha256": "abe38a72672553c6ddada23a2aacb7af5a61e39f7989a9baf997252a75d8cf16"
+    },
+    "turn-step": {
+      "path": "packages/core/agent-loop/src/agent.ts",
+      "symbol": "turn",
+      "startLine": 369,
+      "endLine": 407,
+      "blobOid": "7ec43dd1323edc6e2b488d7c9d35fdd2d323abbd",
+      "excerptSha256": "849764bd6d5b6442bffcfb1f2972c9d2a38dd23ffba9212b8a7808757f5a8e58"
+    },
+    "turn-close": {
+      "path": "packages/core/agent-loop/src/agent.ts",
+      "symbol": "turn",
+      "startLine": 408,
+      "endLine": 438,
+      "blobOid": "7ec43dd1323edc6e2b488d7c9d35fdd2d323abbd",
+      "excerptSha256": "c96d9cb1a47c3bd52138e97f03c42eb4f7ec6d75f0841b9662598574b26b187e"
+    },
+    "step-input": {
+      "path": "packages/core/agent-loop/src/agent.ts",
+      "symbol": "step",
+      "startLine": 441,
+      "endLine": 485,
+      "blobOid": "7ec43dd1323edc6e2b488d7c9d35fdd2d323abbd",
+      "excerptSha256": "aecb2e9ed1a7c19f7a050873c421c0534af33325665cae04c073c0e4d9d747c5"
+    },
+    "prepare-call": {
+      "path": "packages/core/agent-loop/src/agent.ts",
+      "symbol": "prepareRequest",
+      "startLine": 619,
+      "endLine": 658,
+      "blobOid": "7ec43dd1323edc6e2b488d7c9d35fdd2d323abbd",
+      "excerptSha256": "3ce4d74710db29f1b7ed69da4a8ddc9f0e771d1715b9429d8e22c8704d3974ce"
+    },
+    "model-stream": {
+      "path": "packages/core/agent-loop/src/agent.ts",
+      "symbol": "step",
+      "startLine": 485,
+      "endLine": 504,
+      "blobOid": "7ec43dd1323edc6e2b488d7c9d35fdd2d323abbd",
+      "excerptSha256": "163de25d451f454860915a2111eb666b743d3b029bde149cab7833b8e75cc483"
+    },
+    "assistant-tools": {
+      "path": "packages/core/agent-loop/src/agent.ts",
+      "symbol": "step",
+      "startLine": 572,
+      "endLine": 610,
+      "blobOid": "7ec43dd1323edc6e2b488d7c9d35fdd2d323abbd",
+      "excerptSha256": "822f604218d8a318f1f827296277d5b10626fa40207c77d2546e1e359439697d"
+    },
+    "history": {
+      "path": "packages/core/agent-loop/src/agent.ts",
+      "symbol": "buildRequest",
+      "startLine": 662,
+      "endLine": 749,
+      "blobOid": "7ec43dd1323edc6e2b488d7c9d35fdd2d323abbd",
+      "excerptSha256": "26f3401a6f5f55426553b239f125f769e603b1afd1eac32c8da887a35fe59c77"
+    },
+    "derive": {
+      "path": "packages/core/session/src/index.ts",
+      "symbol": "deriveMessages",
+      "startLine": 1079,
+      "endLine": 1100,
+      "blobOid": "ea6c337f553c0a5bd0836a47301d59cc16bafa26",
+      "excerptSha256": "c8ae22852e4664914351a52cbbc7c0e2629f6b6fe6878fc7d98c4d644f77235a"
+    },
+    "dispatch": {
+      "path": "packages/core/tools/src/index.ts",
+      "symbol": "execute",
+      "startLine": 375,
+      "endLine": 377,
+      "blobOid": "0cb307d1cb40ea47ab444966f83627994a9adba2",
+      "excerptSha256": "f8cf1ea973e40315f4f39e5698f2f476e56844cbf1c5c7c980928179b6734aab"
+    },
+    "executor-select": {
+      "path": "packages/core/tools/src/index.ts",
+      "symbol": "selectExecutor",
+      "startLine": 357,
+      "endLine": 367,
+      "blobOid": "0cb307d1cb40ea47ab444966f83627994a9adba2",
+      "excerptSha256": "493df6a37d3a42921919e2ba7086381d28706e338c9910dd25930c1e04b13c5e"
+    },
+    "native": {
+      "path": "packages/core/tool-executor-native/src/index.ts",
+      "symbol": "NativeToolExecutor",
+      "startLine": 8,
+      "endLine": 35,
+      "blobOid": "457749152c004c3b61fe4981eb9c89718bdb1640",
+      "excerptSha256": "7fcc68f5cdc7e489fd858caa66aeb6fb2e6499879e78ef3def7c412f17702c53"
+    },
+    "batch": {
+      "path": "packages/core/tools/src/batch.ts",
+      "symbol": "executeToolBatch",
+      "startLine": 48,
+      "endLine": 96,
+      "blobOid": "e9a378d997e6a05c305e3bcc1ae6d2e124641f6d",
+      "excerptSha256": "f7bc22d1e76e1ea62070d284b7ab86d678603d2c5c5a4e64e9c9fce44528ed3e"
+    },
+    "schedule": {
+      "path": "packages/core/tools/src/batch.ts",
+      "symbol": "runGroup",
+      "startLine": 117,
+      "endLine": 179,
+      "blobOid": "e9a378d997e6a05c305e3bcc1ae6d2e124641f6d",
+      "excerptSha256": "d0a27e7cf00e95c987ecbeacc97fde3ce781386b67ebf0ea833984e899f0d1e6"
+    },
+    "call-log": {
+      "path": "packages/core/tools/src/batch.ts",
+      "symbol": "start",
+      "startLine": 243,
+      "endLine": 250,
+      "blobOid": "e9a378d997e6a05c305e3bcc1ae6d2e124641f6d",
+      "excerptSha256": "459d1f03d4a6704863afa40b7cc06e181c90b7efa0c7eb40a08ed894ff62d951"
+    },
+    "result-log": {
+      "path": "packages/core/tools/src/batch.ts",
+      "symbol": "commit",
+      "startLine": 252,
+      "endLine": 269,
+      "blobOid": "e9a378d997e6a05c305e3bcc1ae6d2e124641f6d",
+      "excerptSha256": "e844771720b7d0f4e5bf471c2723cf9aaddb3bdea2d3cbd8568b0cdfc8b78e79"
+    },
+    "batch-result": {
+      "path": "packages/core/tools/src/batch.ts",
+      "symbol": "result",
+      "startLine": 282,
+      "endLine": 285,
+      "blobOid": "e9a378d997e6a05c305e3bcc1ae6d2e124641f6d",
+      "excerptSha256": "ce921146bd2c8378c0fde26ca13bc7925a8e642da26b4799e95a7195c5215fbe"
+    },
+    "policy": {
+      "path": "packages/core/tools/src/pipeline.ts",
+      "symbol": "prepare",
+      "startLine": 191,
+      "endLine": 234,
+      "blobOid": "9db8bfc610f4e2ac641000f1bdc686269ff23a17",
+      "excerptSha256": "d07a839ff4f8d65ee70437fecdd94c2b2d5c072550a4aaec2e3c42bb7b3cae7a"
+    },
+    "body": {
+      "path": "packages/core/tools/src/pipeline.ts",
+      "symbol": "dispatchToolBody",
+      "startLine": 263,
+      "endLine": 293,
+      "blobOid": "9db8bfc610f4e2ac641000f1bdc686269ff23a17",
+      "excerptSha256": "ed8a6326611be42eb9d8c51c53ec0de9d2e3b9866de2c43faa7917d92f8130c5"
+    },
+    "around-body": {
+      "path": "packages/core/tools/src/pipeline.ts",
+      "symbol": "dispatch",
+      "startLine": 306,
+      "endLine": 336,
+      "blobOid": "9db8bfc610f4e2ac641000f1bdc686269ff23a17",
+      "excerptSha256": "f644de46269b605d2a5737f56758316cfa4c18f4ef2b27f83d53809ecf4c56d8"
+    },
+    "complete": {
+      "path": "packages/core/tools/src/pipeline.ts",
+      "symbol": "complete",
+      "startLine": 356,
+      "endLine": 384,
+      "blobOid": "9db8bfc610f4e2ac641000f1bdc686269ff23a17",
+      "excerptSha256": "69a7c87dcb96947b7c26c265566cab8e760420c0ffce8ad77f21030329f7072c"
+    },
+    "post-policy": {
+      "path": "packages/core/tools/src/pipeline.ts",
+      "symbol": "postExecute",
+      "startLine": 507,
+      "endLine": 520,
+      "blobOid": "9db8bfc610f4e2ac641000f1bdc686269ff23a17",
+      "excerptSha256": "7e3533619aad759f19bc45bbecbc2b0e13bd7872505ac13011dd15f2157a1642"
+    }
+  },
+  "materials": {},
+  "lessons": [
+    {
+      "id": "architecture",
+      "title": "从 headless 任务进入插件运行时",
+      "objectives": [
+        "在固定提交指出 base、headless runner、Agent 注册表与默认驱动的职责。",
+        "沿创建与输入两条链找到 ReactLoopAgent，而不是仅凭同名符号推断调用。",
+        "说出本课公开范围及没有覆盖的资料。"
+      ],
+      "priorKnowledge": [
+        "理解 TypeScript 类、Promise 和插件注入。",
+        "知道配置可以替换服务；本课只读代码，不运行 dsh。"
+      ],
+      "prerequisiteLessons": [],
+      "concepts": [
+        {
+          "kind": "fact",
+          "text": "先看整体：base 配置挂载 llm、session 等服务，并启用原生工具执行器和默认 Agent Loop；headless patch 插入 startup 与 runner。这是公开的插件组合，不是模型服务端的实现。",
+          "sourceRefs": [
+            "base-services",
+            "base-executor",
+            "headless-config"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "headless run 在新会话分支读取模型选择，通过 agents.create 获得 Agent，再用 followup 提交任务。注册表负责工厂转交，AgentLoop 负责构造默认驱动。",
+          "sourceRefs": [
+            "entry",
+            "submit",
+            "registry",
+            "factory-register",
+            "factory-create",
+            "factory-machine"
+          ]
+        },
+        {
+          "kind": "advice",
+          "text": "本课范围：固定公开版本、默认 base 的 headless 新会话及 native 工具路径。Web/Desktop/SDK/ACP、恢复/分叉、PTC 与自定义 patch 未逐条取证；模型权重、训练及托管服务端内部也不能从这些调用点推出。遇到这些问题请登记疑问，不把未覆盖写成未实现。",
+          "sourceRefs": [
+            "entry",
+            "headless-config",
+            "base-executor"
+          ]
+        }
+      ],
+      "sourceReading": [
+        "base-services",
+        "base-executor",
+        "headless-config",
+        "entry",
+        "registry",
+        "factory-register",
+        "factory-create",
+        "factory-machine",
+        "submit",
+        "input",
+        "wake",
+        "driver"
+      ],
+      "keySymbols": [
+        {
+          "name": "run",
+          "sourceRef": "entry"
+        },
+        {
+          "name": "create",
+          "sourceRef": "registry"
+        },
+        {
+          "name": "createAgent",
+          "sourceRef": "factory-create"
+        },
+        {
+          "name": "initializeAgent",
+          "sourceRef": "factory-machine"
+        },
+        {
+          "name": "followup",
+          "sourceRef": "input"
+        }
+      ],
+      "execution": [
+        {
+          "kind": "fact",
+          "text": "1. 新会话场景：run 将默认模型选择放入 agentOptions，生成 sessionId，通过 agents.create 创建；有 sessionId 的恢复分支不在本课追踪范围。",
+          "sourceRefs": [
+            "entry"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "2. AgentRegistry.create 取得工厂，以调用者上下文转交 createAgent；AgentLoop 服务初始化时通过 setFactory 登记自身。",
+          "sourceRefs": [
+            "registry",
+            "factory-register"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "3. createAgent 准备会话并调用 initializeAgent；initializeAgent 构造 ReactLoopAgent。创建还涉及持久化与生命周期管理，本章只取通往驱动的调用链。",
+          "sourceRefs": [
+            "factory-create",
+            "factory-machine"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "4. runner 的 followup 把任务作为 user 消息送入 Agent；followup 使用 next-turn 和 wakeup=true，send 插入 inbox 并调用 wakeDriver。",
+          "sourceRefs": [
+            "submit",
+            "input"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "5. 空闲时 wakeDriver 将状态设为 running 并启动 kick；kick 通过 while(await turn()) 消费后续轮次。",
+          "sourceRefs": [
+            "wake",
+            "driver"
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "kind": "fact",
+          "text": "创建链：headless run → AgentRegistry.create → 已登记 AgentLoop.createAgent → initializeAgent → new ReactLoopAgent。调用通过工厂接口转交，不是注册表硬编码 new。",
+          "sourceRefs": [
+            "entry",
+            "registry",
+            "factory-register",
+            "factory-create",
+            "factory-machine"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "输入链：run → followup → send → wakeDriver → kick → turn。inject 使用 wakeup=false，不能当成 followup 的同义词。",
+          "sourceRefs": [
+            "submit",
+            "input",
+            "wake",
+            "driver"
+          ]
+        }
+      ],
+      "scenario": "教学场景：用户让本机 headless 解释一段业务代码，未传 sessionId，默认 base 已挂载且模型选择可用。先找谁创建会话，再追谁接收任务；这里不执行 CLI、不连接模型，也不把这一入口推广为 Web 或 SDK 的全部流程。",
+      "designRationale": [
+        {
+          "kind": "inference",
+          "text": "注册表转交工厂、默认循环自行登记，表明创建接口与具体驱动有替换边界；由调用结构可以推断这减少了入口对具体类的依赖，但这不是对作者全部设计动机的断言。",
+          "sourceRefs": [
+            "registry",
+            "factory-register",
+            "factory-machine"
+          ]
+        },
+        {
+          "kind": "advice",
+          "text": "独立实现时可先区分“创建运行时”和“投递任务”两个动作，再决定是否需要插件系统。简单场景不必照搬完整生命周期。",
+          "sourceRefs": [
+            "entry",
+            "submit",
+            "input"
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "question": "DeepSeek 公开仓库是否只有模型 API 接口？",
+          "answer": {
+            "kind": "fact",
+            "text": "不是。所核对的公开配置和代码包括会话、Agent 工厂、默认循环与工具执行器；本课将沿这些实际组件学习。公开目录存在仍不代表所有子系统都已完成课程审稿。",
+            "sourceRefs": [
+              "base-services",
+              "base-executor",
+              "factory-machine"
+            ]
+          }
+        },
+        {
+          "question": "资料缺口：能从这里解释模型内部或所有部署吗？",
+          "answer": {
+            "kind": "advice",
+            "text": "不能。模型调用边界只说明 Harness 怎样准备和消费请求；不同 profile 和 patch 可改变入口、工具与策略。本课未验证模型服务端、所有 profile、各操作系统沙箱或真实运行结果；保留为后续独立取证问题。",
+            "sourceRefs": [
+              "headless-config",
+              "entry",
+              "base-executor"
+            ]
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "factory-boundary",
+          "kind": "single-choice",
+          "prompt": "在新会话分支，AgentRegistry.create 怎样进入默认 AgentLoop？",
+          "options": [
+            {
+              "id": "direct",
+              "text": "注册表直接 new ReactLoopAgent"
+            },
+            {
+              "id": "factory",
+              "text": "取得已登记工厂，再转交 createAgent"
+            },
+            {
+              "id": "model",
+              "text": "模型响应负责创建 Agent"
+            }
+          ],
+          "correctOption": "factory",
+          "explanation": {
+            "kind": "fact",
+            "text": "create 通过 requireFactory 取得 target，再 Reflect.apply(target.createAgent, ...)；AgentLoop 用 setFactory 登记自己，具体 new 在 initializeAgent。",
+            "sourceRefs": [
+              "registry",
+              "factory-register",
+              "factory-machine"
+            ]
+          }
+        }
+      ],
+      "summary": [
+        {
+          "kind": "fact",
+          "text": "base 提供共享服务，headless runner 创建 Agent 并提交任务；注册表与具体驱动之间有工厂转交。",
+          "sourceRefs": [
+            "base-services",
+            "headless-config",
+            "entry",
+            "registry"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "followup 是 next-turn 的唤醒输入，经 send/wakeDriver/kick 进入 turn；inject 不主动唤醒。",
+          "sourceRefs": [
+            "input",
+            "wake",
+            "driver"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "turn-step",
+      "title": "一次任务怎样成为模型 step？",
+      "objectives": [
+        "在源码区分 turn 与 step，指出输入被拒绝或改为空时的分支。",
+        "沿 preStep、prepareRequest、buildRequest 找出模型选择、输入接纳和历史来源。",
+        "说明普通完成、工具待续与 next-step 输入怎样影响停止。"
+      ],
+      "priorKnowledge": [
+        "已理解 headless 的创建与投递链。",
+        "了解异步迭代和 AbortSignal；本章先追接受输入、未取消的普通路径。"
+      ],
+      "prerequisiteLessons": [
+        "architecture"
+      ],
+      "concepts": [
+        {
+          "kind": "fact",
+          "text": "turn 是围绕输入的任务边界，step 是其中一次模型请求及其工具处理。turn/start 先于 preStep；输入被 reject 或初次被改为空时可以没有 step。",
+          "sourceRefs": [
+            "turn-open"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "preStep 认领输入、快照当前模型选择，解析 toolSet 并组装提示，再经过 agent/pre-step waterfall。接受结果携带同一 selection、assembly 与 toolSet 进入 step。",
+          "sourceRefs": [
+            "prepare-step"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "模型历史不是把当前任务字符串直接交给网络。step 准备调用并记录接纳消息，buildRequest 从 Session.deriveMessages 取得投影历史，冻结后构成请求。",
+          "sourceRefs": [
+            "step-input",
+            "prepare-call",
+            "history",
+            "derive"
+          ]
+        }
+      ],
+      "sourceReading": [
+        "turn-open",
+        "prepare-step",
+        "step-input",
+        "prepare-call",
+        "history",
+        "derive",
+        "model-stream",
+        "assistant-tools",
+        "turn-step",
+        "turn-close"
+      ],
+      "keySymbols": [
+        {
+          "name": "turn",
+          "sourceRef": "turn-open"
+        },
+        {
+          "name": "preStep",
+          "sourceRef": "prepare-step"
+        },
+        {
+          "name": "step",
+          "sourceRef": "step-input"
+        },
+        {
+          "name": "prepareRequest",
+          "sourceRef": "prepare-call"
+        },
+        {
+          "name": "buildRequest",
+          "sourceRef": "history"
+        },
+        {
+          "name": "deriveMessages",
+          "sourceRef": "derive"
+        }
+      ],
+      "execution": [
+        {
+          "kind": "fact",
+          "text": "1. turn 写 turn/start，target 初始是 next-turn；循环提议下一个 step 并调用 preStep。reject 返回 blocked；初次 enter 的消息为空则完成而不发起模型调用。",
+          "sourceRefs": [
+            "turn-open"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "2. preStep 从 inbox.claim 取输入，获取当前模型选择、解析工具和组装提示，然后调用 agent/pre-step。缺少模型选择直接抛错；reject 释放 toolSet。",
+          "sourceRefs": [
+            "prepare-step"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "3. 接受输入后记录 step/start 并调用 step。prepareRequest 调用 agent/request 和 llm.prepareCall，并检查 provider/model/effort 没有被这个旧钩子改变；NO_ADAPTER 有供中间件使用的回退分支，不表示所有缺适配器都成功。",
+          "sourceRefs": [
+            "turn-open",
+            "turn-step",
+            "prepare-call"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "4. step 在准备调用后追加 system/user 消息，再 buildRequest；buildRequest 使用 session.deriveMessages 投影历史并冻结请求。deriveMessages 遍历 surface 的消息节点，而不是把全部日志事件原样送给模型。",
+          "sourceRefs": [
+            "step-input",
+            "history",
+            "derive"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "5. step 消费 preparedCall.stream 或 llm.stream；正常组装 assistant/message 后，没有 tool-call 则返回 completed，有工具则走工具批次。",
+          "sourceRefs": [
+            "model-stream",
+            "assistant-tools"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "6. turn 在 step/end 后检查终止结果和 nextStep 输入；必要时运行 agent/turn-stopping，再次检查才退出。finally 记录 turn/end，有待处理输入时可开启下一 turn。",
+          "sourceRefs": [
+            "turn-step",
+            "turn-close"
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "kind": "fact",
+          "text": "turn → preStep（输入、工具、提示与接纳）→ step → prepareRequest → llm.prepareCall；step → buildRequest → session.deriveMessages → 流调用。组装、接纳与模型请求有先后约束。",
+          "sourceRefs": [
+            "turn-open",
+            "prepare-step",
+            "step-input",
+            "prepare-call",
+            "history",
+            "model-stream"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "普通工具批次未 concluded 时 step 返回 null，使 turn 继续 next-step；completed 也可能被已有 nextStep 输入延长，不能仅凭有无工具调用判断整个 turn。",
+          "sourceRefs": [
+            "assistant-tools",
+            "turn-step"
+          ]
+        }
+      ],
+      "scenario": "教学场景：用户提交“解释订单状态判断”，模型第一步直接给出普通文本，没有工具调用，也无并发输入、取消或插件拒绝。预测一次 step 后完成；再假设 pre-step 把首个输入改为空，核对为什么只有 turn 边界而没有 step/start。两种结果由代码推演，不宣称是真实模型实验。",
+      "designRationale": [
+        {
+          "kind": "inference",
+          "text": "请求从日志投影并冻结，有助于把一次请求绑定到当时的消息快照；这是由 deriveMessages 和 Object.freeze 推出的作用，不等于证明任意持久化后端都能在断电后恢复。",
+          "sourceRefs": [
+            "history",
+            "derive"
+          ]
+        },
+        {
+          "kind": "advice",
+          "text": "自己的最小循环可以先显式区分任务边界、模型步和终止条件，再为取消、输入插入与重试增加各自证据。不要把单个布尔结束值概括为全部调度策略。",
+          "sourceRefs": [
+            "turn-open",
+            "turn-step",
+            "turn-close"
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "question": "输入被拒绝也一定调用一次模型吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "不一定。turn/start 之后 preStep 可返回 reject；首步 enter 被改为空也会在 step/start 前完成，所以 turn 可以包含零个 step。",
+            "sourceRefs": [
+              "turn-open"
+            ]
+          }
+        },
+        {
+          "question": "资料缺口：会话事件追加是否证明已经安全落盘？",
+          "answer": {
+            "kind": "advice",
+            "text": "本章只证明 Session 消息投影与请求快照。内存日志追加不等于物理刷盘；持久化 backend、迁移和崩溃恢复需另外追踪，不能由 deriveMessages 的行为保证。",
+            "sourceRefs": [
+              "derive",
+              "history"
+            ]
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "history-source",
+          "kind": "single-choice",
+          "prompt": "buildRequest 从哪里取得模型可见的消息数组？",
+          "options": [
+            {
+              "id": "inbox",
+              "text": "直接把 inbox.nextStep 作为 messages"
+            },
+            {
+              "id": "session",
+              "text": "调用 session.deriveMessages()，再冻结消息快照"
+            },
+            {
+              "id": "events",
+              "text": "把所有会话事件不加转换发送"
+            }
+          ],
+          "correctOption": "session",
+          "explanation": {
+            "kind": "fact",
+            "text": "buildRequest 使用 session.deriveMessages()；后者沿 surface 节点派生消息并返回新数组，不把 turn/start 等所有事件原样传给模型。",
+            "sourceRefs": [
+              "history",
+              "derive"
+            ]
+          }
+        }
+      ],
+      "summary": [
+        {
+          "kind": "fact",
+          "text": "preStep 先认领与接纳，step 再准备调用、记录消息并从日志投影构建请求；拒绝或空首输入可以不产生 step。",
+          "sourceRefs": [
+            "prepare-step",
+            "turn-open",
+            "step-input",
+            "history"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "step/end 与 turn/end 是不同边界，是否继续还取决于 step 返回值、nextStep 输入与停止钩子。",
+          "sourceRefs": [
+            "turn-step",
+            "turn-close"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tool-results",
+      "title": "原生工具结果怎样回到下一请求？",
+      "objectives": [
+        "从 assistant 的 tool-call 追到所选执行器、管线和实际工具体。",
+        "定位 tool/call 与 tool/result 的日志写入及 callId/来源关联。",
+        "说明普通工具异常、concluded 和额外上下文对后续 step 的影响。"
+      ],
+      "priorKnowledge": [
+        "已理解 turn、step、会话投影与模型请求。",
+        "理解并发完成顺序与提交顺序可能不同。"
+      ],
+      "prerequisiteLessons": [
+        "turn-step"
+      ],
+      "concepts": [
+        {
+          "kind": "fact",
+          "text": "先看边界：循环收集 assistant 内容中的 tool-call，调用 ToolsService.execute；该服务按 Agent scope 选择执行器。默认 base 启用 native 并禁用 PTC，本章只追原生分支。",
+          "sourceRefs": [
+            "assistant-tools",
+            "dispatch",
+            "executor-select",
+            "base-executor"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "NativeToolExecutor 把批次交给 executeToolBatch；批次规划参数，按执行模式分组。runGroup 执行 prepare、dispatch、complete，按模型顺序提交结果，即使工具体可以重叠运行。",
+          "sourceRefs": [
+            "native",
+            "batch",
+            "schedule"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "工具返回不直接成为下一模型请求。BatchSettlement.commit 写 tool/result；循环继续时 buildRequest 再从 Session 投影模型可见历史。additionalContexts 另进入 next-step inbox。",
+          "sourceRefs": [
+            "result-log",
+            "assistant-tools",
+            "turn-step",
+            "history",
+            "derive"
+          ]
+        }
+      ],
+      "sourceReading": [
+        "assistant-tools",
+        "base-executor",
+        "dispatch",
+        "executor-select",
+        "native",
+        "batch",
+        "schedule",
+        "policy",
+        "around-body",
+        "body",
+        "complete",
+        "post-policy",
+        "call-log",
+        "result-log",
+        "batch-result",
+        "turn-step",
+        "history",
+        "derive"
+      ],
+      "keySymbols": [
+        {
+          "name": "execute",
+          "sourceRef": "dispatch"
+        },
+        {
+          "name": "NativeToolExecutor",
+          "sourceRef": "native"
+        },
+        {
+          "name": "executeToolBatch",
+          "sourceRef": "batch"
+        },
+        {
+          "name": "dispatchToolBody",
+          "sourceRef": "body"
+        },
+        {
+          "name": "commit",
+          "sourceRef": "result-log"
+        }
+      ],
+      "execution": [
+        {
+          "kind": "fact",
+          "text": "1. 正常 assistant/message 已写入日志后，step 筛出 tool-call；没有工具则 completed，有工具则传递 signal、agent、turn/step、并发上限和本 step 的 toolSet。",
+          "sourceRefs": [
+            "assistant-tools"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "2. ToolsService.execute 选择 scope 对应执行器，缺失时抛 ToolExecutorUnavailableError；默认 native 的 execute 调用 executeToolBatch。不能将该选择外推到所有自定义部署。",
+          "sourceRefs": [
+            "dispatch",
+            "executor-select",
+            "native",
+            "base-executor"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "3. 批次通过 runGroup 记 tool/call、调用 prepare，再按返回种类进入 dispatch 或等待结果收尾。prepare 经过 tools/pre-execute、可能的询问与 guards，拒绝会产生错误结果而不进入工具体。",
+          "sourceRefs": [
+            "batch",
+            "schedule",
+            "call-log",
+            "policy"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "4. dispatch 通过 tools/execute waterfall 进入 dispatchToolBody；工具体以 exec.arguments 和 exec 执行，找不到工具或工具抛错会被转换为错误结果。complete 在相应分支经过 postExecute，后者可接受或阻止结果。",
+          "sourceRefs": [
+            "around-body",
+            "body",
+            "complete",
+            "post-policy"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "5. runGroup 以连续模型顺序槽位调用 complete，再 settlement.commit。commit 将 tool/result 追加到会话，保存 callId、isError 和来源 call 的 seq，并收集 additionalContexts。",
+          "sourceRefs": [
+            "schedule",
+            "result-log"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "6. 批次返回 concluded 和上下文；step 将上下文放入 next-step，未 concluded 返回 null。turn 继续时重新 buildRequest，Session.deriveMessages 将已入 surface 的结果投影到下一请求。若 concluded 且没有新输入可结束；max-tokens、取消和内部错误另有分支。",
+          "sourceRefs": [
+            "batch-result",
+            "assistant-tools",
+            "turn-step",
+            "history",
+            "derive"
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "kind": "fact",
+          "text": "普通原生路径：step → ToolsService.execute → selectExecutor → NativeToolExecutor.execute → executeToolBatch → runGroup → prepare/dispatch/complete → BatchSettlement.commit。dispatch 的默认回调调用 dispatchToolBody，再到工具定义的 execute。",
+          "sourceRefs": [
+            "assistant-tools",
+            "dispatch",
+            "executor-select",
+            "native",
+            "batch",
+            "schedule",
+            "around-body",
+            "body",
+            "complete",
+            "result-log"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "结果消费链：commit 追加 tool/result → step 返回批次结论 → turn 判断 next-step → buildRequest → deriveMessages。additionalContexts 通过 inbox 走下一次接纳，与 tool/result 的日志路径不同。",
+          "sourceRefs": [
+            "result-log",
+            "assistant-tools",
+            "turn-step",
+            "history",
+            "derive"
+          ]
+        }
+      ],
+      "scenario": "教学场景：假设注册了一个普通原生订单查询工具，模型返回查询订单 42 的 tool-call；工具成功，未 concludesTurn，未取消且没有新用户输入。沿调用链预测结果入日志并开始下一 step。再假设工具体抛错，查看错误结果如何生成。本场景是源码追踪练习，不是内置 Pi 订单 Mock，也不声称上游存在同名业务工具。",
+      "designRationale": [
+        {
+          "kind": "inference",
+          "text": "runGroup 将工具体并发和有序提交分开，可以推断其作用是既允许重叠工作又保持模型顺序的结果关联；不能据此保证所有插件都无副作用或所有失败都可恢复。",
+          "sourceRefs": [
+            "schedule",
+            "result-log"
+          ]
+        },
+        {
+          "kind": "advice",
+          "text": "独立实现时，先用单工具验证 callId、错误结果和下一请求的历史，再决定是否需要并发池与策略扩展点。真实沙箱和审批安全还需要平台级证据。",
+          "sourceRefs": [
+            "body",
+            "result-log",
+            "history",
+            "policy"
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "question": "工具体抛错会直接跳过结果并结束整个 turn 吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "dispatchToolBody 把普通工具异常转换为 toolErrorResult。工具错误结果、执行器缺失、调度内部失败和取消应分开看；普通工具错误不能被简化为一律终止 turn。",
+            "sourceRefs": [
+              "body",
+              "executor-select",
+              "batch",
+              "assistant-tools"
+            ]
+          }
+        },
+        {
+          "question": "工具完成后一定发起下一次模型请求吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "不一定。step 用 result.concluded 决定 completed 或 null，同时 next-step 上下文与停止钩子也影响继续；max-tokens 可在工具批次之前返回。",
+            "sourceRefs": [
+              "assistant-tools",
+              "turn-step"
+            ]
+          }
+        },
+        {
+          "question": "资料缺口：这一管线是否覆盖全部工具和平台安全？",
+          "answer": {
+            "kind": "advice",
+            "text": "本课验证默认 base 的 native 分支及公共策略扩展点。PTC、第三方插件、各工具实现、操作系统沙箱及实际审批结果未审稿。MCP、Multi-Agent、Memory 与真实持久化也需各自证据链，不用 Pi/Codex 的同名符号或模拟结果填补。",
+            "sourceRefs": [
+              "base-executor",
+              "executor-select",
+              "policy",
+              "body"
+            ]
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "result-history",
+          "kind": "single-choice",
+          "prompt": "原生工具批次普通完成、未 concluded 且未取消时，哪条路径把结果带回下一模型请求？",
+          "options": [
+            {
+              "id": "direct",
+              "text": "工具直接调用 llm.stream 并拼接用户消息"
+            },
+            {
+              "id": "log",
+              "text": "commit 写 tool/result，turn 继续后从会话投影构建请求"
+            },
+            {
+              "id": "pi",
+              "text": "复用 Pi Mock 的工具事件作为 DeepSeek 历史"
+            }
+          ],
+          "correctOption": "log",
+          "explanation": {
+            "kind": "fact",
+            "text": "BatchSettlement.commit 写入 tool/result；step 未 concluded 返回 null，turn 进入 next-step，buildRequest 用 session.deriveMessages 构造历史。原生工具体没有在这条路径直接负责模型续调。",
+            "sourceRefs": [
+              "result-log",
+              "assistant-tools",
+              "turn-step",
+              "history",
+              "derive"
+            ]
+          }
+        },
+        {
+          "id": "trace-result",
+          "kind": "trace",
+          "prompt": "假设一次普通原生工具体抛错，未取消且批次未 concluded。沿当前版源码说明错误怎样变成结果、何处写入日志、谁决定下一步，并列出本课不能验证的一项行为。",
+          "rubric": [
+            "指出 dispatchToolBody 的 catch 返回 toolErrorResult，区别于执行器缺失或调度内部异常。",
+            "指出 complete/runGroup/commit 顺序，以及 tool/result 的 callId 与 call seq 关联。",
+            "指出 step 的 concluded 判断、turn 的 nextStep 检查、buildRequest 的 deriveMessages 历史来源。",
+            "说明场景假设，列出模型服务端或平台安全/持久化等尚未验证范围；答案为自评。"
+          ],
+          "explanation": {
+            "kind": "fact",
+            "text": "先读工具体 catch，再读 complete 和有序 commit；继续与否由批次结论及 turn 控制决定，历史从会话投影取得。工具错误结果不等于调度或模型内部错误。平台安全、模型内部和物理持久化不能由这些调用点证明。",
+            "sourceRefs": [
+              "body",
+              "complete",
+              "schedule",
+              "result-log",
+              "assistant-tools",
+              "turn-step",
+              "history"
+            ]
+          }
+        }
+      ],
+      "summary": [
+        {
+          "kind": "fact",
+          "text": "原生执行由所选 provider 负责；prepare/dispatch/complete 与有序 commit 把工具结果写入同一会话。",
+          "sourceRefs": [
+            "dispatch",
+            "native",
+            "schedule",
+            "policy",
+            "body",
+            "result-log"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "工具结果和额外上下文走不同的入站路径，下一请求统一从已接纳日志的消息投影构造；concluded 与队列共同参与继续判断。",
+          "sourceRefs": [
+            "result-log",
+            "assistant-tools",
+            "turn-step",
+            "history",
+            "derive"
+          ]
+        }
+      ]
+    }
+  ]
+}
