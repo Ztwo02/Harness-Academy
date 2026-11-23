@@ -32,6 +32,10 @@
 | 完整文件的 Git blob OID | `193e3faf9607fee37207c1cd9ec337f1eab8cec5` |
 | 第 32–55 行的 excerptSha256 | `dd1b3f587884c428ab1ee3f8fc985ad9c622c53f4483ddba949d88e3321ed87a` |
 
+### DeepSeek Harness Phase 4 取证
+
+2026-11-23 取得登记的完整提交 `2e39e70496aa02986ca6a820c5d497e816b69d7e`，未升级基线。核实公开插件组合、headless runner、Agent 工厂、默认循环、会话投影与原生工具执行管线；范围与资料缺口见 [DeepSeek 来源审阅](DEEPSEEK_SCOPE.md)。上游 master HEAD 已移动，课程只依赖固定对象，不运行上游程序。
+
 ## 上游升级
 
 ### Codex Phase 3 取证
