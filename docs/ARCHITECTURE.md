@@ -73,3 +73,18 @@ P3 已接入 Codex，`bundledCourses` 统一登记 Pi 两版与 Codex 一版；`
 Codex 的 Rust 声明采用与其他语言一致的文本候选机制，增加 fn、struct、trait、mod 及 let mut 模式。阅读器默认搜索当前目录，scope 经路径校验并通过 Git literal pathspec 限定树枚举，通配符不扩展；范围和预算都显示在反馈中。GitHub 对象获取上限为 240 秒，本机获取仍为 120 秒；Git 工具、协议与脚本执行边界保持不变。
 
 P4 在内置清单中增加 DeepSeek 独立三章课程，开放其课程发布；导入、导师、阅读器与复习继续使用 release 绑定的 repository/commit。TypeScript 方法候选复用现有文本导航，不增加语言级解析器或扩大检索预算。项目入口与各章说明 headless/native 范围及资料缺口，图表只渲染本项目审核过的固定路径。无新增接口、DDL、网络模型或真实执行能力。[公开范围核对](DEEPSEEK_SCOPE.md)
+
+## P5 多来源与官方阅读卡
+
+仓库清单可将多个 repository 归属同一 project。`GET /projects` 按 project 分组，附 repositories（各自来源类别、固定提交及本地 revision）；每个 edition 附 repositoryId/sourceKind。旧项目路由与主仓字段兼容保留。导入只发布命中本仓库/本提交的教材；教材更新可附 repositoryId，不传时只更新已固定来源，未导入的另一类资料不阻塞本类。上传课程可用 repositoryId 限定所选仓库。
+
+课程发布按 v1/v2 Schema 分派。v2 的来源类别绑定数据库 source_kind，断言分类须与本版一致；内部问题独立展示。阅读器、导师和复习继续以 release 取 Git 对象与用户记录。Python def 声明加入既有文本候选；导师在单次请求中复用已读文件，逐条摘要仍重验，不做跨请求的失效风险缓存。
+
+| 接口 | 行为 |
+| --- | --- |
+| GET /reading-cards | 列出内置官方卡片及未导入/就绪/损坏状态 |
+| POST /reading-cards/import | 只接受已登记 id/version，从应用随附响应核验并复制到本机；不接收 URL 或磁盘路径 |
+| GET /reading-cards/:id/:version | 读取本机不可变卡片，验证原始响应、标题所在节的短选区及摘要后展示 |
+| GET /reading-cards/:id/:version/snapshot | 相同核验后以 text/plain 返回原始响应，不渲染活动 HTML/Markdown |
+
+快照不需要 Git 仓库，也不伪造 sourceRefs；是独立官方文档类别。界面使用本地组件，卡片不进入课程练习统计。来源和范围见 [Claude 审阅](CLAUDE_SCOPE.md)。

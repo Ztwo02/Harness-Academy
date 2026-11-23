@@ -42,3 +42,13 @@
 检查程序中包含一个**仅用于契约验收**的最小完整包，由测试文本生成定位信息。可以从 sample_course 开始查看真实字段形状和合法引用。Pi 的课程内容由 P1 针对已取得的 Pi Git 对象另行编写。[完整夹具与拒绝用例](../checks/phase0.py)
 
 课程结构的破坏性修改需要新增 schemaVersion 和旧包读取/迁移策略；内容版次 version 与数据库 PRAGMA user_version 各自演进。
+
+## Phase 5：课程 v2 与官方阅读卡
+
+[v2 Schema](schema/course-v2.schema.json) 保留十二项、单仓固定提交及证据坐标，增加必填 sourceKind（public-repo/sdk-repo）和 unverifiedQuestions。每条技术断言增加同名来源类别 sourceCategory，必须与本版及数据库登记的 source_kind 一致；内部机制没有合法的断言类别，只能作为 question/reason/verificationNeeded 保留。不得在问题里加入 kind=fact 或 text 来绕过分类。Claude 新课程必须使用 v2。
+
+旧 v1 Schema 与既有课程原文保持不变，应用按 schemaVersion 分派验证器。Pi/Codex/DeepSeek 的旧进度、练习与深链仍按原 release 恢复；数据库无需迁移。结构分类检查不替代自然语言语义审稿。
+
+[阅读卡契约](schema/reading-card.schema.json) 独立于源码课：固定 official-doc 类别、id/version、官方 URL、抓取时间、原始响应 SHA-256、标题定位、短选区及其 SHA-256、中文摘要和未决问题。导入器只接收应用内已核对卡片的 id/version；原始响应不做换行归一化。阅读时校验摘要和标题后同一节内的选区，原文作为纯文本提供，不执行 Markdown 内代码或 HTML。
+
+阅读卡本身不伪造 Git 证据或十二项源码课，也不纳入章节完成率。版本化本机清单及原始响应随数据目录备份；同版不同清单冲突，原始响应缺失或损坏可从应用附带同版副本修复。

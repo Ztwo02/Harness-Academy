@@ -21,6 +21,8 @@ import {
   useAcademy,
   useNarrow,
   Version,
+  sourceLabels,
+  PendingQuestions,
 } from "./ui";
 
 function SourceChip({ page, id }: { page: ChapterPage; id: string }) {
@@ -38,6 +40,7 @@ function Claims({ list, page }: { list: Claim[]; page: ChapterPage }) {
       {list.map((c, i) => (
         <li key={i}>
           <span className="claim-kind">
+            {c.sourceCategory && sourceLabels[c.sourceCategory] + " · "}
             {{ fact: "源码事实", inference: "推断", advice: "建议" }[c.kind]}
           </span>
           {c.text}
@@ -338,6 +341,7 @@ function LessonView({ page }: { page: ChapterPage }) {
       <PageTitle title={l.title} description={page.title + " · v" + page.version}>
         <ProgressState state={status} />
       </PageTitle>
+      {page.projectId === "claude" && <p className="notice source-notice">来源类别：{sourceLabels[page.sourceKind]} · {page.repositoryId}。本章事实只适用于此仓库、此提交；<Link to="/materials/claude">官方文档快照另读</Link>。</p>}
       <div className="button-row chapter-lab-links">
         <Link
           className="button"
@@ -383,6 +387,10 @@ function LessonView({ page }: { page: ChapterPage }) {
           </Section>
           <Section title="架构与概念" id="concepts">
             <Claims list={l.concepts} page={page} />
+            {page.projectId === "claude" && (
+              (page.repositoryId === "claude-code" && page.commit === "b022ba6df88a5ddfbcedc39739a191c7e2ff5196" && l.id === "hook-example") ||
+              (page.repositoryId === "claude-agent-sdk-python" && page.commit === "3184360393a92ca8a6ec7bbbdee571afd1ce1c56" && l.id === "query-transport")
+            ) && <Suspense fallback={<Loading />}><FlowDiagram project={page.sourceKind === "sdk-repo" ? "claude-sdk" : "claude-public"} /></Suspense>}
             {page.projectId === "deepseek" &&
               page.commit === "2e39e70496aa02986ca6a820c5d497e816b69d7e" &&
               l.id === "architecture" &&
@@ -482,6 +490,7 @@ function LessonView({ page }: { page: ChapterPage }) {
           <Notebook page={page} />
         </aside>
       </div>
+      <PendingQuestions questions={page.unverifiedQuestions} />
     </>
   );
 }

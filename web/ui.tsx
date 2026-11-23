@@ -8,7 +8,17 @@ import {
   GitCommitHorizontal,
   LoaderCircle,
 } from "lucide-react";
-import type { Edition, Project, State } from "../shared/types";
+import type { Edition, Project, State, UnverifiedQuestion } from "../shared/types";
+
+export const sourceLabels = { "public-repo": "公开仓库", "sdk-repo": "官方 SDK", "official-doc": "官方文档" };
+export function PendingQuestions({ questions }: { questions: UnverifiedQuestion[] }) {
+  if (!questions.length) return null;
+  return <section className="sheet pending-questions" aria-label="内部机制待验证问题">
+    <h2>内部机制：待验证问题</h2>
+    <p>以下内容尚无本课程可验证的内部实现证据，不作为源码事实或调用链。</p>
+    {questions.map(q => <details key={q.id}><summary>{q.question}</summary><p>{q.reason}</p><p>所需证据：{q.verificationNeeded}</p></details>)}
+  </section>;
+}
 
 export const Academy = createContext<{ projects: Project[]; refresh: () => void; revision: number }>({
   projects: [],

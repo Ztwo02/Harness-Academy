@@ -7,6 +7,7 @@ export interface CatalogSource {
   phase: number;
   observedRef: string;
   baselineCommit: string;
+  sourceKind?: "public-repo" | "sdk-repo";
 }
 export interface Evidence {
   path: string;
@@ -21,6 +22,13 @@ export interface Claim {
   text: string;
   sourceRefs: string[];
   materialRefs?: string[];
+  sourceCategory?: "public-repo" | "sdk-repo";
+}
+export interface UnverifiedQuestion {
+  id: string;
+  question: string;
+  reason: string;
+  verificationNeeded: string;
 }
 export type Exercise = {
   id: string;
@@ -48,7 +56,9 @@ export interface Lesson {
   summary: Claim[];
 }
 export interface Course {
-  schemaVersion: 1;
+  schemaVersion: 1 | 2;
+  sourceKind?: "public-repo" | "sdk-repo";
+  unverifiedQuestions?: UnverifiedQuestion[];
   projectId: string;
   repositoryId: string;
   commit: string;
@@ -74,9 +84,12 @@ export interface Edition {
   version: number;
   title: string;
   commit: string;
+  repositoryId: string;
+  sourceKind: "public-repo" | "sdk-repo";
   chapters: ChapterLink[];
 }
 export interface Project extends CatalogSource {
+  repositories: (CatalogSource & { revisions: string[] })[];
   available: boolean;
   revisions: string[];
   editions: Edition[];
@@ -88,6 +101,8 @@ export interface ChapterPage {
   releaseId: number;
   repositoryId: string;
   projectId: string;
+  sourceKind: "public-repo" | "sdk-repo";
+  unverifiedQuestions: UnverifiedQuestion[];
   commit: string;
   version: number;
   title: string;

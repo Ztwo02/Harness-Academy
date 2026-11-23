@@ -14,6 +14,7 @@ import {
 } from "./git.ts";
 import { bundledCourses, evidenceFor, getLesson, getRelease, publish } from "./courses.ts";
 import { findSymbol, tutor } from "./navigation.ts";
+import { getReading, installReading, listReadings } from "./readings.ts";
 import { chapterPage, projects, recordAnswer, review } from "./study.ts";
 import type { CatalogSource, Course, ImportJob } from "../shared/types.ts";
 
@@ -136,6 +137,15 @@ export function createAcademy(
   });
   api.get("/session", (_req, res) => res.json({ token }));
   api.get("/projects", (_req, res) => res.json(projects(db, sources, bundles)));
+  api.get("/reading-cards", (_req, res) => res.json(listReadings(dataDir)));
+  api.post("/reading-cards/import", (req, res) => {
+    const body = z.object({ id, version: positive }).strict().parse(req.body);
+    res.json(installReading(dataDir, body.id, body.version));
+  });
+  api.get("/reading-cards/:card/:version", (req, res) =>
+    res.json(getReading(dataDir, id.parse(req.params.card), integer(req.params.version)).card));
+  api.get("/reading-cards/:card/:version/snapshot", (req, res) =>
+    res.type("text/plain").send(getReading(dataDir, id.parse(req.params.card), integer(req.params.version)).body));
   api.post("/imports", (req, res) => {
     const body = importInput.parse(req.body);
     const source = sources.find((x) => x.repositoryId === body.repositoryId);
@@ -187,15 +197,22 @@ export function createAcademy(
         "repository",
         "课程包不属于当前选择的项目。",
       );
+    if (req.query.repositoryId !== undefined)
+      requireThat(id.parse(req.query.repositoryId) === req.body?.repositoryId, 422, "repository", "课程包不属于当前选择的仓库。");
     const releaseId = await publish(db, dataDir, req.body);
     res.json({ releaseId, projectId: getRelease(db, releaseId).projectId });
   });
   api.post("/bundled-releases", async (req, res) => {
-    const { projectId = "pi" } = z.object({ projectId: id.optional() }).strict().parse(req.body);
-    const selected = bundles.filter((course) => course.projectId === projectId);
+    const { projectId = "pi", repositoryId } = z.object({ projectId: id.optional(), repositoryId: id.optional() }).strict().parse(req.body);
+    const selected = bundles.filter((course) => course.projectId === projectId && (!repositoryId || course.repositoryId === repositoryId));
     requireThat(selected.length, 404, "planned", "此项目暂未提供内置课程。");
     let releaseId: number | undefined;
-    for (const course of selected) releaseId = await publish(db, dataDir, course);
+    for (const course of selected) {
+      if (!repositoryId && selected.some(c => c.repositoryId !== course.repositoryId) &&
+          !db.prepare("SELECT 1 FROM revision WHERE repository_id=? AND commit_sha=?").get(course.repositoryId, course.commit)) continue;
+      releaseId = await publish(db, dataDir, course);
+    }
+    requireThat(releaseId, 422, "revision", "请先导入所选教材对应的固定仓库版本。");
     res.json({ releaseId, projectId });
   });
   api.get("/releases/:rid/symbols", async (req, res) => {

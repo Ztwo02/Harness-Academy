@@ -49,4 +49,8 @@ P3 同样保持数据库 `user_version=2`，无需迁移。Codex 使用独立的
 
 P4 保持同一数据库版本，增加 DeepSeek 的 `deepseek-foundations` v1 及其独立 repository/revision。课程和练习继续按 release 隔离；没有回填、迁移或覆盖 Pi/Codex 的学习记录。资料缺口保存在课程断言、FAQ 和版本化说明中，不新增用户数据表。
 
+P5 不改变数据库 user_version=2。新增官方 SDK 仓库使用既有 sdk-repo 类型，仍归属 claude；两门课程各有 course/release 与独立 SHA。原 v1 文档不重写，v2 的类别和内部待查问题保存在不可变发布原文。旧 SQLite 打开时只登记新增来源，不迁移原进度或学习记录。
+
+官方阅读卡以 `readings/<id>.v<version>.json` 保存本机版本化清单，原始响应写入 `materials/<sha256>`。写入先验证应用内固定副本，再通过临时文件原子替换内容寻址响应；同版不同清单拒绝覆盖。读取检查文件类型、尺寸、UTF-8、响应摘要、标题和短选区。响应损坏可从应用内同 SHA 副本修复；备份与恢复须包含 readings 和 materials 两目录。卡片没有新增用户作答或进度实体，章节统计仍只来自课程。
+
 P2 统计按筛选后的每版每章每题计数。首次/最近分别取最小/最大 attempt.id；已答题数为至少有一次作答的题数。首次正确数、最近正确数的分母均为已答题数，未作答显示“未作答”，不产生除零百分比。待复习为最近 incorrect；“首次错 → 最近对”只统计首次 incorrect 且最近 correct。累计作答含所有有效 attempt，重试同一 request_id 不新增次数；追踪题按课程类型标记自评。所有统计从原记录派生，没有计数器回填或迁移。

@@ -17,7 +17,7 @@ export function projects(
   sources: CatalogSource[],
   bundles: Course[] = bundledCourses,
 ): Project[] {
-  return sources.map((source) => {
+  return sources.filter((source, index) => sources.findIndex(s => s.projectId === source.projectId) === index).map((source) => {
     const releases = db
       .prepare(
         "SELECT id,document FROM course_release WHERE project_id=? ORDER BY course_id,version DESC",
@@ -25,6 +25,11 @@ export function projects(
       .all(source.projectId);
     return {
       ...source,
+      repositories: sources.filter(s => s.projectId === source.projectId).map(s => ({
+        ...s,
+        revisions: db.prepare("SELECT commit_sha FROM revision WHERE repository_id=? ORDER BY pinned_at DESC")
+          .all(s.repositoryId).map(x => String(x.commit_sha)),
+      })),
       available: bundles.some((course) => course.projectId === source.projectId),
       revisions: db
         .prepare("SELECT commit_sha FROM revision WHERE repository_id=? ORDER BY pinned_at DESC")
@@ -44,6 +49,8 @@ export function projects(
           version: course.version,
           commit: course.commit,
           title: course.title,
+          repositoryId: course.repositoryId,
+          sourceKind: course.sourceKind ?? "public-repo",
           chapters: course.lessons.map((l) => ({
             id: l.id,
             title: l.title,
@@ -65,6 +72,8 @@ export function chapterPage(db: DatabaseSync, releaseId: number, lessonId: strin
     releaseId,
     repositoryId: course.repositoryId,
     projectId: course.projectId,
+    sourceKind: course.sourceKind ?? "public-repo",
+    unverifiedQuestions: course.unverifiedQuestions ?? [],
     commit: course.commit,
     version: course.version,
     title: course.title,

@@ -29,6 +29,7 @@ import { Home, ProjectPage } from "./projects";
 import { Repositories } from "./repositories";
 import { Chapter } from "./chapter";
 import { Records } from "./records";
+import { Reading, Readings } from "./readings";
 import "./style.css";
 
 const Reader = lazy(() => import("./reader"));
@@ -114,7 +115,7 @@ function Shell() {
           <Monitor size={17} />
           <div>
             <strong>本地工作区</strong>
-            <small>Harness Academy · v0.4</small>
+            <small>Harness Academy · v0.5</small>
           </div>
         </div>
       </aside>
@@ -161,6 +162,8 @@ function Shell() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/projects/:id" element={<ProjectPage />} />
+                  <Route path="/materials/claude" element={<Readings />} />
+                  <Route path="/materials/claude/:card/:version" element={<Reading key={loc.pathname} />} />
                   <Route path="/repositories" element={<Repositories />} />
                   <Route path="/review" element={<Records />} />
                   <Route path="/lab" element={<Lab />} />

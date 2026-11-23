@@ -557,6 +557,35 @@ main {
 .project-map-head {
   flex-wrap: wrap;
 }
+.source-scope,
+.source-choice,
+.reading-row,
+.pending-questions {
+  margin-bottom: 20px;
+}
+.notice.source-notice {
+  display: block;
+}
+.source-choice {
+  display: block;
+}
+.source-choice select {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+}
+.reading-paper {
+  max-width: 80ch;
+  line-height: 1.85;
+}
+.reading-paper h2 {
+  margin-top: 26px;
+}
+.reading-paper blockquote {
+  margin: 16px 0;
+  padding: 16px;
+  background: var(--tint);
+}
 .project-map-head > h2 {
   flex-shrink: 0;
 }

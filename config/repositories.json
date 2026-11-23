@@ -2,24 +2,50 @@
   "catalogVersion": 1,
   "repositories": [
     {
-      "projectId": "pi", "repositoryId": "pi-mono", "name": "Pi Agent Harness",
-      "url": "https://github.com/agentic-labs/pi-mono", "phase": 1,
-      "observedRef": "refs/heads/main", "baselineCommit": "08dc60bc52d89d6823a9738cc90b1916e5e446e5"
+      "projectId": "pi",
+      "repositoryId": "pi-mono",
+      "name": "Pi Agent Harness",
+      "url": "https://github.com/agentic-labs/pi-mono",
+      "phase": 1,
+      "observedRef": "refs/heads/main",
+      "baselineCommit": "08dc60bc52d89d6823a9738cc90b1916e5e446e5"
     },
     {
-      "projectId": "codex", "repositoryId": "codex-cli", "name": "OpenAI Codex CLI",
-      "url": "https://github.com/openai/codex", "phase": 3,
-      "observedRef": "refs/heads/main", "baselineCommit": "d4014cb19d23614be39c0cf57d981e042ba0763a"
+      "projectId": "codex",
+      "repositoryId": "codex-cli",
+      "name": "OpenAI Codex CLI",
+      "url": "https://github.com/openai/codex",
+      "phase": 3,
+      "observedRef": "refs/heads/main",
+      "baselineCommit": "d4014cb19d23614be39c0cf57d981e042ba0763a"
     },
     {
-      "projectId": "deepseek", "repositoryId": "deepseek-harness", "name": "DeepSeek Harness",
-      "url": "https://github.com/DeepSeek-ai/deepseek-harness", "phase": 4,
-      "observedRef": "refs/heads/master", "baselineCommit": "2e39e70496aa02986ca6a820c5d497e816b69d7e"
+      "projectId": "deepseek",
+      "repositoryId": "deepseek-harness",
+      "name": "DeepSeek Harness",
+      "url": "https://github.com/DeepSeek-ai/deepseek-harness",
+      "phase": 4,
+      "observedRef": "refs/heads/master",
+      "baselineCommit": "2e39e70496aa02986ca6a820c5d497e816b69d7e"
     },
     {
-      "projectId": "claude", "repositoryId": "claude-code", "name": "Claude Code（公开仓库）",
-      "url": "https://github.com/anthropics/claude-code", "phase": 5,
-      "observedRef": "refs/heads/main", "baselineCommit": "b022ba6df88a5ddfbcedc39739a191c7e2ff5196"
+      "projectId": "claude",
+      "repositoryId": "claude-code",
+      "name": "Claude Code",
+      "url": "https://github.com/anthropics/claude-code",
+      "phase": 5,
+      "observedRef": "refs/heads/main",
+      "baselineCommit": "b022ba6df88a5ddfbcedc39739a191c7e2ff5196"
+    },
+    {
+      "projectId": "claude",
+      "repositoryId": "claude-agent-sdk-python",
+      "name": "Claude Agent SDK（Python 官方源码）",
+      "url": "https://github.com/anthropics/claude-agent-sdk-python",
+      "phase": 5,
+      "observedRef": "refs/heads/main",
+      "baselineCommit": "3184360393a92ca8a6ec7bbbdee571afd1ce1c56",
+      "sourceKind": "sdk-repo"
     }
   ]
 }

@@ -11,7 +11,7 @@ import {
   LoaderCircle,
 } from "lucide-react";
 import { api, message } from "./api";
-import { Failure, PageTitle, useAcademy, Version } from "./ui";
+import { Failure, PageTitle, useAcademy, Version, sourceLabels } from "./ui";
 import type { ImportJob, Project } from "../shared/types";
 
 function ImportForm({ source }: { source: Project }) {
@@ -163,7 +163,7 @@ function ImportForm({ source }: { source: Project }) {
     </form>
   );
 }
-function PublishForm({ projectId }: { projectId: string }) {
+function PublishForm({ projectId, repositoryId }: { projectId: string; repositoryId: string }) {
   const { refresh } = useAcademy(),
     [file, setFile] = useState<File | null>(null),
     [error, setError] = useState(""),
@@ -179,7 +179,7 @@ function PublishForm({ projectId }: { projectId: string }) {
       if (file.size > 2 * 1024 ** 2) throw new Error("课程文件超过 2 MiB。");
       // Preserve raw JSON so the server can detect duplicate property names.
       const { token } = await api<{ token: string }>("/session");
-      const r = await fetch("/api/releases?" + new URLSearchParams({ projectId }), {
+      const r = await fetch("/api/releases?" + new URLSearchParams({ projectId, repositoryId }), {
         method: "POST",
         headers: { "Content-Type": "application/json", "X-Academy-Token": token },
         body: await file.text(),
@@ -230,14 +230,17 @@ function PublishForm({ projectId }: { projectId: string }) {
 export function Repositories() {
   const { projects } = useAcademy(),
     [query, setQuery] = useSearchParams();
-  const source = projects.find((p) => p.projectId === query.get("project")) ?? projects[0];
+  const project = projects.find((p) => p.projectId === query.get("project")) ?? projects[0];
+  const selected = project.repositories.find(r => r.repositoryId === (query.get("repository") ?? project.repositoryId));
+  if (!selected) return <Failure text="找不到所选仓库，请重新选择项目来源。" />;
+  const source = { ...project, ...selected, editions: project.editions.filter(e => e.repositoryId === selected.repositoryId) };
   return (
     <>
       <PageTitle title="仓库管理" description="选择来源，将课程对应的 Git 提交保存在本机。" />
       <div className="repo-tabs" aria-label="仓库选择">
         {projects.map((p) => (
           <button
-            aria-pressed={p === source}
+            aria-pressed={p === project}
             key={p.projectId}
             onClick={() => setQuery({ project: p.projectId })}
           >
@@ -245,6 +248,11 @@ export function Repositories() {
           </button>
         ))}
       </div>
+      {project.repositories.length > 1 && <label className="sheet source-choice">本项目资料来源
+        <select aria-label="本项目资料来源" value={selected.repositoryId} onChange={e => setQuery({ project: project.projectId, repository: e.target.value })}>
+          {project.repositories.map(r => <option key={r.repositoryId} value={r.repositoryId}>{sourceLabels[r.sourceKind ?? "public-repo"]} · {r.name}</option>)}
+        </select>
+      </label>}
       <div className="two-col">
         <ImportForm key={source.repositoryId} source={source} />
         <section className="sheet source-details">
@@ -253,6 +261,7 @@ export function Repositories() {
             来源详情
           </h2>
           <dl>
+            <dt>来源类别</dt><dd>{sourceLabels[source.sourceKind ?? "public-repo"]}</dd>
             <dt>已登记仓库</dt>
             <dd>
               <code>{source.url.replace("https://github.com/", "")}</code>
@@ -274,7 +283,7 @@ export function Repositories() {
           )}
         </section>
       </div>
-      {source.available && <PublishForm key={source.projectId} projectId={source.projectId} />}
+      {source.available && <PublishForm key={source.repositoryId} projectId={source.projectId} repositoryId={source.repositoryId} />}
     </>
   );
 }

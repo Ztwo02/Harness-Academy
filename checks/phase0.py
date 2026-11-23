@@ -93,7 +93,7 @@ class DocumentChecks(unittest.TestCase):
             "deepseek": ("DeepSeek-ai/deepseek-harness", 4),
             "claude": ("anthropics/claude-code", 5),
         }
-        repositories = catalog["repositories"]
+        repositories = [r for r in catalog["repositories"] if r.get("sourceKind") != "sdk-repo"]
         self.assertCountEqual([r["projectId"] for r in repositories], expected.keys())
         self.assertEqual(len({r["repositoryId"] for r in repositories}), len(expected))
         sources = (ROOT / "docs" / "REPOSITORY_SOURCES.md").read_text(encoding="utf-8")
@@ -107,6 +107,29 @@ class DocumentChecks(unittest.TestCase):
         plan = (ROOT / "PLAN.md").read_text(encoding="utf-8")
         for phase in range(7):
             self.assertIn(f"| P{phase} ", plan)
+
+    def test_phase5_source_contracts(self):
+        repos = load_json(ROOT / "config/repositories.json")["repositories"]
+        sdk = [r for r in repos if r.get("sourceKind") == "sdk-repo"]
+        self.assertEqual(len(sdk), 1)
+        self.assertEqual(sdk[0]["projectId"], "claude")
+        self.assertEqual(sdk[0]["url"], "https://github.com/anthropics/claude-agent-sdk-python")
+        schema = load_json(SCHEMA_DIR / "course-v2.schema.json")
+        Draft202012Validator.check_schema(schema)
+        validator = Draft202012Validator(schema, format_checker=FormatChecker())
+        for name in ("claude-public.v1.json", "claude-sdk-python.v1.json"):
+            course = load_json(ROOT / "courses" / name)
+            validator.validate(course)
+            self.assertEqual(course["schemaVersion"], 2)
+            self.assertTrue(course["unverifiedQuestions"])
+        cards_schema = load_json(SCHEMA_DIR / "reading-card.schema.json")
+        Draft202012Validator.check_schema(cards_schema)
+        for card in load_json(ROOT / "materials" / "claude" / "cards.v1.json"):
+            Draft202012Validator(cards_schema, format_checker=FormatChecker()).validate(card)
+            snapshot = (ROOT / "materials" / "claude" / (card["sha256"] + ".txt")).read_bytes()
+            self.assertEqual(hashlib.sha256(snapshot).hexdigest(), card["sha256"])
+            self.assertIn(card["locator"], snapshot.decode("utf-8"))
+            self.assertIn(card["excerpt"], snapshot.decode("utf-8"))
 
 
 class CourseChecks(unittest.TestCase):

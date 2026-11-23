@@ -3,7 +3,7 @@ import type { DatabaseSync } from "node:sqlite";
 import { getLesson, getRelease } from "./courses.ts";
 import { requireThat, Problem } from "./base.ts";
 import { readFileAt, snapshotPath, sourceCorpus, verifyExcerpt } from "./git.ts";
-import type { SymbolCandidate, SymbolSearch, TutorCard } from "../shared/types.ts";
+import type { FileView, SymbolCandidate, SymbolSearch, TutorCard } from "../shared/types.ts";
 
 export async function findSymbol(
   db: DatabaseSync,
@@ -59,7 +59,7 @@ export async function findSymbol(
   let matchedLines = 0;
   const escaped = symbol.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const definition = new RegExp(
-    "(?:\\b(?:function|fn|struct|trait|mod|class|interface|type|enum|const|let|var)\\s+(?:mut\\s+)?" +
+    "(?:\\b(?:function|fn|def|struct|trait|mod|class|interface|type|enum|const|let|var)\\s+(?:mut\\s+)?" +
       escaped +
       "(?=[^\\w$]|$)|(?:^|\\s)(?:(?:private|public|protected|static|async|export)\\s+)*" +
       escaped +
@@ -137,15 +137,20 @@ export async function tutor(
       ].flatMap((c) => c.sourceRefs),
     ),
   );
+  const files = new Map<string, FileView>();
   for (const key of refs) {
     const e = course.sourceEvidence[key];
-    verifyExcerpt(await readFileAt(dir, course.commit, e.path), e);
+    const file = files.get(e.path) ?? await readFileAt(dir, course.commit, e.path);
+    files.set(e.path, file);
+    verifyExcerpt(file, e);
   }
   return {
     cards,
     evidence: course.sourceEvidence,
     commit: course.commit,
     version: course.version,
+    sourceKind: course.sourceKind ?? "public-repo",
+    unverifiedQuestions: course.unverifiedQuestions ?? [],
     notice: cards.length
       ? "本地已审稿课程摘编；结论保留事实、推断和建议标记。"
       : "现有教材没有覆盖这个符号或问题，请在原章登记待验证疑问。",

@@ -8,13 +8,13 @@ import { catalog } from "../server/base.ts";
 import { snapshotPath } from "../server/git.ts";
 import { git, launch, makeFixture } from "./fixture.ts";
 
-test("Phase 4 bundled catalog opens three independent projects and leaves Claude planned", async (t) => {
+test("Bundled catalog preserves four project entries when Claude gains an independent SDK source", async (t) => {
   const dir = mkdtempSync(path.join(tmpdir(), "academy-p4-catalog-")), app = await launch(dir);
   t.after(async () => { await app.close(); rmSync(dir, { recursive: true, force: true }); });
   const projects = (await app.call("/projects")).body;
-  assert.deepEqual(projects.map((p: { available: boolean }) => p.available), [true, true, true, false]);
+  assert.deepEqual(projects.map((p: { available: boolean }) => p.available), [true, true, true, true]);
   assert.ok(projects.every((p: { editions: unknown[] }) => p.editions.length === 0));
-  assert.equal((await app.call("/bundled-releases", "POST", { projectId: "claude" })).status, 404);
+  assert.equal((await app.call("/bundled-releases", "POST", { projectId: "claude" })).status, 422);
 });
 
 test("DeepSeek same-path symbols, citations and study records stay isolated from Pi/Codex across repair, update and restart", async (t) => {
@@ -84,7 +84,7 @@ test("DeepSeek same-path symbols, citations and study records stay isolated from
     assert.equal((await app.call(`/releases?projectId=${f.source.projectId}`, "POST", deep.course)).status, 422);
   }
   const planned = { ...deep.course, projectId: "claude", repositoryId: "claude-code" };
-  assert.equal((await app.call("/releases", "POST", planned)).body.code, "planned");
+  assert.equal((await app.call("/releases", "POST", planned)).body.code, "source_category");
   await app.call(`/releases/${drid}/lessons/${lesson}/progress`, "PUT", { state: "completed" });
   const oldReviews = await Promise.all(["pi", "codex", "deepseek"].map(async p => (await app.call(`/review?projectId=${p}`)).body));
   assert.equal(oldReviews[2].statistics.pending, 1);

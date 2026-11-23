@@ -18,7 +18,7 @@ import {
   Sparkles,
   Terminal,
 } from "lucide-react";
-import { chapterUrl, counts, Failure, PageTitle, ProgressState, useAcademy, Version } from "./ui";
+import { chapterUrl, counts, Failure, PageTitle, ProgressState, useAcademy, Version, sourceLabels } from "./ui";
 import type { Project } from "../shared/types";
 
 const names: Record<string, string> = {
@@ -241,6 +241,10 @@ export function ProjectPage() {
       <PageTitle title={names[p.projectId] ?? p.name} description={topics[p.projectId]}>
         <ProjectIcon id={p.projectId} />
       </PageTitle>
+      {p.projectId === "claude" && <section className="sheet source-scope">
+        <h2>按来源学习</h2><p>公开示例、官方 SDK 客户端与官方文档分别核验；二进制内部机制保留为待验证问题。</p>
+        <div className="button-row">{p.repositories.map(r => <Link className="button" key={r.repositoryId} to={"/repositories?" + new URLSearchParams({ project: p.projectId, repository: r.repositoryId })}>导入{sourceLabels[r.sourceKind ?? "public-repo"]}</Link>)}<Link className="button" to="/materials/claude">官方文档阅读卡</Link></div>
+      </section>}
       <section className="sheet">
         {p.projectId === "deepseek" && (
           <p className="notice">
@@ -259,7 +263,7 @@ export function ProjectPage() {
               <select value={edition.id} onChange={(e) => setQuery({ edition: e.target.value })}>
                 {p.editions.map((e) => (
                   <option key={e.id} value={e.id}>
-                    {e.title} · v{e.version}
+                    {p.repositories.length > 1 ? sourceLabels[e.sourceKind] + " · " : ""}{e.title} · v{e.version}
                   </option>
                 ))}
               </select>
@@ -272,6 +276,7 @@ export function ProjectPage() {
               {edition.title} · {counts(edition).done} / {edition.chapters.length} 章完成
             </p>
             <Version sha={edition.commit} />
+            {p.repositories.length > 1 && <p className="inline-meta">{sourceLabels[edition.sourceKind]} · {edition.repositoryId}</p>}
             {edition.chapters.map((l, i) => (
               <Link className="chapter-line" key={l.id} to={chapterUrl(edition.id, l.id)}>
                 <span className="chapter-no">{String(i + 1).padStart(2, "0")}</span>

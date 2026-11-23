@@ -296,7 +296,7 @@ export default function Reader() {
       )}
       <PageTitle
         title="源码阅读器"
-        description={edition ? edition.title + " · v" + edition.version : undefined}
+        description={edition ? edition.title + " · v" + edition.version + " · " + edition.repositoryId + (edition.sourceKind === "sdk-repo" ? "（官方 SDK）" : "（公开仓库）") : undefined}
       >
         {edition && (
           <div>
@@ -322,7 +322,7 @@ export default function Reader() {
           <p>
             <Link
               className="text-link"
-              to={"/repositories?" + new URLSearchParams({ project: project?.projectId ?? "" })}
+              to={"/repositories?" + new URLSearchParams({ project: project?.projectId ?? "", repository: edition?.repositoryId ?? "" })}
             >
               重新导入固定版本
               <ArrowRight size={15} />

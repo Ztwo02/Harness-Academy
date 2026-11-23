@@ -14,6 +14,7 @@ const ajv = new Ajv2020({ ownProperties: true });
 addFormats(ajv);
 const schema = JSON.parse(readFileSync(path.join(root, "docs/schema/course.schema.json"), "utf8"));
 const matchesSchema = ajv.compile<Course>(schema);
+const matchesV2 = ajv.compile<Course>(JSON.parse(readFileSync(path.join(root, "docs/schema/course-v2.schema.json"), "utf8")));
 export const piCourse = parseJson(
   readFileSync(path.join(root, "courses/pi-foundations.v1.json"), "utf8"),
 ) as Course;
@@ -27,7 +28,9 @@ export const codexCourse = parseJson(
 export const deepseekCourse = parseJson(
   readFileSync(path.join(root, "courses/deepseek-foundations.v1.json"), "utf8"),
 ) as Course;
-export const bundledCourses = [...piCourses, codexCourse, deepseekCourse];
+export const claudeCourse = parseJson(readFileSync(path.join(root, "courses/claude-public.v1.json"), "utf8")) as Course;
+export const claudeSdkCourse = parseJson(readFileSync(path.join(root, "courses/claude-sdk-python.v1.json"), "utf8")) as Course;
+export const bundledCourses = [...piCourses, codexCourse, deepseekCourse, claudeCourse, claudeSdkCourse];
 
 export function getRelease(db: DatabaseSync, id: number) {
   const row = db.prepare("SELECT document FROM course_release WHERE id=?").get(id);
@@ -56,6 +59,8 @@ function reviewLesson(course: Course, lesson: Lesson, previous: Set<string>) {
     ...lesson.exercises.map((x) => x.explanation),
   ];
   for (const claim of claims) {
+    if (course.schemaVersion === 2)
+      check(claim.sourceCategory === course.sourceKind, "断言来源类别与本版仓库不同；内部机制请登记为待验证问题。");
     for (const id of claim.sourceRefs) refs.add(id);
     for (const id of claim.materialRefs ?? [])
       check(Object.hasOwn(course.materials, id), "缺少资料：" + id);
@@ -85,15 +90,16 @@ function reviewLesson(course: Course, lesson: Lesson, previous: Set<string>) {
 }
 
 export async function publish(db: DatabaseSync, dataDir: string, input: unknown) {
+  const validate = (input as { schemaVersion?: unknown } | null)?.schemaVersion === 2 ? matchesV2 : matchesSchema;
   requireThat(
-    matchesSchema(input),
+    validate(input),
     422,
     "course_schema",
-    "课程字段有误：" + ajv.errorsText(matchesSchema.errors),
+    "课程字段有误：" + ajv.errorsText(validate.errors),
   );
   const course = input;
   const repository = db
-    .prepare("SELECT project_id,public_url FROM repository WHERE id=?")
+    .prepare("SELECT project_id,public_url,source_kind FROM repository WHERE id=?")
     .get(course.repositoryId);
   requireThat(
     repository?.project_id === course.projectId,
@@ -102,11 +108,17 @@ export async function publish(db: DatabaseSync, dataDir: string, input: unknown)
     "课程项目与主仓库不匹配。",
   );
   requireThat(
-    ["pi", "codex", "deepseek"].includes(course.projectId),
+    ["pi", "codex", "deepseek", "claude"].includes(course.projectId),
     422,
     "planned",
-    "当前阶段仅开放 Pi、Codex 和 DeepSeek Harness 课程。",
+    "该项目尚未开放课程。",
   );
+  requireThat(course.projectId !== "claude" || course.schemaVersion === 2, 422, "source_category", "Claude 课程须使用 v2 格式明确来源类别。");
+  if (course.schemaVersion === 2) {
+    requireThat(course.sourceKind === repository.source_kind, 422, "source_category", "课程来源类别与登记仓库不符。");
+    const questions = course.unverifiedQuestions ?? [];
+    requireThat(new Set(questions.map(q => q.id)).size === questions.length, 422, "course_reference", "待验证问题 ID 重复。");
+  }
   const dir = snapshotPath(db, dataDir, course.repositoryId, course.commit);
   const ids = new Set<string>(),
     links = new Map<string, Set<string>>();

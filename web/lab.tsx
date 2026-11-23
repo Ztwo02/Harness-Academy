@@ -4,9 +4,11 @@ import { Play, Pause, SkipForward, RotateCcw } from "lucide-react";
 import { LabPlayer, type LabInput, type LabRun, type LabScenario } from "../shared/lab";
 import type { Claim, Evidence, TutorCard } from "../shared/types";
 import { api, message, useData } from "./api";
-import { chapterUrl, evidenceUrl, Failure, Loading, PageTitle, useAcademy, Version } from "./ui";
+import { chapterUrl, evidenceUrl, Failure, Loading, PageTitle, useAcademy, Version, PendingQuestions, sourceLabels } from "./ui";
 
 interface TutorResponse {
+  sourceKind: "public-repo" | "sdk-repo";
+  unverifiedQuestions: import("../shared/types").UnverifiedQuestion[];
   cards: TutorCard[];
   evidence: Record<string, Evidence>;
   notice: string;
@@ -208,6 +210,7 @@ function TutorClaims({
       {claims.map((c, i) => (
         <li key={i}>
           <span className="claim-kind">
+            {c.sourceCategory === "public-repo" ? "公开仓库 · " : c.sourceCategory === "sdk-repo" ? "官方 SDK · " : ""}
             {{ fact: "源码事实", inference: "推断", advice: "建议" }[c.kind]}
           </span>
           {c.text}
@@ -287,8 +290,10 @@ function Tutor({
       ) : (
         <>
           <p role="status" className="notice">
+            {projectId === "claude" && sourceLabels[result.data.sourceKind] + " · "}
             {result.data.notice}
           </p>
+          <PendingQuestions questions={result.data.unverifiedQuestions} />
           {result.data.cards.map((card) => (
             <article className="lesson-paper tutor-card" key={card.lessonId}>
               <h2>{card.title}</h2>
@@ -380,6 +385,7 @@ export function Lab() {
     try {
       const r = await api<{ releaseId: number }>("/bundled-releases", "POST", {
         projectId: project.projectId,
+        ...(edition ? { repositoryId: edition.repositoryId } : {}),
       });
       refresh();
       setParams({ releaseId: String(r.releaseId) });

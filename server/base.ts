@@ -104,9 +104,10 @@ export function openStore(dir: string) {
     transaction(db, () => {
       for (const src of catalog) {
         db.prepare("INSERT OR IGNORE INTO project VALUES (?,?,?)").run(src.projectId, src.name, src.phase);
-        db.prepare("INSERT OR IGNORE INTO repository VALUES (?,?,'public-repo',?)").run(
+        db.prepare("INSERT OR IGNORE INTO repository VALUES (?,?,?,?)").run(
           src.repositoryId,
           src.projectId,
+          src.sourceKind ?? "public-repo",
           src.url,
         );
       }
