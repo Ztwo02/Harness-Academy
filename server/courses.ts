@@ -21,6 +21,10 @@ export const piCourses = [
   piCourse,
   parseJson(readFileSync(path.join(root, "courses/pi-foundations.v2.json"), "utf8")) as Course,
 ];
+export const codexCourse = parseJson(
+  readFileSync(path.join(root, "courses/codex-foundations.v1.json"), "utf8"),
+) as Course;
+export const bundledCourses = [...piCourses, codexCourse];
 
 export function getRelease(db: DatabaseSync, id: number) {
   const row = db.prepare("SELECT document FROM course_release WHERE id=?").get(id);
@@ -94,7 +98,12 @@ export async function publish(db: DatabaseSync, dataDir: string, input: unknown)
     "repository",
     "课程项目与主仓库不匹配。",
   );
-  requireThat(course.projectId === "pi", 422, "planned", "当前阶段仅开放 Pi 课程。");
+  requireThat(
+    ["pi", "codex"].includes(course.projectId),
+    422,
+    "planned",
+    "当前阶段仅开放 Pi 和 Codex 课程。",
+  );
   const dir = snapshotPath(db, dataDir, course.repositoryId, course.commit);
   const ids = new Set<string>(),
     links = new Map<string, Set<string>>();
@@ -110,7 +119,7 @@ export async function publish(db: DatabaseSync, dataDir: string, input: unknown)
         material.url.startsWith(String(repository.public_url) + "/"),
       422,
       "material_origin",
-      id + "：Pi 补充资料须来自登记的项目仓库。",
+      id + "：补充资料须来自本版登记的项目仓库。",
     );
     const bytes = await readFile(path.join(dataDir, "materials", material.sha256)).catch(
       () => null,

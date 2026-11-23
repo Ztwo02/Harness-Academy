@@ -1,0 +1,932 @@
+{
+  "schemaVersion": 1,
+  "projectId": "codex",
+  "repositoryId": "codex-cli",
+  "commit": "d4014cb19d23614be39c0cf57d981e042ba0763a",
+  "courseId": "codex-foundations",
+  "version": 1,
+  "title": "Codex 架构与核心执行路径",
+  "sourceEvidence": {
+    "entry": {
+      "path": "codex-rs/exec/src/lib.rs",
+      "symbol": "run_main",
+      "startLine": 284,
+      "endLine": 307,
+      "blobOid": "f1ac42c31464ad9c0ccfd2868af40f168e743c10",
+      "excerptSha256": "a59aa055e13bb41dd05523b08970ceae0d4fc233dac2f0c64a3c077ace58cfc2"
+    },
+    "cli-route": {
+      "path": "codex-rs/cli/src/main.rs",
+      "symbol": null,
+      "startLine": 1207,
+      "endLine": 1227,
+      "blobOid": "aeb38648aeba3dfe447cba2246034e4aea723c70",
+      "excerptSha256": "df55fa0319605ac377186396a333c229661df68267d9ddc46d7f5de5e4308a3a"
+    },
+    "embedded-server": {
+      "path": "codex-rs/exec/src/lib.rs",
+      "symbol": null,
+      "startLine": 1120,
+      "endLine": 1128,
+      "blobOid": "f1ac42c31464ad9c0ccfd2868af40f168e743c10",
+      "excerptSha256": "1f48315757adb1e4ace4cd6269777988c3a11aa031df1d6ef56ec49005915d3b"
+    },
+    "thread-start": {
+      "path": "codex-rs/exec/src/lib.rs",
+      "symbol": "start_thread",
+      "startLine": 1616,
+      "endLine": 1644,
+      "blobOid": "f1ac42c31464ad9c0ccfd2868af40f168e743c10",
+      "excerptSha256": "af987fb3900626fa14a91a79763e926a4e41a35838a27d40cccd8dbaa31d2806"
+    },
+    "turn-request": {
+      "path": "codex-rs/exec/src/lib.rs",
+      "symbol": null,
+      "startLine": 1370,
+      "endLine": 1408,
+      "blobOid": "f1ac42c31464ad9c0ccfd2868af40f168e743c10",
+      "excerptSha256": "eef9dde87b3b13a87188e6b8172c3c8c1af1cafac1e295448d54bbd41afad12b"
+    },
+    "request-route": {
+      "path": "codex-rs/app-server/src/message_processor.rs",
+      "symbol": null,
+      "startLine": 1850,
+      "endLine": 1863,
+      "blobOid": "503c41365f8ea116d8e0ff5540a1c5fe25fe9f76",
+      "excerptSha256": "b1dc0972cffcc9cffd8cf3fa723cedbd685d503ae8bdec71c640d007496064d9"
+    },
+    "turn-start": {
+      "path": "codex-rs/app-server/src/request_processors/turn_processor.rs",
+      "symbol": "turn_start",
+      "startLine": 177,
+      "endLine": 194,
+      "blobOid": "92af920ebffb295f3cad1ee6e183e12cfc4f8b78",
+      "excerptSha256": "534de766ce50fb185456fa2b96bbf57771bae5710577016e1f36ab7be31cff02"
+    },
+    "turn-submit": {
+      "path": "codex-rs/app-server/src/request_processors/turn_processor.rs",
+      "symbol": null,
+      "startLine": 727,
+      "endLine": 747,
+      "blobOid": "92af920ebffb295f3cad1ee6e183e12cfc4f8b78",
+      "excerptSha256": "00fcf1b4fb03a3d05ddf114c05a117c0b2fd362429f3d4171add3b6d632904b7"
+    },
+    "thread-api": {
+      "path": "codex-rs/core/src/codex_thread.rs",
+      "symbol": "start_or_steer_turn",
+      "startLine": 630,
+      "endLine": 636,
+      "blobOid": "03583c3436d169c0cacc955fe850ad26a255c1cc",
+      "excerptSha256": "5360ac55e2d40a9f1b6b0363eaa5fef5cf99f4576f8e25ed768aa8a75dfa5591"
+    },
+    "thread-forward": {
+      "path": "codex-rs/core/src/codex_thread.rs",
+      "symbol": "submit_turn_input_with_mode",
+      "startLine": 805,
+      "endLine": 844,
+      "blobOid": "03583c3436d169c0cacc955fe850ad26a255c1cc",
+      "excerptSha256": "bcff59648132a5506b455d6ba8af7de7d55b2835e7e1a3238a757a27bea0646d"
+    },
+    "submission": {
+      "path": "codex-rs/core/src/session/mod.rs",
+      "symbol": "submit_turn_input",
+      "startLine": 1266,
+      "endLine": 1296,
+      "blobOid": "f51a912fef63468219c201566034705601872fc2",
+      "excerptSha256": "220bc74af4bf449cce45f398bf1258e352855864bc83d4cd3fc137102ffc3df7"
+    },
+    "queue-dispatch": {
+      "path": "codex-rs/core/src/session/handlers.rs",
+      "symbol": null,
+      "startLine": 649,
+      "endLine": 665,
+      "blobOid": "98633f60ca25065f65ce457cfbb0bb0e3ba74d5d",
+      "excerptSha256": "65f69c68642a4b4a92dd913399ea0476e160c4aab14b0f7b782a45172f0ef49b"
+    },
+    "input-dispatch": {
+      "path": "codex-rs/core/src/session/turn_input.rs",
+      "symbol": null,
+      "startLine": 331,
+      "endLine": 337,
+      "blobOid": "078e2ddd9114f61fa8c46884f57327a3a8889dc6",
+      "excerptSha256": "ddae8dd83f06e989cc26f1f6e5492477c7859de2e27a4a9a1d42830caefacf9b"
+    },
+    "input-admission": {
+      "path": "codex-rs/core/src/session/turn_input.rs",
+      "symbol": "start_or_steer",
+      "startLine": 468,
+      "endLine": 494,
+      "blobOid": "078e2ddd9114f61fa8c46884f57327a3a8889dc6",
+      "excerptSha256": "a71fc0f8b842a1ace03fab1f2fbe244f4f8dd9250a3dab7dd315cbb127c767e0"
+    },
+    "regular-spawn": {
+      "path": "codex-rs/core/src/session/turn_input.rs",
+      "symbol": null,
+      "startLine": 579,
+      "endLine": 598,
+      "blobOid": "078e2ddd9114f61fa8c46884f57327a3a8889dc6",
+      "excerptSha256": "60adb0462507cc4a47fc62730a41f3a6b6c09ba34fafe9c32b43725126f470dd"
+    },
+    "regular-turn": {
+      "path": "codex-rs/core/src/tasks/regular.rs",
+      "symbol": "run_turns",
+      "startLine": 140,
+      "endLine": 181,
+      "blobOid": "2ed7716d2b54145a7f9a22732914a5eb76db08a3",
+      "excerptSha256": "45b4a2edb4e353c8ad71b290c8930a0d2b9475b9a7daf884fe177a9c07625a3e"
+    },
+    "turn-entry": {
+      "path": "codex-rs/core/src/session/turn.rs",
+      "symbol": "run_turn",
+      "startLine": 227,
+      "endLine": 249,
+      "blobOid": "69cf16e774791a1d9b11e38768391e33f027645b",
+      "excerptSha256": "10adf0bd362dbf5a03df03824caa0ae24dd5255d1cdb17068092811b931935a7"
+    },
+    "sampling-input": {
+      "path": "codex-rs/core/src/session/turn.rs",
+      "symbol": null,
+      "startLine": 676,
+      "endLine": 693,
+      "blobOid": "69cf16e774791a1d9b11e38768391e33f027645b",
+      "excerptSha256": "5cd9a7e75809d8c1d77129821364f54722b63991c4d91e64f599af73b1c16485"
+    },
+    "continuation": {
+      "path": "codex-rs/core/src/session/turn.rs",
+      "symbol": null,
+      "startLine": 704,
+      "endLine": 757,
+      "blobOid": "69cf16e774791a1d9b11e38768391e33f027645b",
+      "excerptSha256": "7322ff466cfa28755dd334e719a2086ab63f96c8d103283f5ab4db93835badaf"
+    },
+    "stop-gate": {
+      "path": "codex-rs/core/src/session/turn.rs",
+      "symbol": null,
+      "startLine": 872,
+      "endLine": 889,
+      "blobOid": "69cf16e774791a1d9b11e38768391e33f027645b",
+      "excerptSha256": "ed7b5190ca4fe3a6f8bbd2c7b0afcdbcd5cb5d86fcf51bbe8ae2dfbae4c45dd5"
+    },
+    "output-routing": {
+      "path": "codex-rs/core/src/stream_events_utils.rs",
+      "symbol": "handle_output_item_done",
+      "startLine": 351,
+      "endLine": 422,
+      "blobOid": "5f4ac376e000c5cd09a35e2f690c1680f42e2c6e",
+      "excerptSha256": "6e0ac27be65a895fa6ba06c6ac91f8cbc885dac3d14e1f828228dee4054274a1"
+    },
+    "tool-errors": {
+      "path": "codex-rs/core/src/stream_events_utils.rs",
+      "symbol": null,
+      "startLine": 470,
+      "endLine": 503,
+      "blobOid": "5f4ac376e000c5cd09a35e2f690c1680f42e2c6e",
+      "excerptSha256": "ec39a5c4a24c6fa5a130bde095646009b4f9af4df3589629ae7b34456bddebed"
+    },
+    "tool-runtime": {
+      "path": "codex-rs/core/src/tools/parallel.rs",
+      "symbol": "handle_tool_call",
+      "startLine": 148,
+      "endLine": 199,
+      "blobOid": "79e4b3d455338958c7f0b5fd12ee37969ebf1a14",
+      "excerptSha256": "af46bcf9d1d378565b9035398b8d3a413bdeb519354f7223edf87f59d0d37c45"
+    },
+    "runtime-dispatch": {
+      "path": "codex-rs/core/src/tools/parallel.rs",
+      "symbol": null,
+      "startLine": 384,
+      "endLine": 396,
+      "blobOid": "79e4b3d455338958c7f0b5fd12ee37969ebf1a14",
+      "excerptSha256": "b725add55befd9c54f6f9e6860ce591d7657cbb11e1c7bac5fa2efa54acfed08"
+    },
+    "tool-dispatch": {
+      "path": "codex-rs/core/src/tools/router.rs",
+      "symbol": "dispatch_tool_call_with_state",
+      "startLine": 388,
+      "endLine": 448,
+      "blobOid": "a19a1d32de175d219bc18198bc9ed30fa1ec860e",
+      "excerptSha256": "b5d33ec3e3aa99655843ed8e0d2653168aa182f5a22cb607a000f7bac25757ac"
+    },
+    "tool-drain": {
+      "path": "codex-rs/core/src/session/turn.rs",
+      "symbol": "drain_in_flight",
+      "startLine": 3053,
+      "endLine": 3080,
+      "blobOid": "69cf16e774791a1d9b11e38768391e33f027645b",
+      "excerptSha256": "80fd5114edf93356d35af94ce509dc9e0cb5d092b075163eeb98fdea2ae86657"
+    },
+    "output-future": {
+      "path": "codex-rs/core/src/session/turn.rs",
+      "symbol": null,
+      "startLine": 3529,
+      "endLine": 3547,
+      "blobOid": "69cf16e774791a1d9b11e38768391e33f027645b",
+      "excerptSha256": "926393c6cc742f3bcf39860fddecbe3a32eae0ba1b87999f9cce674492c01031"
+    },
+    "tool-settlement": {
+      "path": "codex-rs/core/src/session/turn.rs",
+      "symbol": null,
+      "startLine": 4000,
+      "endLine": 4030,
+      "blobOid": "69cf16e774791a1d9b11e38768391e33f027645b",
+      "excerptSha256": "0b9d0dc69c592bbcaf598ffc26ce6bda7a5a1ae00d19f20839c817590db6b48f"
+    }
+  },
+  "materials": {},
+  "lessons": [
+    {
+      "id": "architecture",
+      "title": "从 codex exec 进入核心运行时",
+      "objectives": [
+        "指出 CLI、exec 客户端、app-server 与 core Session 的职责边界。",
+        "在固定提交中从入口追到 turn/start 请求和核心输入提交。"
+      ],
+      "priorKnowledge": [
+        "会读函数调用和异步流程；了解 Rust 模块、Arc 与 Result 的基本写法。"
+      ],
+      "prerequisiteLessons": [],
+      "concepts": [
+        {
+          "kind": "fact",
+          "text": "本章选择本机、非交互的 codex exec 普通用户任务路径。CLI 的 Exec 分支整理参数后调用 codex_exec::run_main；本章不把该路径推广为默认 TUI 或远端执行路径。",
+          "sourceRefs": [
+            "cli-route",
+            "entry"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "本机 exec 使用 InProcessAppServerClient 启动内嵌 app-server。exec 客户端发送 thread/start 和 turn/start 请求，而核心 Session 在服务器后方处理输入与轮次。",
+          "sourceRefs": [
+            "embedded-server",
+            "thread-start",
+            "turn-request",
+            "turn-submit"
+          ]
+        }
+      ],
+      "sourceReading": [
+        "cli-route",
+        "entry",
+        "embedded-server",
+        "thread-start",
+        "turn-request",
+        "request-route",
+        "turn-start",
+        "turn-submit",
+        "thread-api",
+        "thread-forward",
+        "submission"
+      ],
+      "keySymbols": [
+        {
+          "name": "run_main",
+          "sourceRef": "entry"
+        },
+        {
+          "name": "start_thread",
+          "sourceRef": "thread-start"
+        },
+        {
+          "name": "turn_start",
+          "sourceRef": "turn-start"
+        },
+        {
+          "name": "start_or_steer_turn",
+          "sourceRef": "thread-api"
+        },
+        {
+          "name": "submit_turn_input",
+          "sourceRef": "submission"
+        }
+      ],
+      "execution": [
+        {
+          "kind": "fact",
+          "text": "CLI 的 Exec 分支继承公共选项并把配置传给 run_main，客户端按配置准备后建立内嵌服务连接。",
+          "sourceRefs": [
+            "cli-route",
+            "embedded-server"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "start_thread 发送 ClientRequest::ThreadStart。本章研究新任务的普通路径；恢复、分叉和远端路径需要各自继续取证。",
+          "sourceRefs": [
+            "thread-start"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "UserTurn 分支构造 TurnStartParams，将输入项和 thread_id 放入 ClientRequest::TurnStart。",
+          "sourceRefs": [
+            "turn-request"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "app-server 将 TurnStart 路由给 turn_start，经 turn_start_inner 构造 TurnInputRequest，并调用 thread.start_or_steer_turn。",
+          "sourceRefs": [
+            "request-route",
+            "turn-start",
+            "turn-submit"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "CodexThread 先解析输入并检查启动容量，再调用 SessionIo.submit_turn_input，把请求包装成 SubmissionOp::TurnInput 交给会话队列并等待应答。",
+          "sourceRefs": [
+            "thread-api",
+            "thread-forward",
+            "submission"
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "kind": "fact",
+          "text": "已核对的前半条调用链是 CLI Exec → codex_exec::run_main → 内嵌服务 → TurnStart → turn_start → turn_start_inner。",
+          "sourceRefs": [
+            "cli-route",
+            "entry",
+            "embedded-server",
+            "turn-request",
+            "request-route",
+            "turn-start"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "后半条提交链是 start_or_steer_turn → submit_turn_input_with_mode → submit_resolved_turn_input_with_mode → SessionIo.submit_turn_input。",
+          "sourceRefs": [
+            "thread-api",
+            "thread-forward",
+            "submission"
+          ]
+        }
+      ],
+      "scenario": "教学场景：开发者希望用本机 codex exec 解释仓库内一个纯函数，并在终端获得答复。本平台只阅读这个请求的公开实现，不运行 Codex、不发送模型请求，也不读取你的凭据。命令、输入和目标用于理解调用关系。",
+      "designRationale": [
+        {
+          "kind": "inference",
+          "text": "exec 把任务提交与核心轮次分开，说明终端交互和运行时通过请求边界协作；这是从内嵌客户端及提交接口推导的职责划分。",
+          "sourceRefs": [
+            "turn-request",
+            "turn-submit",
+            "submission"
+          ]
+        },
+        {
+          "kind": "advice",
+          "text": "独立设计 Harness 时，可先把用户入口、任务提交和执行循环分层，再决定是否需要服务协议；不要仅凭入口函数名猜测整条路径。",
+          "sourceRefs": [
+            "cli-route",
+            "turn-request",
+            "submission"
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "question": "codex exec 直接在 CLI main 里执行 Agent 循环吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "这条本机路径先进入 exec 客户端，经内嵌 app-server 的请求进入核心会话；CLI 的分发片段本身没有执行核心采样循环。",
+            "sourceRefs": [
+              "cli-route",
+              "embedded-server",
+              "turn-request",
+              "turn-submit"
+            ]
+          }
+        },
+        {
+          "question": "这里讲的是 Codex 桌面应用全部内部实现吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "不是。本章证据只覆盖 openai/codex 公开仓库这一固定提交中的本机 exec 普通任务路径，不能据此推出桌面应用或服务端的全部实现。",
+            "sourceRefs": [
+              "cli-route",
+              "entry",
+              "embedded-server"
+            ]
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "entry-route",
+          "kind": "single-choice",
+          "prompt": "本课程固定版本的本机 exec 用户输入经哪个边界进入服务器任务处理？",
+          "options": [
+            {
+              "id": "request",
+              "text": "ClientRequest::TurnStart，携带 thread_id 与输入项"
+            },
+            {
+              "id": "direct",
+              "text": "CLI main 直接调用 run_turn"
+            },
+            {
+              "id": "pi",
+              "text": "Pi 的 agentLoop"
+            }
+          ],
+          "correctOption": "request",
+          "explanation": {
+            "kind": "fact",
+            "text": "UserTurn 分支向客户端发送 TurnStart，请求在 app-server 中进入 turn_start，再提交给核心 thread。",
+            "sourceRefs": [
+              "turn-request",
+              "request-route",
+              "turn-submit"
+            ]
+          }
+        }
+      ],
+      "summary": [
+        {
+          "kind": "fact",
+          "text": "读入口要同时查看客户端请求和服务器消费位置，才能解释用户输入怎样到达核心。",
+          "sourceRefs": [
+            "turn-request",
+            "turn-submit",
+            "submission"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "每次学习都固定到本课程的 Codex 仓库与提交；本章没有引用其他项目的实现。",
+          "sourceRefs": [
+            "cli-route",
+            "entry"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "turn-loop",
+      "title": "一次用户任务怎样驱动模型轮次？",
+      "objectives": [
+        "从提交队列追踪到 RegularTask 和 run_turn。",
+        "指出历史进入模型请求的位置，以及后续工作影响继续采样的条件。"
+      ],
+      "priorKnowledge": [
+        "已理解客户端与核心之间的输入提交边界；了解队列、Future 与取消令牌。"
+      ],
+      "prerequisiteLessons": [
+        "architecture"
+      ],
+      "concepts": [
+        {
+          "kind": "fact",
+          "text": "submit_turn_input 用 oneshot 应答配合会话提交队列；队列消费 TurnInput 时调用 turn_input::handle，再把处理结果发回 reply。",
+          "sourceRefs": [
+            "submission",
+            "queue-dispatch"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "普通任务进入 RegularTask。run_turns 调用 run_turn，并在终止错误、预算耗尽、采样中断或没有待处理输入等条件下结束这层任务处理。",
+          "sourceRefs": [
+            "regular-spawn",
+            "regular-turn"
+          ]
+        }
+      ],
+      "sourceReading": [
+        "submission",
+        "queue-dispatch",
+        "input-dispatch",
+        "input-admission",
+        "regular-spawn",
+        "regular-turn",
+        "turn-entry",
+        "sampling-input",
+        "continuation",
+        "stop-gate"
+      ],
+      "keySymbols": [
+        {
+          "name": "submit_turn_input",
+          "sourceRef": "submission"
+        },
+        {
+          "name": "start_or_steer",
+          "sourceRef": "input-admission"
+        },
+        {
+          "name": "run_turns",
+          "sourceRef": "regular-turn"
+        },
+        {
+          "name": "run_turn",
+          "sourceRef": "turn-entry"
+        }
+      ],
+      "execution": [
+        {
+          "kind": "fact",
+          "text": "会话队列取出 SubmissionOp::TurnInput，将 request、mode 和提交 ID 交给输入处理模块。",
+          "sourceRefs": [
+            "queue-dispatch",
+            "input-dispatch"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "start_or_steer 区分输入类别并提取线程设置与启动选项；普通新任务的接纳分支把显式输入整理为 task_input，随后 spawn_task 创建 RegularTask。正在运行时的 steering 是另一条分支，不等于每条输入都新建任务。",
+          "sourceRefs": [
+            "input-admission",
+            "regular-spawn"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "RegularTask::run_turns 以取消子令牌调用 run_turn；run_turn 中克隆当前历史作为 sampling_request_input，交给 run_sampling_request。",
+          "sourceRefs": [
+            "regular-turn",
+            "turn-entry",
+            "sampling-input"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "采样结果中 model_needs_follow_up 与待处理输入共同参与 needs_follow_up 的计算。该片段还先处理采样结果状态与异步钩子，不能把继续条件简化成只看是否有工具调用。",
+          "sourceRefs": [
+            "continuation"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "没有后续工作时会进入停止钩子和工作状态检查。这个版本的停止边界涉及这些条件，本章没有把某一条 assistant 消息或单个通知等同于任务全部结算。",
+          "sourceRefs": [
+            "stop-gate"
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "kind": "fact",
+          "text": "提交消费调用 turn_input::handle；本章跟随 start_or_steer 的普通新任务分支进入 RegularTask，再由 run_turns 调用 run_turn。",
+          "sourceRefs": [
+            "queue-dispatch",
+            "input-admission",
+            "regular-spawn",
+            "regular-turn",
+            "input-dispatch"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "run_turn 调用 run_sampling_request，传入 clone_history 得到的历史；完成后的继续条件从采样结果及输入队列派生。",
+          "sourceRefs": [
+            "sampling-input",
+            "continuation"
+          ]
+        }
+      ],
+      "scenario": "教学场景：用户要求解释一个函数，模型需要先读取文件才能回答。一次用户任务可能包含多次模型请求，读取结果进入历史后再请求模型。中途追加用户输入时，是否继续及何时处理，还受输入队列与任务状态影响。这里不模拟真实模型。",
+      "designRationale": [
+        {
+          "kind": "inference",
+          "text": "把任务层的 run_turns 与采样层的后续工作分开，可以解释“一个用户任务不等于一次模型响应”；这是从两层调用与继续条件推导出的理解方式。",
+          "sourceRefs": [
+            "regular-turn",
+            "sampling-input",
+            "continuation"
+          ]
+        },
+        {
+          "kind": "advice",
+          "text": "调试循环时分别记录任务 ID、模型响应和工具结果；先解释自己追踪的是哪一层停止条件，再下结论。",
+          "sourceRefs": [
+            "regular-turn",
+            "continuation",
+            "stop-gate"
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "question": "一个用户任务只调用一次模型吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "不一定。run_turn 使用历史构造采样请求，并根据采样后续工作、待处理输入及其他运行条件决定后续处理。",
+            "sourceRefs": [
+              "sampling-input",
+              "continuation"
+            ]
+          }
+        },
+        {
+          "question": "没有工具调用就一定立刻返回吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "不能这样断言。needs_follow_up 还考虑待处理输入；没有后续工作时仍有停止钩子和工作状态检查。",
+            "sourceRefs": [
+              "continuation",
+              "stop-gate"
+            ]
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "request-history",
+          "kind": "single-choice",
+          "prompt": "run_turn 在哪里取得本次模型采样的历史输入？",
+          "options": [
+            {
+              "id": "history",
+              "text": "sess.clone_history()，随后传入 run_sampling_request"
+            },
+            {
+              "id": "cli",
+              "text": "再次解析 CLI 参数"
+            },
+            {
+              "id": "tool",
+              "text": "每个工具自行读取终端历史"
+            }
+          ],
+          "correctOption": "history",
+          "explanation": {
+            "kind": "fact",
+            "text": "该片段先 clone_history，再把 sampling_request_input 作为参数传入 run_sampling_request。",
+            "sourceRefs": [
+              "sampling-input"
+            ]
+          }
+        }
+      ],
+      "summary": [
+        {
+          "kind": "fact",
+          "text": "用户提交 → 会话队列 → 输入接纳 → RegularTask → run_turn → 采样请求，是本章的阅读路线。",
+          "sourceRefs": [
+            "submission",
+            "queue-dispatch",
+            "regular-spawn",
+            "regular-turn",
+            "sampling-input"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "停止与继续涉及模型后续工作、待处理输入、预算、中断及钩子，当前证据支持的是带条件的路径。",
+          "sourceRefs": [
+            "regular-turn",
+            "continuation",
+            "stop-gate"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tool-results",
+      "title": "工具调用与结果怎样回到模型？",
+      "objectives": [
+        "从完成的模型输出项追到工具 Future、路由和历史回填。",
+        "区分 RespondToModel 与 Fatal 错误，避免把所有工具失败都理解为同一种停止。"
+      ],
+      "priorKnowledge": [
+        "已理解 run_turn 的采样输入和后续工作；了解 Future 队列与 Result 分支。"
+      ],
+      "prerequisiteLessons": [
+        "turn-loop"
+      ],
+      "concepts": [
+        {
+          "kind": "fact",
+          "text": "handle_output_item_done 让 tool_router 识别输出项；识别为工具调用时记录调用项，创建 tool_future，并标记 needs_follow_up。",
+          "sourceRefs": [
+            "output-routing"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "工具运行时把正常结果转换成 ResponseItemEnvelope；非 Fatal 的调用错误可以被封装为失败响应，Fatal 走错误返回。",
+          "sourceRefs": [
+            "tool-runtime"
+          ]
+        }
+      ],
+      "sourceReading": [
+        "output-routing",
+        "output-future",
+        "tool-runtime",
+        "runtime-dispatch",
+        "tool-dispatch",
+        "tool-errors",
+        "tool-drain",
+        "tool-settlement",
+        "sampling-input"
+      ],
+      "keySymbols": [
+        {
+          "name": "handle_output_item_done",
+          "sourceRef": "output-routing"
+        },
+        {
+          "name": "handle_tool_call",
+          "sourceRef": "tool-runtime"
+        },
+        {
+          "name": "dispatch_tool_call_with_state",
+          "sourceRef": "tool-dispatch"
+        },
+        {
+          "name": "drain_in_flight",
+          "sourceRef": "tool-drain"
+        }
+      ],
+      "execution": [
+        {
+          "kind": "fact",
+          "text": "输出项处理先 build_tool_call；正常工具调用分支持久记录调用项，并交给 ToolCallRuntime.handle_tool_call。取消或输入抢占条件会影响是否真正分派。",
+          "sourceRefs": [
+            "output-routing"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "采样流的消费处把 tool_future 加入 in_flight，并累计 output_result.needs_follow_up。",
+          "sourceRefs": [
+            "output-future"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "路由器的 dispatch_tool_call_with_state 委托内部方法构造 ToolInvocation，再交给 registry.dispatch_any_with_state。具体工具的审批和沙箱不能仅凭这一层推断，需另取执行器证据。",
+          "sourceRefs": [
+            "tool-dispatch"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "工具运行时成功时 into_response；遇到 FunctionCallError::Fatal 返回 CodexErr::Fatal；其他错误使用 failure_response 形成消息产物。",
+          "sourceRefs": [
+            "tool-runtime"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "输出项识别阶段的 RespondToModel 分支构造 FunctionCallOutput、记录调用与输出并要求后续采样；Fatal 分支返回错误。",
+          "sourceRefs": [
+            "tool-errors"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "结算片段把已完成和未完成工具流交给 drain_in_flight；它对成功的 envelope 调用 record_annotated_conversation_items。随后 run_turn 的下一次采样又从历史构造输入。",
+          "sourceRefs": [
+            "tool-settlement",
+            "tool-drain",
+            "sampling-input"
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "kind": "fact",
+          "text": "正常工具路径为 handle_output_item_done → ToolCallRuntime.handle_tool_call → 路由/注册表执行；tool_future 返回响应产物。这里只展开公共路由边界，不覆盖每种工具内部执行。",
+          "sourceRefs": [
+            "output-routing",
+            "tool-runtime",
+            "tool-dispatch",
+            "runtime-dispatch"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "采样消费收集 Future，结算时 drain_in_flight 把成功的响应产物记入会话历史，下一采样使用 clone_history。",
+          "sourceRefs": [
+            "output-future",
+            "tool-settlement",
+            "tool-drain",
+            "sampling-input"
+          ]
+        }
+      ],
+      "scenario": "教学场景：模型为了回答函数用途，请求读取一个源文件。学习者先预测“工具文本直接打印完就结束，还是进入模型上下文”，再沿输出项、工具 Future、历史回填三段核对。课程不执行读取工具，也不声称所有工具具有同一审批或错误恢复策略。",
+      "designRationale": [
+        {
+          "kind": "inference",
+          "text": "调用项和结果项都进入历史，使后续模型请求可以关联工具请求与输出；这一解释由调用记录、结果回填和历史采样输入共同支持。",
+          "sourceRefs": [
+            "output-routing",
+            "tool-drain",
+            "sampling-input"
+          ]
+        },
+        {
+          "kind": "advice",
+          "text": "自己实现 Harness 时，可把可返回模型的失败与不可继续的运行错误分别建模，并用固定输入检查消息关联；具体安全策略仍需独立设计。",
+          "sourceRefs": [
+            "tool-errors",
+            "tool-runtime"
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "question": "工具失败都会让整个任务立即停止吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "不能一概而论。输出项识别的 RespondToModel 会写入 FunctionCallOutput 并要求后续工作；Fatal 返回错误。工具运行时也区分 Fatal 与可封装为失败响应的其他错误。",
+            "sourceRefs": [
+              "tool-errors",
+              "tool-runtime"
+            ]
+          }
+        },
+        {
+          "question": "工具结果在哪段进入后续采样的历史？",
+          "answer": {
+            "kind": "fact",
+            "text": "本章选定的结算路径经 drain_in_flight 对成功 envelope 记录 annotated conversation items；后续采样输入从 clone_history 获取。其他提前完成路径需按各自消费位置核对。",
+            "sourceRefs": [
+              "tool-settlement",
+              "tool-drain",
+              "sampling-input"
+            ]
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "tool-error",
+          "kind": "single-choice",
+          "prompt": "在 handle_output_item_done 的工具识别错误分支中，RespondToModel(message) 会怎样？",
+          "options": [
+            {
+              "id": "response",
+              "text": "记录 FunctionCallOutput 并将 needs_follow_up 设为 true"
+            },
+            {
+              "id": "fatal",
+              "text": "无条件按 Fatal 返回"
+            },
+            {
+              "id": "drop",
+              "text": "静默丢弃调用项和错误"
+            }
+          ],
+          "correctOption": "response",
+          "explanation": {
+            "kind": "fact",
+            "text": "RespondToModel 分支构造工具输出、记录历史并设置后续工作；Fatal 是后面的另一分支。",
+            "sourceRefs": [
+              "tool-errors"
+            ]
+          }
+        },
+        {
+          "id": "trace-result",
+          "kind": "trace",
+          "prompt": "解释文件读取的工具产物怎样进入下一次模型请求。写出三个消费位置并注明错误分支边界。",
+          "rubric": [
+            "handle_output_item_done 创建工具 Future 并标记后续工作",
+            "采样消费把 Future 加入 in_flight",
+            "结算路径 drain_in_flight 将成功 envelope 写入历史",
+            "run_turn 的 clone_history 形成后续采样输入",
+            "区分 RespondToModel 与 Fatal；不把单一路径推广为所有工具实现"
+          ],
+          "explanation": {
+            "kind": "fact",
+            "text": "对照输出处理、Future 收集、结算回填和采样输入四段。此题采用学习者自评，不自动判断文字答案。",
+            "sourceRefs": [
+              "output-routing",
+              "output-future",
+              "tool-drain",
+              "sampling-input",
+              "tool-errors"
+            ]
+          }
+        }
+      ],
+      "summary": [
+        {
+          "kind": "fact",
+          "text": "工具调用不是终端显示动作：它可生成异步产物，经会话历史影响后续采样。",
+          "sourceRefs": [
+            "output-routing",
+            "tool-drain",
+            "sampling-input"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "错误语义和具体安全边界需分层取证，不能用一个工具路由函数代替整个执行与审批链。",
+          "sourceRefs": [
+            "tool-errors",
+            "tool-runtime",
+            "tool-dispatch"
+          ]
+        }
+      ]
+    }
+  ]
+}
