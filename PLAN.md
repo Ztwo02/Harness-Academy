@@ -1,6 +1,6 @@
 # 开发与验收计划
 
-按 P0 → P1 → P2 → P3 → P4 → P5 → P6 顺序交付。每阶段在验收条件、测试结果和 Git 记录齐备后交负责人验收。**P0、P1 已完成，P2 已实现并进入交付评审。** [Phase 1 验收记录](docs/PHASE1_ACCEPTANCE.md) · [Phase 2 验收记录](docs/PHASE2_ACCEPTANCE.md)
+按 P0 → P1 → P2 → P3 → P4 → P5 → P6 顺序交付。每阶段在验收条件、测试结果和 Git 记录齐备后交负责人验收。**P0–P2 已完成，P3 已实现并进入交付评审。** [Phase 1 验收记录](docs/PHASE1_ACCEPTANCE.md) · [Phase 2 验收记录](docs/PHASE2_ACCEPTANCE.md) · [Phase 3 验收记录](docs/PHASE3_ACCEPTANCE.md)
 
 | 阶段与依赖 | 明确任务和具体交付物 | 验收标准 | 测试要求 | Git 提交要求 |
 | --- | --- | --- | --- | --- |
@@ -51,3 +51,14 @@ P1 主要依赖链为 1 → 2 → 3 → 4；步骤 5 依赖步骤 1、3，步骤
 | 复习统计 | 按版次/项目筛选，逐题比较首次与最近结果，统计已答、待复习和首次错后答对；保留全部历史，自评标注来源 | `/review?tab=statistics`；重试、错→对→错、旧版恢复与自评测试 |
 
 P2 不新增 DDL。实验只驻留内存，统计由已有进度与作答派生；离线教材更新创建不可变 v2，不迁移或覆盖 v1 的记录。Git 交付拆为教材、实验引擎、学习功能及验收说明，实际提交见 Phase 2 验收记录。
+
+## P3 实施与验收清单
+
+| 交付 | 已实现内容 | 验证入口 |
+| --- | --- | --- |
+| 独立 Codex 课程 | `openai/codex` 固定 `d4014cb19d23614be39c0cf57d981e042ba0763a`，`codex-foundations` v1，三章、28 条证据、三道单选和一道追踪自评 | [课程包](courses/codex-foundations.v1.json)；逐条证据和调用链审阅见验收记录 |
+| 项目学习入口 | Codex 可导入并发布；首页进度、知识地图、架构图、阅读器、本地导师、笔记与复习复用现有组件 | 从 Codex 项目进入章节、源码，再返回章节并完成作答 |
+| Rust 导航 | 支持 fn/struct/trait 等声明候选；增加字面目录范围，不放宽检索预算；全仓超预算时提示缩小模块 | 在 `codex-rs/core/src` 查询 run_turn，命中第 227 行 |
+| 项目隔离回归 | 同章号、题号、证据键、路径不串库；教材更新绑定所选项目；Codex 损坏/修复、重启后 Pi 记录仍在 | [跨项目测试](tests/phase3.test.ts)；[真实 Codex 回放](tests/codex.test.ts)；旧 Pi 可移植深链 |
+
+P3 保持课程 Schema v1 与数据库 user_version=2。教材独立提交；应用接入和验收说明另行提交。实际命令、初次下载超时与修订后结果、浏览器覆盖和待负责人复核项见 [Phase 3 验收记录](docs/PHASE3_ACCEPTANCE.md)。

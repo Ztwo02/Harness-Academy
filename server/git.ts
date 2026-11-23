@@ -90,8 +90,18 @@ async function git(
 
 // Ordinary source blobs only; no checkout, attributes, symlinks, filters or upstream config.
 // The caller searches the decoded in-memory corpus with ripgrep over stdin.
-export async function sourceCorpus(dir: string, sha: string) {
-  const raw = (await git(dir, ["ls-tree", "-rz", "--full-tree", sha])).toString("utf8");
+export async function sourceCorpus(dir: string, sha: string, scope = "") {
+  checkPath(scope, true);
+  const raw = (
+    await git(dir, [
+      "--literal-pathspecs",
+      "ls-tree",
+      "-rz",
+      "--full-tree",
+      sha,
+      ...(scope ? ["--", scope] : []),
+    ])
+  ).toString("utf8");
   const entries = raw
     .split("\0")
     .filter(Boolean)
@@ -108,7 +118,7 @@ export async function sourceCorpus(dir: string, sha: string) {
     entries.length <= 4000,
     422,
     "index_budget",
-    "源码索引超过 4000 文件预算，请缩小来源。可继续通过课程证据阅读。",
+    "源码索引超过 4000 文件预算，请缩小检索目录。可继续通过课程证据阅读。",
   );
   if (!entries.length) return [];
   const sizes = (
@@ -132,7 +142,7 @@ export async function sourceCorpus(dir: string, sha: string) {
     total <= 32 * 1024 ** 2,
     422,
     "index_budget",
-    "源码索引超过 32 MiB 预算。可继续通过课程证据阅读。",
+    "源码索引超过 32 MiB 预算，请缩小检索目录。可继续通过课程证据阅读。",
   );
   if (!selected.length) return [];
   const bytes = await git(dir, ["cat-file", "--batch"], {
@@ -322,7 +332,10 @@ export async function importRevision(
         remote,
         sha + ":refs/heads/pin",
       ],
-      { protocol: kind === "github" ? "https" : "file", timeout: 120000 },
+      {
+        protocol: kind === "github" ? "https" : "file",
+        timeout: kind === "github" ? 240000 : 120000,
+      },
     );
     await git(snapshot, ["symbolic-ref", "HEAD", "refs/heads/pin"]);
     requireThat(

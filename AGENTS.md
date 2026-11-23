@@ -4,8 +4,8 @@
 
 ## 工作范围
 
-- Phase 0、Phase 1 已完成，当前实现为 Phase 2。后续依序推进，并按 PLAN 中该阶段的任务、交付物、验收、测试、Git 要求完成工作。
-- MVP 首先接入 Pi，其他三个项目先登记。前端采用 React + TypeScript，后端采用 Node.js + TypeScript 和 SQLite。阅读器使用 Monaco，流程图使用 Mermaid。Git 提供版本事实，ripgrep 用于固定版本上的文本查询。
+- Phase 0–2 已完成，当前实现为 Phase 3。后续依序推进，并按 PLAN 中该阶段的任务、交付物、验收、测试、Git 要求完成工作。
+- 当前开放 Pi 与 Codex，DeepSeek Harness 和 Claude Code 先登记。前端采用 React + TypeScript，后端采用 Node.js + TypeScript 和 SQLite。阅读器使用 Monaco，流程图使用 Mermaid。Git 提供版本事实，ripgrep 用于固定版本上的文本查询。
 - 新增页面或接口前核对 PRD 与架构；新增持久化同时核对数据模型、迁移与旧记录恢复。维持单用户本地部署，先用已有组件解决已出现的问题。
 
 ## 前端设计技能

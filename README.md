@@ -2,7 +2,7 @@
 
 一个本地优先的中文 Agent Harness 源码学习平台。学习者从具体问题进入课程，先看架构和执行过程，再跳到固定 Git 提交中的函数与行区间，最后通过练习、笔记和复习检验理解。
 
-**Phase 2 已实现 Pi 深入学习。** 新版课程覆盖架构导读、循环控制、工具结果、事件与状态四章，提供本地源码导师、定义/引用候选导航、可重放的 Mock 实验和阶段复习统计。Phase 1 旧版课程与学习记录仍可读取。Codex、DeepSeek Harness、Claude Code 分别计划在 Phase 3、4、5 开课。
+**Phase 3 已接入 Codex。** Pi 提供四章深入课程及 Mock 实验；Codex 新增架构导读、模型轮次和工具结果三章，支持本地源码导师、Rust 定义/引用候选与独立学习记录。Pi 旧版课程与记录继续保留。DeepSeek Harness、Claude Code 分别计划在 Phase 4、5 开课。
 
 ## 本机启动
 
@@ -19,6 +19,14 @@ npm start
 3. 保存笔记和疑问，提交练习，再点“标记本章完成”。学习记录页可以查看历次作答；最新作答正确时，该题退出待复习列表。
 4. 在章节打开“本章源码导师”查看职责、调用链和数据流，或打开 Mock 实验，选择工具成功、抛错、工具不存在三种场景，单步或自动播放。在阅读器输入标识符检索候选，也可在 Monaco 使用 F12 / Shift+F12；候选是文本定位，需要核对上下文。
 5. 在“学习记录 → 阶段复习与统计”比较每道题的首次与最近作答。旧用户在“源码导师与实验”点击“从已固定源码更新 Phase 2 教材”，可离线新增 v2；v1 的进度和笔记保留，新版独立计数。
+
+### 学习 Codex
+
+在学习中心打开 **OpenAI Codex CLI**，导入其预填来源 `https://github.com/openai/codex` 和完整提交 `d4014cb19d23614be39c0cf57d981e042ba0763a`，也可选择含该提交的本机工作树或裸仓库。导入后自动发布 **Codex 架构与核心执行路径 · v1**，依次阅读入口、任务轮次和工具结果三章。
+
+从第二章打开 `run_turn`，应定位 `codex-rs/core/src/session/turn.rs` 第 227–249 行。阅读器默认在当前目录查询；需要跨模块时，把“检索目录”改为 `codex-rs/core/src`。全仓超过 4000 文件或 32 MiB 的检索预算会提示缩小范围，定义/引用仍是文本候选。
+
+导师可按项目切换，也会从章节带入正确版次；复习页可按 Codex 或 Pi 单独筛选。Codex 教材只讲固定公开版本的本机 `codex exec` 普通任务路径，不执行 Codex、不调用模型。现有订单 Mock 对应 Pi，Codex 不复用这条模拟作为实现证据。[Phase 3 验收与手动复核](docs/PHASE3_ACCEPTANCE.md)
 
 默认数据目录为当前用户主目录下的 `.harness-academy`。SQLite、已固定的 Git 对象和学习记录保存在本机，导入后可断网阅读。可在启动前设置 `HARNESS_DATA_DIR` 和 `HARNESS_PORT`。备份时先停止服务，再复制整个数据目录；恢复时将 `HARNESS_DATA_DIR` 指向该副本。全部学习功能在本机运行，无需模型密钥。
 
@@ -45,6 +53,7 @@ shared/                         前后端共用的课程与学习记录类型
 web/                            React 学习中心、章节、Monaco 阅读器
 courses/pi-foundations.v1.json   不可变的 Pi 旧版架构导读
 courses/pi-foundations.v2.json   同一 Git 基线的四章深入课程
+courses/codex-foundations.v1.json Codex 独立 Git 基线的三章课程
 shared/lab.ts                   不执行上游代码的确定性 Mock 引擎
 tests/                          单元、集成、进程重启及真实 Pi 验收
 config/
@@ -67,7 +76,7 @@ checks/
 
 ## 测试
 
-`npm test` 在独立临时目录运行离线测试。`npm run build` 同时检查 TypeScript 和生产构建。Phase 2 的实际验收、Mock 输入和完整事件序列见 [Phase 2 验收记录](docs/PHASE2_ACCEPTANCE.md)；两种真实 Pi 来源的导入步骤沿用 [Phase 1 验收记录](docs/PHASE1_ACCEPTANCE.md)。
+`npm test` 在独立临时目录运行离线测试，默认跳过需要真实 Pi/Codex 来源的两个用例。`npm run build` 同时检查 TypeScript 和生产构建。最新命令及范围见 [Phase 3 验收记录](docs/PHASE3_ACCEPTANCE.md)；Pi 的 Mock 输入及完整事件序列保留在 [Phase 2 验收记录](docs/PHASE2_ACCEPTANCE.md)，两种真实 Pi 来源的导入步骤见 [Phase 1 验收记录](docs/PHASE1_ACCEPTANCE.md)。
 
 ### Phase 0 设计契约
 

@@ -55,8 +55,8 @@ flowchart LR
 
 | 请求 | 输入 → 输出 |
 | --- | --- |
-| POST /bundled-releases | 已导入的固定对象 → 按序验证并发布内置 v1/v2；返回最新 release ID。重复更新复用既有版次，可离线操作 |
-| GET /releases/:id/symbols | symbol、kind=definition/reference → 当前提交内文本候选、路径/行/列、依据、范围与截断标志。标识符限 80 字符，不接受正则或路径 |
+| POST /bundled-releases | 可选 projectId（兼容旧客户端，默认 pi）及已导入的固定对象 → 只按序验证发布所选项目教材，返回最新 release ID 和 projectId；不要求导入其他项目 |
+| GET /releases/:id/symbols | symbol、kind=definition/reference、可选 scope → 当前提交内文本候选、路径/行/列、依据、范围与截断标志。标识符限 80 字符，不接受正则；scope 只接受固定 tree 内的相对路径 |
 | GET /releases/:id/tutor | 可选 lesson、q（最多 160 字符） → 已审稿职责、调用链、执行流、场景和 FAQ；回答前复验其证据。未命中不生成答案 |
 | GET /review | 原筛选参数 → 条目、作答历史、统计和逐题首次/最近结果；不新增持久化 |
 
@@ -67,3 +67,7 @@ Mock 引擎位于 [shared/lab.ts](../shared/lab.ts)，预生成纯教学事件�
 前端静态资源、编辑器及图表依赖随应用本地分发。数据目录包含 SQLite 库、按 repository ID 隔离的 Git 对象库、按 SHA 命名的只读索引缓存，以及按内容哈希存放的官方资料快照。备份覆盖数据库、被引用的 Git 对象和资料快照；文本索引可重建。P1 验收从空目录启动、重启和断网三种情况。
 
 后续项目复用仓库、证据及学习记录接口，各自编写课程。跨项目比较显式引用每一格的 release 和证据。网络模型、桌面打包、远程数据库、多用户同步与真实代码运行需要另行确定使用场景。
+
+P3 已接入 Codex，`bundledCourses` 统一登记 Pi 两版与 Codex 一版；`GET /projects` 的 available 表示应用已提供本项目教材。导入只发布同仓库同提交的内置课程；本地课程上传可附 projectId，拒绝与所选项目不符的包。导师按 release 解析所属项目，项目/版次冲突的深链报错，不静默回退 Pi；订单 Mock 仍只映射 Pi。
+
+Codex 的 Rust 声明采用与其他语言一致的文本候选机制，增加 fn、struct、trait、mod 及 let mut 模式。阅读器默认搜索当前目录，scope 经路径校验并通过 Git literal pathspec 限定树枚举，通配符不扩展；范围和预算都显示在反馈中。GitHub 对象获取上限为 240 秒，本机获取仍为 120 秒；Git 工具、协议与脚本执行边界保持不变。

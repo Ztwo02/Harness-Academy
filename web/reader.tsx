@@ -192,7 +192,7 @@ function SourceView({
         </section>
       </div>
       <div id="symbol-navigation">
-        <SymbolNavigation rid={rid} from={from} seed={symbol} />
+        <SymbolNavigation rid={rid} from={from} seed={symbol} initialScope={parent(file.path)} />
       </div>
       <div className="two-col reader-bottom">
         <section className="sheet">
@@ -320,7 +320,10 @@ export default function Reader() {
         <>
           <Failure text={resource.error} />
           <p>
-            <Link className="text-link" to="/repositories?project=pi">
+            <Link
+              className="text-link"
+              to={"/repositories?" + new URLSearchParams({ project: project?.projectId ?? "" })}
+            >
               重新导入固定版本
               <ArrowRight size={15} />
             </Link>

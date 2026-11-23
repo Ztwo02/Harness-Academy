@@ -8,17 +8,20 @@ export function SymbolNavigation({
   rid,
   from,
   seed,
+  initialScope,
 }: {
   rid: number;
   from: string;
   seed: { symbol: string; kind: "definition" | "reference" };
+  initialScope: string;
 }) {
   const [text, setText] = useState(seed.symbol),
-    [query, setQuery] = useState(seed);
+    [query, setQuery] = useState({ ...seed, scope: initialScope }),
+    [scope, setScope] = useState(initialScope);
   const input = useRef<HTMLInputElement>(null);
   useEffect(() => {
     setText(seed.symbol);
-    setQuery(seed);
+    setQuery({ ...seed, scope });
     if (seed.symbol) input.current?.focus();
   }, [seed]);
   const result = useData<SymbolSearch>(
@@ -26,7 +29,7 @@ export function SymbolNavigation({
   );
   function search(e: FormEvent, kind: "definition" | "reference") {
     e.preventDefault();
-    setQuery({ symbol: text.trim(), kind });
+    setQuery({ symbol: text.trim(), kind, scope: scope.trim() });
   }
   return (
     <section className="sheet symbol-navigation" aria-label="定义与引用导航">
@@ -47,11 +50,15 @@ export function SymbolNavigation({
             onChange={(e) => setText(e.target.value)}
           />
         </label>
+        <label>
+          检索目录（留空查全仓）
+          <input value={scope} maxLength={4096} onChange={(e) => setScope(e.target.value)} />
+        </label>
         <button className="secondary">查找定义</button>
         <button
           type="button"
           disabled={!text.trim()}
-          onClick={() => setQuery({ symbol: text.trim(), kind: "reference" })}
+          onClick={() => setQuery({ symbol: text.trim(), kind: "reference", scope: scope.trim() })}
         >
           查找引用
         </button>

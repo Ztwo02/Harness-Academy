@@ -242,8 +242,8 @@ export function Records() {
                   : "此范围内暂无" + (tabs.find((x) => x[0] === tab)?.[1] ?? "记录")}
               </h3>
               <p>阅读章节时可以保存笔记、登记疑问并作答。</p>
-              <Link className="text-link" to="/projects/pi">
-                查看 Pi 课程
+              <Link className="text-link" to={project ? "/projects/" + project : "/"}>
+                查看学习课程
                 <ArrowUpRight size={15} />
               </Link>
             </div>

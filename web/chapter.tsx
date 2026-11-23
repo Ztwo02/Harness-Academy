@@ -345,15 +345,17 @@ function LessonView({ page }: { page: ChapterPage }) {
         >
           本章源码导师
         </Link>
-        <Link
-          className="button"
-          to={
-            "/lab?" +
-            new URLSearchParams({ releaseId: String(page.releaseId), lesson: l.id, mode: "mock" })
-          }
-        >
-          打开 Mock 实验
-        </Link>
+        {page.projectId === "pi" && (
+          <Link
+            className="button"
+            to={
+              "/lab?" +
+              new URLSearchParams({ releaseId: String(page.releaseId), lesson: l.id, mode: "mock" })
+            }
+          >
+            打开 Mock 实验
+          </Link>
+        )}
       </div>
       {narrow && (
         <Disclosure label="本章目录">
@@ -381,6 +383,14 @@ function LessonView({ page }: { page: ChapterPage }) {
           </Section>
           <Section title="架构与概念" id="concepts">
             <Claims list={l.concepts} page={page} />
+            {page.projectId === "codex" &&
+              page.commit === "d4014cb19d23614be39c0cf57d981e042ba0763a" &&
+              l.id === "architecture" &&
+              page.evidence.entry?.symbol === "run_main" && (
+                <Suspense fallback={<Loading />}>
+                  <FlowDiagram project="codex" />
+                </Suspense>
+              )}
             {page.projectId === "pi" &&
               page.commit === "08dc60bc52d89d6823a9738cc90b1916e5e446e5" &&
               l.id === "agent-loop" &&

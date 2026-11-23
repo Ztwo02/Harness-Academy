@@ -77,6 +77,7 @@ export interface Edition {
   chapters: ChapterLink[];
 }
 export interface Project extends CatalogSource {
+  available: boolean;
   revisions: string[];
   editions: Edition[];
 }

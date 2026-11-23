@@ -12,7 +12,7 @@ import {
   treePage,
   verifyExcerpt,
 } from "./git.ts";
-import { evidenceFor, getLesson, getRelease, piCourses, publish } from "./courses.ts";
+import { bundledCourses, evidenceFor, getLesson, getRelease, publish } from "./courses.ts";
 import { findSymbol, tutor } from "./navigation.ts";
 import { chapterPage, projects, recordAnswer, review } from "./study.ts";
 import type { CatalogSource, Course, ImportJob } from "../shared/types.ts";
@@ -73,7 +73,7 @@ function stringParam(value: unknown) {
 export function createAcademy(
   dataDir: string,
   sources: CatalogSource[] = catalog,
-  bundled: Course | Course[] = piCourses,
+  bundled: Course | Course[] = bundledCourses,
 ) {
   const bundles = Array.isArray(bundled) ? bundled : [bundled];
   const db = openStore(dataDir),
@@ -135,7 +135,7 @@ export function createAcademy(
     next();
   });
   api.get("/session", (_req, res) => res.json({ token }));
-  api.get("/projects", (_req, res) => res.json(projects(db, sources)));
+  api.get("/projects", (_req, res) => res.json(projects(db, sources, bundles)));
   api.post("/imports", (req, res) => {
     const body = importInput.parse(req.body);
     const source = sources.find((x) => x.repositoryId === body.repositoryId);
@@ -179,18 +179,36 @@ export function createAcademy(
     requireThat(job, 404, "job", "任务已结束或服务已重启，请刷新仓库列表。");
     res.json(job);
   });
-  api.post("/releases", async (req, res) =>
-    res.json({ releaseId: await publish(db, dataDir, req.body) }),
-  );
-  api.post("/bundled-releases", async (_req, res) => {
+  api.post("/releases", async (req, res) => {
+    if (req.query.projectId !== undefined)
+      requireThat(
+        id.parse(req.query.projectId) === req.body?.projectId,
+        422,
+        "repository",
+        "课程包不属于当前选择的项目。",
+      );
+    const releaseId = await publish(db, dataDir, req.body);
+    res.json({ releaseId, projectId: getRelease(db, releaseId).projectId });
+  });
+  api.post("/bundled-releases", async (req, res) => {
+    const { projectId = "pi" } = z.object({ projectId: id.optional() }).strict().parse(req.body);
+    const selected = bundles.filter((course) => course.projectId === projectId);
+    requireThat(selected.length, 404, "planned", "此项目暂未提供内置课程。");
     let releaseId: number | undefined;
-    for (const course of bundles) releaseId = await publish(db, dataDir, course);
-    res.json({ releaseId });
+    for (const course of selected) releaseId = await publish(db, dataDir, course);
+    res.json({ releaseId, projectId });
   });
   api.get("/releases/:rid/symbols", async (req, res) => {
     const kind = z.enum(["definition", "reference"]).parse(req.query.kind ?? "definition");
     res.json(
-      await findSymbol(db, dataDir, integer(req.params.rid), stringParam(req.query.symbol), kind),
+      await findSymbol(
+        db,
+        dataDir,
+        integer(req.params.rid),
+        stringParam(req.query.symbol),
+        kind,
+        stringParam(req.query.scope ?? ""),
+      ),
     );
   });
   api.get("/releases/:rid/tutor", async (req, res) => {

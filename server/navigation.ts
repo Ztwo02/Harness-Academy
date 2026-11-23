@@ -11,6 +11,7 @@ export async function findSymbol(
   rid: number,
   symbol: string,
   kind: "definition" | "reference",
+  scope = "",
 ): Promise<SymbolSearch> {
   requireThat(
     /^[A-Za-z_$][A-Za-z0-9_$]{0,79}$/.test(symbol),
@@ -20,14 +21,19 @@ export async function findSymbol(
   );
   const course = getRelease(db, rid),
     dir = snapshotPath(db, dataDir, course.repositoryId, course.commit);
-  const files = await sourceCorpus(dir, course.commit);
+  const files = await sourceCorpus(dir, course.commit, scope);
   const lines: { path: string; line: number; text: string }[] = [];
   for (const file of files)
     file.content.split("\n").forEach((text, i) => {
       lines.push({ path: file.path, line: i + 1, text });
     });
   if (!lines.length)
-    return { symbol, candidates: [], truncated: false, scope: "固定提交的普通源码文本" };
+    return {
+      symbol,
+      candidates: [],
+      truncated: false,
+      scope: `${course.repositoryId}@${course.commit} · ${scope || "全仓"} · 没有受支持的普通源码文本`,
+    };
   // Fixed strings and stdin: neither the symbol nor repository paths become shell syntax or rg options.
   const matches = await new Promise<string>((resolve, reject) => {
     const child = execFile(
@@ -53,7 +59,7 @@ export async function findSymbol(
   let matchedLines = 0;
   const escaped = symbol.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const definition = new RegExp(
-    "(?:\\b(?:function|class|interface|type|enum|const|let|var)\\s+" +
+    "(?:\\b(?:function|fn|struct|trait|mod|class|interface|type|enum|const|let|var)\\s+(?:mut\\s+)?" +
       escaped +
       "(?=[^\\w$]|$)|(?:^|\\s)(?:(?:private|public|protected|static|async|export)\\s+)*" +
       escaped +
@@ -88,7 +94,7 @@ export async function findSymbol(
     symbol,
     candidates: candidates.slice(0, 100),
     truncated: matchedLines >= 501 || candidates.length > 100,
-    scope: `${course.repositoryId}@${course.commit} · 普通 TS/JS/Rust/Python 文本；不提供语言级绑定保证`,
+    scope: `${course.repositoryId}@${course.commit} · ${scope || "全仓"} · 普通 TS/JS/Rust/Python 文本；不提供语言级绑定保证`,
   };
 }
 
