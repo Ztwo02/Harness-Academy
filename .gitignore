@@ -5,4 +5,5 @@ coverage/
 .phase2-qa/
 .phase3-qa/
 .phase4-qa/
+.phase5-qa/
 *.tsbuildinfo
