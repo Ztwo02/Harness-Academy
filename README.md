@@ -2,7 +2,23 @@
 
 一个本地优先的中文 Agent Harness 源码学习平台。学习者从具体问题进入课程，先看架构和执行过程，再跳到固定 Git 提交中的函数与行区间，最后通过练习、笔记和复习检验理解。
 
-**当前交付为 Phase 0，待项目负责人验收。** 本仓库提供产品与技术设计、四个来源的版本基线，以及可以独立检查的课程和数据库契约。首个应用版本在 Phase 1 接入 Pi。
+**Phase 1 已接入 Pi。** 首页展示四个项目与学习进度。首门课从 `agentLoop` 进入 Pi 运行时，支持源码双向跳转、章节进度、笔记、疑问和错题。Codex、DeepSeek Harness、Claude Code 分别计划在 Phase 3、4、5 开课。
+
+## 本机启动
+
+准备 Node.js 24.12 或更高版本、npm 和 Git。在仓库根目录执行以下命令，然后打开终端打印的地址。默认地址为 `http://127.0.0.1:4317`。
+
+```sh
+npm ci
+npm run build
+npm start
+```
+
+1. 在学习中心选择 **导入 Pi 源码**。可确认预填的 GitHub 来源，也可以切到“本机目录”，输入已含该提交的工作树或裸仓库的绝对路径。关联工作树可选择主仓库。保留首章基线 SHA 后点击“开始导入”。
+2. 打开 **Pi 架构导读 → 从输入消息到 Agent Loop**。在“源码阅读”中选择 `agentLoop`，阅读器会标记第 32–55 行。点击“返回原章”可回到原证据。
+3. 保存笔记和疑问，提交练习，再点“标记本章完成”。学习记录页可以查看历次作答；最新作答正确时，该题退出待复习列表。
+
+默认数据目录为当前用户主目录下的 `.harness-academy`。SQLite、已固定的 Git 对象和学习记录保存在本机，导入后可断网阅读。可在启动前设置 `HARNESS_DATA_DIR` 和 `HARNESS_PORT`。备份时先停止服务，再复制整个数据目录；恢复时将 `HARNESS_DATA_DIR` 指向该副本。只需要 Node.js、Git 和本地浏览器，无需模型密钥。
 
 ## 从哪里开始读
 
@@ -22,6 +38,11 @@ README.md
 AGENTS.md
 PLAN.md
 LICENSE
+server/                         本机 API、SQLite、Git 与课程校验
+shared/                         前后端共用的课程与学习记录类型
+web/                            React 学习中心、章节、Monaco 阅读器
+courses/pi-foundations.v1.json   固定版本的 Pi 架构导读
+tests/                          单元、集成、进程重启及真实 Pi 验收
 config/
   repositories.json             四个项目的公开仓库和固定提交
 docs/
@@ -40,7 +61,11 @@ checks/
   phase0.py                     离线验收设计契约
 ```
 
-## 复核本次设计
+## 测试
+
+`npm test` 在独立临时目录运行离线测试。`npm run build` 同时检查 TypeScript 和生产构建。复验两种真实 Pi 来源时，见 [Phase 1 验收记录](docs/PHASE1_ACCEPTANCE.md)。
+
+### Phase 0 设计契约
 
 使用 Python 3.10+ 和含 JSON 函数的 SQLite 3.38+。在已激活的 Python 虚拟环境中安装校验依赖，再从仓库根目录运行检查。安装完成后，检查只使用内存数据库和本地测试夹具。
 

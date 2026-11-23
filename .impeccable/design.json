@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-23T06:38:13Z",
+  "title": "Harness Academy 设计系统",
+  "extensions": {
+    "breakpoints": [
+      {
+        "name": "max-1150",
+        "value": "1150px"
+      },
+      {
+        "name": "max-960",
+        "value": "960px"
+      },
+      {
+        "name": "max-700",
+        "value": "700px"
+      },
+      {
+        "name": "max-480",
+        "value": "480px"
+      }
+    ],
+    "motion": [
+      {
+        "name": "loading",
+        "value": "turn 1s linear infinite",
+        "purpose": "等待本地服务响应，减少动态效果时停用旋转。"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "主操作",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "主操作",
+      "html": "<button type=\"button\" class=\"ds-button-primary\">开始导入</button>",
+      "css": ".ds-button-primary{background:var(--blue,#3053b2);color:white;border:1px solid var(--blue,#3053b2);border-radius:7px;padding:7px 14px;min-height:40px;} .ds-button-primary:hover{background:#233e87} .ds-button-primary:focus-visible{outline:3px solid var(--focus,#2958c2);outline-offset:3px}"
+    },
+    {
+      "name": "辅助操作",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "辅助操作",
+      "html": "<button type=\"button\" class=\"ds-button-secondary\">仓库管理</button>",
+      "css": ".ds-button-secondary{background:white;color:var(--ink,#202c42);border:1px solid var(--line,#dce1e9);border-radius:7px;padding:7px 14px;min-height:40px;} .ds-button-secondary:hover{background:#edf1f8} .ds-button-secondary:focus-visible{outline:3px solid var(--focus,#2958c2);outline-offset:3px}"
+    },
+    {
+      "name": "文本字段",
+      "kind": "input",
+      "refersTo": "text-field",
+      "description": "文本字段",
+      "html": "<input class=\"ds-text-field\" aria-label=\"Git Commit SHA\" placeholder=\"Git Commit SHA\">",
+      "css": ".ds-text-field{background:white;color:var(--ink,#202c42);border:1px solid #b9c3d1;border-radius:6px;padding:9px 11px;} .ds-text-field:hover{border-color:#68768a} .ds-text-field:focus-visible{outline:3px solid var(--focus,#2958c2);outline-offset:3px}"
+    },
+    {
+      "name": "当前导航项",
+      "kind": "nav",
+      "refersTo": "nav-current",
+      "description": "当前导航项",
+      "html": "<button type=\"button\" class=\"ds-nav-current\">学习中心</button>",
+      "css": ".ds-nav-current{border:0;background:#e9efff;color:#2b4eaa;font-weight:700;padding:12px 16px;border-radius:7px;} .ds-nav-current:hover{background:#e1e9ff} .ds-nav-current:focus-visible{outline:3px solid var(--focus,#2958c2);outline-offset:3px}"
+    },
+    {
+      "name": "证据引用",
+      "kind": "chip",
+      "refersTo": "evidence-chip",
+      "description": "证据引用",
+      "html": "<button type=\"button\" class=\"ds-evidence-chip\">agentLoop · L32–55</button>",
+      "css": ".ds-evidence-chip{font-size:12px;color:var(--blue,#3053b2);border:1px solid var(--line,#dce1e9);background:#f3f6fc;border-radius:4px;padding:2px 6px;} .ds-evidence-chip:hover{background:#eaf0ff} .ds-evidence-chip:focus-visible{outline:3px solid var(--focus,#2958c2);outline-offset:3px}"
+    },
+    {
+      "name": "Pi 学习入口",
+      "kind": "button",
+      "refersTo": "pi-action",
+      "description": "Pi 学习入口",
+      "html": "<button type=\"button\" class=\"ds-pi-action\">继续学习</button>",
+      "css": ".ds-pi-action{background:#eff3ff;color:var(--navy,#203458);border:0;padding:9px 14px;border-radius:6px;font-weight:700;} .ds-pi-action:hover{background:#d8e3ff} .ds-pi-action:focus-visible{outline:3px solid var(--focus,#2958c2);outline-offset:3px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "中文源码阅读工作台",
+    "overview": "首页先展示项目与学习进度，课程阅读始终关联固定源码。",
+    "keyCharacteristics": [
+      "项目与进度同屏",
+      "源码与课程双向定位",
+      "窄屏目录支持键盘收放"
+    ],
+    "rules": [
+      {
+        "name": "代码与正文",
+        "body": "路径、版本和行号使用等宽字。",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "返回章节时恢复原证据焦点。"
+    ],
+    "donts": [
+      "避免只用颜色区分证据和状态。"
+    ]
+  }
+}
