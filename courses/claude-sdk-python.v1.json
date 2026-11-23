@@ -1,0 +1,643 @@
+{
+  "schemaVersion": 2,
+  "projectId": "claude",
+  "repositoryId": "claude-agent-sdk-python",
+  "commit": "3184360393a92ca8a6ec7bbbdee571afd1ce1c56",
+  "courseId": "claude-sdk-python",
+  "version": 1,
+  "title": "官方 Python Agent SDK：传输与控制协议",
+  "sourceKind": "sdk-repo",
+  "unverifiedQuestions": [
+    {
+      "id": "internal-loop",
+      "question": "Claude Code 二进制内部怎样调度模型轮次？",
+      "reason": "公开 Hook 示例与 SDK 进程协议不提供二进制内部调用图。",
+      "verificationNeeded": "可验证的官方运行时源码及独立固定版本。"
+    },
+    {
+      "id": "internal-sandbox",
+      "question": "所有平台中的审批与沙箱隔离怎样实现？",
+      "reason": "回调和文档说明只能证明各自接口，不能证明全部平台的内部执行。",
+      "verificationNeeded": "各平台后端源码、配置和受控运行验收。"
+    },
+    {
+      "id": "internal-context",
+      "question": "内部上下文裁剪、记忆与恢复策略是什么？",
+      "reason": "SDK 输入输出和会话接口不等于运行时内部算法。",
+      "verificationNeeded": "相应实现的公开证据；未取得前保留问题。"
+    }
+  ],
+  "sourceEvidence": {
+    "query-entry": {
+      "path": "src/claude_agent_sdk/query.py",
+      "symbol": "query",
+      "startLine": 11,
+      "endLine": 20,
+      "blobOid": "a7e6c62bef0be8107493f30c2b338a3d2aede341",
+      "excerptSha256": "818f847fe3b7e8f8ae7ff203301a4b5209ef3efdf156544aa7aef53d9d770971"
+    },
+    "query-delegate": {
+      "path": "src/claude_agent_sdk/query.py",
+      "symbol": "InternalClient",
+      "startLine": 124,
+      "endLine": 132,
+      "blobOid": "a7e6c62bef0be8107493f30c2b338a3d2aede341",
+      "excerptSha256": "52bc71b6d19d692f27af2844d0aa65ea9fd01d91793b833d3d406419870c3ffe"
+    },
+    "client-entry": {
+      "path": "src/claude_agent_sdk/_internal/client.py",
+      "symbol": "process_query",
+      "startLine": 34,
+      "endLine": 71,
+      "blobOid": "58bf3e9f0951ff00623ac7143a160673d799871a",
+      "excerptSha256": "90ffa6948c615f8fb90518ece522323318d4eb62bdb92d55f7aad3a09ee87c7e"
+    },
+    "transport-select": {
+      "path": "src/claude_agent_sdk/_internal/client.py",
+      "symbol": "_process_query_inner",
+      "startLine": 73,
+      "endLine": 98,
+      "blobOid": "58bf3e9f0951ff00623ac7143a160673d799871a",
+      "excerptSha256": "cc4d4745d16a3fb2baf4a52ad84b859cffd2f366c35a405e74787c3f99268a04"
+    },
+    "query-setup": {
+      "path": "src/claude_agent_sdk/_internal/client.py",
+      "symbol": "Query",
+      "startLine": 137,
+      "endLine": 156,
+      "blobOid": "58bf3e9f0951ff00623ac7143a160673d799871a",
+      "excerptSha256": "1c808f1da74927160b3bb8cbd09b4f5cdb1d886b03abb97a6441086de59a2fef"
+    },
+    "send": {
+      "path": "src/claude_agent_sdk/_internal/client.py",
+      "symbol": "initialize",
+      "startLine": 173,
+      "endLine": 201,
+      "blobOid": "58bf3e9f0951ff00623ac7143a160673d799871a",
+      "excerptSha256": "7c96b96279ae574981928cf3479a655b12ad58f73c6af4a8e5ac02a4332e2218"
+    },
+    "receive": {
+      "path": "src/claude_agent_sdk/_internal/client.py",
+      "symbol": "parse_message",
+      "startLine": 203,
+      "endLine": 211,
+      "blobOid": "58bf3e9f0951ff00623ac7143a160673d799871a",
+      "excerptSha256": "5ec5743633d61021844ae2f85cc1f4477d6059abd2bf15b798027963493d028a"
+    },
+    "cli-find": {
+      "path": "src/claude_agent_sdk/_internal/transport/subprocess_cli.py",
+      "symbol": "_find_cli",
+      "startLine": 272,
+      "endLine": 292,
+      "blobOid": "ec05358572d081fffc2ce547154ed3139866681b",
+      "excerptSha256": "32569bbe48fc13fd8fefa81786e22498a31ac952d2270d580f2ee5427bf56728"
+    },
+    "cli-args": {
+      "path": "src/claude_agent_sdk/_internal/transport/subprocess_cli.py",
+      "symbol": null,
+      "startLine": 521,
+      "endLine": 528,
+      "blobOid": "ec05358572d081fffc2ce547154ed3139866681b",
+      "excerptSha256": "eb5419744f2187849cd054b083ee64a5cf51722795c4a4f8b26763535af5ce2c"
+    },
+    "cli-input": {
+      "path": "src/claude_agent_sdk/_internal/transport/subprocess_cli.py",
+      "symbol": null,
+      "startLine": 738,
+      "endLine": 744,
+      "blobOid": "ec05358572d081fffc2ce547154ed3139866681b",
+      "excerptSha256": "46ec3b1ebbcd0ab141d31572e1700887e0ab5b840f75fc37069511bb929f8bb8"
+    },
+    "cli-connect": {
+      "path": "src/claude_agent_sdk/_internal/transport/subprocess_cli.py",
+      "symbol": "connect",
+      "startLine": 746,
+      "endLine": 754,
+      "blobOid": "ec05358572d081fffc2ce547154ed3139866681b",
+      "excerptSha256": "2150b2f295ca6ea4834ce882a248526ad7dfb276436890d027f48f4ed385d993"
+    },
+    "spawn": {
+      "path": "src/claude_agent_sdk/_internal/transport/subprocess_cli.py",
+      "symbol": "open_process",
+      "startLine": 824,
+      "endLine": 852,
+      "blobOid": "ec05358572d081fffc2ce547154ed3139866681b",
+      "excerptSha256": "c28973685c0cc9009d943bbc5824a2ea8e0907e0b0c3c8766e3b659b63400537"
+    },
+    "read": {
+      "path": "src/claude_agent_sdk/_internal/transport/subprocess_cli.py",
+      "symbol": "read_messages",
+      "startLine": 1052,
+      "endLine": 1082,
+      "blobOid": "ec05358572d081fffc2ce547154ed3139866681b",
+      "excerptSha256": "33ce2f6805eb81f37b09432b659eff8f70f3025e623f71397ee77dcd957a949d"
+    },
+    "route": {
+      "path": "src/claude_agent_sdk/_internal/query.py",
+      "symbol": "_read_messages",
+      "startLine": 442,
+      "endLine": 472,
+      "blobOid": "1c1462ea221642ac7033ad8c6af5b2f307663374",
+      "excerptSha256": "d0d89b4f7505718007c048556dfccb072d4a4e624107b7527509950d42c7ecda"
+    },
+    "control-hooks": {
+      "path": "src/claude_agent_sdk/_internal/query.py",
+      "symbol": "hook_callback",
+      "startLine": 695,
+      "endLine": 710,
+      "blobOid": "1c1462ea221642ac7033ad8c6af5b2f307663374",
+      "excerptSha256": "f8f043b522aa32103b32e3a3bd3656e94d7fde49d6cf124b93cb14ca19beace0"
+    },
+    "control-permission": {
+      "path": "src/claude_agent_sdk/_internal/query.py",
+      "symbol": "can_use_tool",
+      "startLine": 631,
+      "endLine": 648,
+      "blobOid": "1c1462ea221642ac7033ad8c6af5b2f307663374",
+      "excerptSha256": "eb1a70d562d8336bd7d59da43a5a7a3cfd4a957395f152ba91d150d0d0c52c13"
+    },
+    "control-write": {
+      "path": "src/claude_agent_sdk/_internal/query.py",
+      "symbol": "_send_control_request",
+      "startLine": 761,
+      "endLine": 789,
+      "blobOid": "1c1462ea221642ac7033ad8c6af5b2f307663374",
+      "excerptSha256": "c911603c48e3b5cc844b752ddf13db2298c0b73d63643690b6d17913290d0afb"
+    },
+    "receive-messages": {
+      "path": "src/claude_agent_sdk/_internal/query.py",
+      "symbol": "receive_messages",
+      "startLine": 1190,
+      "endLine": 1202,
+      "blobOid": "1c1462ea221642ac7033ad8c6af5b2f307663374",
+      "excerptSha256": "88ccd1c80388b23d9839415e3c466928020a5021c07be9fbfb6ed7a68ac5e206"
+    },
+    "parse": {
+      "path": "src/claude_agent_sdk/_internal/message_parser.py",
+      "symbol": "parse_message",
+      "startLine": 50,
+      "endLine": 67,
+      "blobOid": "077d7b743318ce25fc90452ca242cf8d9296da96",
+      "excerptSha256": "cf08ee01886e41e7b05f8d1b059750355278cf7f91bd8b9fa553a003502f0587"
+    }
+  },
+  "materials": {},
+  "lessons": [
+    {
+      "id": "query-transport",
+      "title": "官方 Python SDK：请求怎样进入 CLI 传输层？",
+      "objectives": [
+        "沿 SDK query 定位 InternalClient 与默认传输。",
+        "指出 SDK 如何通过进程管道连接 CLI。",
+        "区分 SDK 源码事实与二进制内部未知行为。"
+      ],
+      "priorKnowledge": [
+        "理解异步生成器、进程 stdin/stdout 与 JSON 行协议。",
+        "此教材固定 Python SDK 0.2.187，不是 Anthropic Messages API 客户端课程。"
+      ],
+      "prerequisiteLessons": [],
+      "concepts": [
+        {
+          "kind": "fact",
+          "text": "官方 Agent SDK 是本章唯一 Git 来源。公开 query 默认构造 options，创建 InternalClient 并转发 process_query；不能把该客户端视为 CLI 内部 Agent Loop。",
+          "sourceRefs": [
+            "query-entry",
+            "query-delegate"
+          ],
+          "sourceCategory": "sdk-repo"
+        },
+        {
+          "kind": "fact",
+          "text": "InternalClient 支持自定义 transport；普通分支创建 SubprocessCLITransport 并 connect。默认传输负责找 CLI、构建参数和启动进程。",
+          "sourceRefs": [
+            "transport-select",
+            "cli-find",
+            "cli-connect",
+            "spawn"
+          ],
+          "sourceCategory": "sdk-repo"
+        },
+        {
+          "kind": "advice",
+          "text": "范围是默认传输、普通字符串 prompt、无 session_store 恢复的路径。二进制内部模型调度、工具策略和上下文算法不由 SDK 管道证明。",
+          "sourceRefs": [
+            "client-entry",
+            "transport-select",
+            "spawn"
+          ],
+          "sourceCategory": "sdk-repo"
+        }
+      ],
+      "sourceReading": [
+        "query-entry",
+        "query-delegate",
+        "client-entry",
+        "transport-select",
+        "cli-find",
+        "cli-args",
+        "cli-input",
+        "cli-connect",
+        "spawn",
+        "query-setup",
+        "send",
+        "receive"
+      ],
+      "keySymbols": [
+        {
+          "name": "query",
+          "sourceRef": "query-entry"
+        },
+        {
+          "name": "process_query",
+          "sourceRef": "client-entry"
+        },
+        {
+          "name": "_process_query_inner",
+          "sourceRef": "transport-select"
+        },
+        {
+          "name": "connect",
+          "sourceRef": "cli-connect"
+        }
+      ],
+      "execution": [
+        {
+          "kind": "fact",
+          "text": "1. query 将 prompt/options/transport 传给 InternalClient.process_query。process_query 校验会话选项，再进入 _process_query_inner；退出时关闭内部生成器并清理恢复资源。",
+          "sourceRefs": [
+            "query-delegate",
+            "client-entry"
+          ],
+          "sourceCategory": "sdk-repo"
+        },
+        {
+          "kind": "fact",
+          "text": "2. _process_query_inner 选择调用者传输或 SubprocessCLITransport，再 connect。默认传输查找已捆绑或系统中的 CLI，不在 SDK 中实现 CLI 二进制内部循环。",
+          "sourceRefs": [
+            "transport-select",
+            "cli-find",
+            "spawn"
+          ],
+          "sourceCategory": "sdk-repo"
+        },
+        {
+          "kind": "fact",
+          "text": "3. 参数使用 stream-json 输入输出；connect 通过 anyio.open_process 传入 stdin/stdout 管道和 cwd/env，并建立文本收发流。",
+          "sourceRefs": [
+            "cli-args",
+            "cli-input",
+            "spawn"
+          ],
+          "sourceCategory": "sdk-repo"
+        },
+        {
+          "kind": "fact",
+          "text": "4. 客户端创建 Query，start 后 initialize；字符串任务封装为 user 消息，以 JSON 加换行写入传输。之后迭代 receive_messages，经 parse_message 返回。",
+          "sourceRefs": [
+            "query-setup",
+            "send",
+            "receive"
+          ],
+          "sourceCategory": "sdk-repo"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "fact",
+          "text": "SDK 调用链：query → InternalClient.process_query → _process_query_inner → SubprocessCLITransport.connect → anyio.open_process。消息发送由客户端在初始化后调用 transport.write。",
+          "sourceRefs": [
+            "query-delegate",
+            "client-entry",
+            "transport-select",
+            "spawn",
+            "send"
+          ],
+          "sourceCategory": "sdk-repo"
+        }
+      ],
+      "scenario": "教学场景：应用调用 SDK query(prompt=\"解释订单状态\")，不传自定义 transport，不启用会话恢复。只用固定源码追踪选项、子进程和 user JSON 的构造，不启动 Claude、不使用密钥。",
+      "designRationale": [
+        {
+          "kind": "inference",
+          "text": "传输接口使客户端与具体进程载体分离，这是从选择分支推断的设计作用；自定义传输的实际语义需独立核对。",
+          "sourceRefs": [
+            "transport-select"
+          ],
+          "sourceCategory": "sdk-repo"
+        },
+        {
+          "kind": "advice",
+          "text": "在自己的 Harness 里可先画清“客户端协议”和“运行时实现”边界，再评估是否需要进程隔离；启动进程本身不等于已经提供安全沙箱。",
+          "sourceRefs": [
+            "spawn",
+            "send"
+          ],
+          "sourceCategory": "sdk-repo"
+        }
+      ],
+      "faq": [
+        {
+          "question": "_internal 目录是否代表掌握了 Claude Code 内部运行时？",
+          "answer": {
+            "kind": "fact",
+            "text": "不是。这里是公开 Python SDK 的私有模块命名；源码显示它连接传输并处理协议，CLI 二进制作为外部进程启动。",
+            "sourceRefs": [
+              "transport-select",
+              "spawn"
+            ],
+            "sourceCategory": "sdk-repo"
+          }
+        },
+        {
+          "question": "官方 SDK 与公开仓库能共用同一个 Git SHA 吗？",
+          "answer": {
+            "kind": "advice",
+            "text": "不能。本课程固定 SDK 自己的仓库和提交；公开 Hook 课程有独立版次。引用必须回到当前仓库的对象。",
+            "sourceRefs": [
+              "query-entry",
+              "spawn"
+            ],
+            "sourceCategory": "sdk-repo"
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "transport-boundary",
+          "kind": "single-choice",
+          "prompt": "默认 SDK 传输在公开代码中怎样连接 Claude CLI？",
+          "options": [
+            {
+              "id": "process",
+              "text": "通过 anyio.open_process 启动进程并建立管道"
+            },
+            {
+              "id": "loop",
+              "text": "在 Python 中直接调用 CLI 内部模型调度函数"
+            }
+          ],
+          "correctOption": "process",
+          "explanation": {
+            "kind": "fact",
+            "text": "默认 SubprocessCLITransport.connect 以 stdin/stdout 管道启动 CLI；此调用点不提供二进制内部函数链。",
+            "sourceRefs": [
+              "spawn",
+              "transport-select"
+            ],
+            "sourceCategory": "sdk-repo"
+          }
+        }
+      ],
+      "summary": [
+        {
+          "kind": "fact",
+          "text": "query 委托客户端，默认传输启动 CLI；初始化后用 JSON 行协议发送用户消息，返回流由 Query 与解析器消费。",
+          "sourceRefs": [
+            "query-delegate",
+            "transport-select",
+            "spawn",
+            "send",
+            "receive"
+          ],
+          "sourceCategory": "sdk-repo"
+        }
+      ]
+    },
+    {
+      "id": "messages-control",
+      "title": "消息与控制回调怎样分流并返回？",
+      "objectives": [
+        "区分普通 SDK 消息、control_response 与 control_request。",
+        "沿 NDJSON 读取、Query 路由、receive_messages 和 parse_message 回到调用者。",
+        "说明回调处理证明什么、没有证明什么。"
+      ],
+      "priorKnowledge": [
+        "已理解默认 SDK 请求与子进程边界。",
+        "了解异步迭代和请求 ID 关联。"
+      ],
+      "prerequisiteLessons": [
+        "query-transport"
+      ],
+      "concepts": [
+        {
+          "kind": "fact",
+          "text": "默认传输从 stdout 分帧读取 NDJSON，限制消息长度并解析字典。Query._read_messages 再按 type 路由控制响应和控制请求。",
+          "sourceRefs": [
+            "read",
+            "route"
+          ],
+          "sourceCategory": "sdk-repo"
+        },
+        {
+          "kind": "fact",
+          "text": "control_response 按 request_id 唤醒挂起请求；control_request 交给处理器。hook_callback 查找注册回调并等待结果，can_use_tool 是另一分支。",
+          "sourceRefs": [
+            "route",
+            "control-hooks",
+            "control-permission"
+          ],
+          "sourceCategory": "sdk-repo"
+        },
+        {
+          "kind": "fact",
+          "text": "普通消息从 receive_messages 输出，客户端再调用 parse_message；关闭路径位于 finally。这是 SDK 侧协议行为，不是服务端工具调度源码。",
+          "sourceRefs": [
+            "receive-messages",
+            "receive",
+            "parse"
+          ],
+          "sourceCategory": "sdk-repo"
+        }
+      ],
+      "sourceReading": [
+        "read",
+        "route",
+        "control-permission",
+        "control-hooks",
+        "control-write",
+        "receive-messages",
+        "parse",
+        "receive"
+      ],
+      "keySymbols": [
+        {
+          "name": "read_messages",
+          "sourceRef": "read"
+        },
+        {
+          "name": "_read_messages",
+          "sourceRef": "route"
+        },
+        {
+          "name": "receive_messages",
+          "sourceRef": "receive-messages"
+        },
+        {
+          "name": "parse_message",
+          "sourceRef": "parse"
+        }
+      ],
+      "execution": [
+        {
+          "kind": "fact",
+          "text": "1. read_messages 委托 _read_messages_impl，从 stdout 文本块分帧、检查长度、解析行，再 yield 消息字典。",
+          "sourceRefs": [
+            "read"
+          ],
+          "sourceCategory": "sdk-repo"
+        },
+        {
+          "kind": "fact",
+          "text": "2. Query 读取 transport 消息；控制响应通过 request_id 关联，控制请求启动处理器，二者均不当普通消息直接返回。",
+          "sourceRefs": [
+            "route"
+          ],
+          "sourceCategory": "sdk-repo"
+        },
+        {
+          "kind": "fact",
+          "text": "3. hook_callback 分支查 callback_id 并执行已登记 callback，转换 Python 字段；缺少回调会产生异常。权限回调由 can_use_tool 分支单独处理。",
+          "sourceRefs": [
+            "control-hooks",
+            "control-permission"
+          ],
+          "sourceCategory": "sdk-repo"
+        },
+        {
+          "kind": "fact",
+          "text": "4. receive_messages 处理 end/error 哨兵，否则 yield；客户端调用 parse_message，过滤 None 并交回 query 的异步迭代调用者，finally 关闭 Query。",
+          "sourceRefs": [
+            "receive-messages",
+            "parse",
+            "receive",
+            "query-delegate"
+          ],
+          "sourceCategory": "sdk-repo"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "fact",
+          "text": "结果链：transport.read_messages → Query._read_messages → receive_messages → InternalClient 的 parse_message → query 的调用者。控制请求在 _handle_control_request 的分支处理，不能混作 assistant 消息。",
+          "sourceRefs": [
+            "read",
+            "route",
+            "receive-messages",
+            "receive",
+            "query-delegate",
+            "control-hooks"
+          ],
+          "sourceCategory": "sdk-repo"
+        }
+      ],
+      "scenario": "教学推演：CLI 输出包含一个控制响应、一条 hook_callback 请求和一条普通消息。先按源码标出谁处理控制消息，再找到哪条消息能到达调用者。只进行阅读追踪，不执行 CLI、Hook 或网络模型。",
+      "designRationale": [
+        {
+          "kind": "inference",
+          "text": "按类型与请求 ID 分流，有助于将控制协议与消息迭代分开；这是从路由结构推断的作用，不保证所有内部执行一定按某种顺序发生。",
+          "sourceRefs": [
+            "route",
+            "receive-messages"
+          ],
+          "sourceCategory": "sdk-repo"
+        },
+        {
+          "kind": "advice",
+          "text": "独立实现协议时可为数据流和控制流分别定义类型及关联 ID，并测试未知消息和关闭路径；不要据回调存在就宣称实现了完整权限系统。",
+          "sourceRefs": [
+            "route",
+            "control-permission",
+            "receive"
+          ],
+          "sourceCategory": "sdk-repo"
+        }
+      ],
+      "faq": [
+        {
+          "question": "SDK 回调存在能证明所有工具都必经同一权限算法吗？",
+          "answer": {
+            "kind": "advice",
+            "text": "不能。公开证据只覆盖 SDK 收到对应控制请求后的分支，二进制何时发请求和全部工具策略仍需运行时独立证据。",
+            "sourceRefs": [
+              "control-permission",
+              "control-hooks"
+            ],
+            "sourceCategory": "sdk-repo"
+          }
+        },
+        {
+          "question": "receive_messages 遇到 end 和 error 怎样处理？",
+          "answer": {
+            "kind": "fact",
+            "text": "end 停止迭代；error 重抛已有 Exception，或由错误字符串创建 Exception；其他消息继续 yield。",
+            "sourceRefs": [
+              "receive-messages"
+            ],
+            "sourceCategory": "sdk-repo"
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "control-route",
+          "kind": "single-choice",
+          "prompt": "Query 收到 type=control_response 时怎样处理？",
+          "options": [
+            {
+              "id": "correlate",
+              "text": "按 request_id 关联挂起控制请求，然后 continue"
+            },
+            {
+              "id": "assistant",
+              "text": "直接作为 assistant 消息 yield 给应用"
+            }
+          ],
+          "correctOption": "correlate",
+          "explanation": {
+            "kind": "fact",
+            "text": "控制响应分支查 pending_control_responses，写结果并 set 事件，然后 continue；不会直接进入普通消息路径。",
+            "sourceRefs": [
+              "route"
+            ],
+            "sourceCategory": "sdk-repo"
+          }
+        },
+        {
+          "id": "trace-stream",
+          "kind": "trace",
+          "prompt": "追踪一条普通消息从子进程 stdout 回到 query 调用者；再指出一个内部机制无法由此验证的原因。",
+          "rubric": [
+            "指出传输分帧/解析、Query 路由、receive_messages、parse_message 与调用者。",
+            "区分控制消息和普通消息，说明 finally 的关闭路径。",
+            "列出一个内部待验证问题及所需证据，不把 SDK 模块命名当成运行时实现。"
+          ],
+          "explanation": {
+            "kind": "fact",
+            "text": "按 read → route → receive_messages → 客户端 parse_message → query 逐段核对；这些证据固定于 SDK 仓库，内部循环仍在独立的 CLI 运行时边界外。",
+            "sourceRefs": [
+              "read",
+              "route",
+              "receive-messages",
+              "receive",
+              "query-delegate"
+            ],
+            "sourceCategory": "sdk-repo"
+          }
+        }
+      ],
+      "summary": [
+        {
+          "kind": "fact",
+          "text": "控制消息按 type 和 request_id 分流，普通消息经 SDK 解析输出；回调是公开协议的一部分，不能据此还原二进制内部执行。",
+          "sourceRefs": [
+            "route",
+            "control-hooks",
+            "receive-messages",
+            "receive"
+          ],
+          "sourceCategory": "sdk-repo"
+        }
+      ]
+    }
+  ]
+}
