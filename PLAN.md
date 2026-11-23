@@ -1,6 +1,6 @@
 # 开发与验收计划
 
-按 P0 → P1 → P2 → P3 → P4 → P5 → P6 顺序交付。每阶段在验收条件、测试结果和 Git 记录齐备后交负责人验收。**P0–P3 已完成，P4 已实现并进入交付评审。** [Phase 1 验收记录](docs/PHASE1_ACCEPTANCE.md) · [Phase 2 验收记录](docs/PHASE2_ACCEPTANCE.md) · [Phase 3 验收记录](docs/PHASE3_ACCEPTANCE.md) · [Phase 4 验收记录](docs/PHASE4_ACCEPTANCE.md)
+按 P0 → P1 → P2 → P3 → P4 → P5 → P6 顺序交付。每阶段在验收条件、测试结果和 Git 记录齐备后交负责人验收。**P0–P4 已完成，P5 已实现并进入交付评审。** [Phase 1 验收记录](docs/PHASE1_ACCEPTANCE.md) · [Phase 2 验收记录](docs/PHASE2_ACCEPTANCE.md) · [Phase 3 验收记录](docs/PHASE3_ACCEPTANCE.md) · [Phase 4 验收记录](docs/PHASE4_ACCEPTANCE.md) · [Phase 5 验收记录](docs/PHASE5_ACCEPTANCE.md)
 
 | 阶段与依赖 | 明确任务和具体交付物 | 验收标准 | 测试要求 | Git 提交要求 |
 | --- | --- | --- | --- | --- |
@@ -73,3 +73,14 @@ P3 保持课程 Schema v1 与数据库 user_version=2。教材独立提交；应
 | 三项目隔离与恢复 | 同路径、同方法名、同课程/章节/题号/证据键不串项目；错项目/错提交/错 blob 拒绝；修复、重启与新版不覆盖旧记录 | [Phase 4 测试](tests/phase4.test.ts)；Pi/Codex 真实固定来源回归 |
 
 P4 保持课程 Schema v1 与数据库 user_version=2，没有新增持久化或执行上游代码。来源核对、课程、应用接入、验收分别提交。已执行命令、结果和待负责人审稿项见 [Phase 4 验收记录](docs/PHASE4_ACCEPTANCE.md)。
+
+## P5 实施与验收清单
+
+| 交付 | 已实现内容 | 验证入口 |
+| --- | --- | --- |
+| 公开仓库课程 | Claude 主仓保留 `b022ba6df88a5ddfbcedc39739a191c7e2ff5196`，一章公开 Hook 示例、6 条证据 | [公开课程](courses/claude-public.v1.json) |
+| 独立官方 SDK | Python Agent SDK 0.2.187，独立 `3184360393a92ca8a6ec7bbbdee571afd1ce1c56`；两章、19 条证据；按来源选择与独立 release 保存记录 | [SDK 教材](courses/claude-sdk-python.v1.json) · [真实回放](tests/claude.test.ts) |
+| 官方文档阅读卡 | 两份原始 Markdown 响应、时间、URL、响应摘要、标题和短选区摘要；本机导入、离线读取与损坏修复 | `/materials/claude`；[快照归属](materials/claude/NOTICE.md) |
+| 来源审稿边界 | Schema v2 分类断言；内部问题独立字段；错仓、错类别、内部 fact 结构、错段落和错摘要拒绝；旧 v1 原样恢复 | [课程契约](docs/LEARNING_SCHEMA.md) · [来源与缺口](docs/CLAUDE_SCOPE.md) · [Phase 5 测试](tests/phase5.test.ts) |
+
+P5 保持 SQLite user_version=2；既有 source_kind 已支持 SDK，不新增 DDL。阅读卡以不可变本机清单和内容寻址响应保留，随整个数据目录备份，不纳入源码章节完成率。按公开仓库、SDK、补充资料、平台接入和验收拆分提交，实际命令及待验收边界见 [Phase 5 验收记录](docs/PHASE5_ACCEPTANCE.md)。

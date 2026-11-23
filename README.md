@@ -2,7 +2,7 @@
 
 一个本地优先的中文 Agent Harness 源码学习平台。学习者从具体问题进入课程，先看架构和执行过程，再跳到固定 Git 提交中的函数与行区间，最后通过练习、笔记和复习检验理解。
 
-**Phase 4 已接入 DeepSeek Harness。** Pi 提供四章深入课程及 Mock 实验；Codex 提供架构导读、模型轮次和工具结果三章；DeepSeek 新增插件架构、模型 step 与原生工具结果三章。三个项目支持固定源码阅读、本地导师、符号候选和独立学习记录。旧版课程与记录继续保留，Claude Code 计划在 Phase 5 开课。
+**Phase 5 已接入 Claude Code。** 四个项目均可学习：Pi 深入课程与 Mock、Codex 核心路径、DeepSeek 插件运行时，以及 Claude 的公开 Hook 示例和独立官方 Python Agent SDK 教材。Claude 官方文档另有带原始响应快照的阅读卡，未验证内部机制保留为问题。旧版课程与学习记录继续可用。
 
 ## 本机启动
 
@@ -38,6 +38,16 @@ npm start
 
 本课仅覆盖固定公开版本、默认 base 的 headless 新会话与 native 工具路径。各章说明未覆盖范围；模型服务端内部、其他 profile、PTC 和平台安全实测没有被概括为事实。[公开组件与资料缺口表](docs/DEEPSEEK_SCOPE.md) · [Phase 4 验收与手动复核](docs/PHASE4_ACCEPTANCE.md)
 
+### 学习 Claude Code 与官方 Agent SDK
+
+在学习中心打开 **Claude Code**，按来源选择：
+
+1. **公开仓库**：导入 `https://github.com/anthropics/claude-code`，完整提交 `b022ba6df88a5ddfbcedc39739a191c7e2ff5196`。打开《Claude Code 公开仓库与 Hook 示例》，从 `_validate_command` 定位公开示例第 48–53 行；这不是 CLI 二进制内部源码。
+2. **官方 SDK**：在仓库管理的“本项目资料来源”切换到 Python SDK，导入 `https://github.com/anthropics/claude-agent-sdk-python`，独立提交 `3184360393a92ca8a6ec7bbbdee571afd1ce1c56`（0.2.187）。打开《官方 Python Agent SDK：传输与控制协议》的两章，从 `query` 第 11–20 行追到客户端、子进程管道与消息路由。也可分别使用含相应提交的本机工作树或裸仓库。
+3. **官方文档阅读卡**：从项目页进入，点击“导入已核对快照”，再阅读原始响应中的标题与短选区。URL、抓取时间、响应及选区摘要均可核对，导入后可断网复读；原文只作纯文本展示。
+
+课程、阅读器和导师会标明“公开仓库 / 官方 SDK”，课程版次与记录独立。两类源码课共三章、25 条证据、三道单选和一道追踪自评；官方文档有两张独立卡片。各章及导师列出内部调度、沙箱和上下文机制的待验证问题，不能把 SDK 客户端或文档说明当作这些内部实现。[Claude 来源审阅](docs/CLAUDE_SCOPE.md) · [Phase 5 验收记录](docs/PHASE5_ACCEPTANCE.md)
+
 ## 从哪里开始读
 
 | 想了解什么 | 入口 |
@@ -63,10 +73,13 @@ courses/pi-foundations.v1.json   不可变的 Pi 旧版架构导读
 courses/pi-foundations.v2.json   同一 Git 基线的四章深入课程
 courses/codex-foundations.v1.json Codex 独立 Git 基线的三章课程
 courses/deepseek-foundations.v1.json DeepSeek 独立版次与公开范围课程
+courses/claude-public.v1.json    Claude 公开 Hook 示例（Schema v2）
+courses/claude-sdk-python.v1.json 官方 SDK 独立固定版次（Schema v2）
+materials/claude/               官方文档阅读卡、原始响应和归属说明
 shared/lab.ts                   不执行上游代码的确定性 Mock 引擎
 tests/                          单元、集成、进程重启及真实 Pi 验收
 config/
-  repositories.json             四个项目的公开仓库和固定提交
+  repositories.json             四个项目、五个 Git 来源和固定提交
 docs/
   PRD.md                        需求、页面及验收路径
   ARCHITECTURE.md               模块、接口和本地数据流
@@ -79,13 +92,15 @@ docs/
   schema/
     academy.sql                 可在空 SQLite 库执行的设计基线
     course.schema.json          JSON Schema Draft 2020-12
+    course-v2.schema.json       来源分类与内部待验证问题
+    reading-card.schema.json    官方文档快照卡契约
 checks/
   phase0.py                     离线验收设计契约
 ```
 
 ## 测试
 
-`npm test` 在独立临时目录运行离线测试，默认跳过需要真实 Pi/Codex/DeepSeek 来源的三个用例。`npm run build` 同时检查 TypeScript 和生产构建。最新命令及范围见 [Phase 4 验收记录](docs/PHASE4_ACCEPTANCE.md)；Pi 的 Mock 输入及完整事件序列保留在 [Phase 2 验收记录](docs/PHASE2_ACCEPTANCE.md)，两种真实 Pi 来源的导入步骤见 [Phase 1 验收记录](docs/PHASE1_ACCEPTANCE.md)。
+`npm test` 在独立临时目录运行离线测试，默认跳过需要真实 Git 来源的四个用例（Claude 用例涵盖两个独立仓库）。`npm run build` 同时检查 TypeScript 和生产构建。最新命令及范围见 [Phase 5 验收记录](docs/PHASE5_ACCEPTANCE.md)；Pi 的 Mock 输入及完整事件序列保留在 [Phase 2 验收记录](docs/PHASE2_ACCEPTANCE.md)，两种真实 Pi 来源的导入步骤见 [Phase 1 验收记录](docs/PHASE1_ACCEPTANCE.md)。
 
 ### Phase 0 设计契约
 
