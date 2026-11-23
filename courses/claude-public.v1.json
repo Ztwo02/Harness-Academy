@@ -1,0 +1,289 @@
+{
+  "schemaVersion": 2,
+  "projectId": "claude",
+  "repositoryId": "claude-code",
+  "commit": "b022ba6df88a5ddfbcedc39739a191c7e2ff5196",
+  "courseId": "claude-public",
+  "version": 1,
+  "title": "Claude Code 公开仓库与 Hook 示例",
+  "sourceKind": "public-repo",
+  "unverifiedQuestions": [
+    {
+      "id": "internal-loop",
+      "question": "Claude Code 二进制内部怎样调度模型轮次？",
+      "reason": "公开 Hook 示例与 SDK 进程协议不提供二进制内部调用图。",
+      "verificationNeeded": "可验证的官方运行时源码及独立固定版本。"
+    },
+    {
+      "id": "internal-sandbox",
+      "question": "所有平台中的审批与沙箱隔离怎样实现？",
+      "reason": "回调和文档说明只能证明各自接口，不能证明全部平台的内部执行。",
+      "verificationNeeded": "各平台后端源码、配置和受控运行验收。"
+    },
+    {
+      "id": "internal-context",
+      "question": "内部上下文裁剪、记忆与恢复策略是什么？",
+      "reason": "SDK 输入输出和会话接口不等于运行时内部算法。",
+      "verificationNeeded": "相应实现的公开证据；未取得前保留问题。"
+    }
+  ],
+  "sourceEvidence": {
+    "hook-config": {
+      "path": "examples/hooks/bash_command_validator_example.py",
+      "symbol": null,
+      "startLine": 1,
+      "endLine": 27,
+      "blobOid": "53ab7a829eb159fe3f216faab8296f0ab306f329",
+      "excerptSha256": "5b19151a166539241fa10ac306f32215d2691c9a64b07f72f735b4371728fc04"
+    },
+    "rules": {
+      "path": "examples/hooks/bash_command_validator_example.py",
+      "symbol": null,
+      "startLine": 35,
+      "endLine": 45,
+      "blobOid": "53ab7a829eb159fe3f216faab8296f0ab306f329",
+      "excerptSha256": "b3aaad4257ff6de0517b57c38ba5ae259b64e87cb55918f69c8721c7c129147d"
+    },
+    "validate": {
+      "path": "examples/hooks/bash_command_validator_example.py",
+      "symbol": "_validate_command",
+      "startLine": 48,
+      "endLine": 53,
+      "blobOid": "53ab7a829eb159fe3f216faab8296f0ab306f329",
+      "excerptSha256": "fa25f877b3b101f831f07f458b8a881f6c7b90f2d3de8f7a4861ffe2467bd125"
+    },
+    "input": {
+      "path": "examples/hooks/bash_command_validator_example.py",
+      "symbol": "main",
+      "startLine": 56,
+      "endLine": 72,
+      "blobOid": "53ab7a829eb159fe3f216faab8296f0ab306f329",
+      "excerptSha256": "7bcdf95de29f4c436bc93b904450894d5d3ee0f57c08fa82ab23851a24bd430d"
+    },
+    "decision": {
+      "path": "examples/hooks/bash_command_validator_example.py",
+      "symbol": "_validate_command",
+      "startLine": 74,
+      "endLine": 79,
+      "blobOid": "53ab7a829eb159fe3f216faab8296f0ab306f329",
+      "excerptSha256": "3291aea46357d6b9b05ab3d2a4b6d007f39d47c661421e4b862697a7a1953e37"
+    },
+    "entry": {
+      "path": "examples/hooks/bash_command_validator_example.py",
+      "symbol": "main",
+      "startLine": 82,
+      "endLine": 83,
+      "blobOid": "53ab7a829eb159fe3f216faab8296f0ab306f329",
+      "excerptSha256": "12c5c4b0d7c69fa3b629575ac993b6e531614689f8359dae03394dcab8fbde8c"
+    }
+  },
+  "materials": {},
+  "lessons": [
+    {
+      "id": "hook-example",
+      "title": "公开 Hook 示例：从输入到校验结果",
+      "objectives": [
+        "指出课程证据来自公开示例，而非 Claude Code 内部运行时。",
+        "追踪 stdin JSON、Bash 分支、正则规则与退出码。",
+        "按源码推演一个命令，并说明示例的安全边界。"
+      ],
+      "priorKnowledge": [
+        "理解 Python 函数、JSON、正则和进程退出码。",
+        "本平台只阅读示例，不执行 Hook 或命令。"
+      ],
+      "prerequisiteLessons": [],
+      "concepts": [
+        {
+          "kind": "fact",
+          "text": "先定位范围：这个文件自带 PreToolUse/Bash 配置示例，main 从标准输入读取 JSON。它是一段公开 Hook 示例，不是 Claude Code 内部 Agent Loop 的源码。",
+          "sourceRefs": [
+            "hook-config",
+            "input"
+          ],
+          "sourceCategory": "public-repo"
+        },
+        {
+          "kind": "fact",
+          "text": "示例规则只匹配特定 grep/find 文本；_validate_command 返回问题列表，main 根据列表写 stderr 并退出 2。退出码的产品含义在官方文档阅读卡中单独核对，不能只凭注释证明运行时实现。",
+          "sourceRefs": [
+            "rules",
+            "validate",
+            "decision"
+          ],
+          "sourceCategory": "public-repo"
+        },
+        {
+          "kind": "advice",
+          "text": "输入要满足示例假设：这里仅捕获 JSONDecodeError，不能把它当成任意恶意输入的完整防护或通用 shell 安全分析器。未公开的内部机制在待验证问题中保留。",
+          "sourceRefs": [
+            "input",
+            "rules"
+          ],
+          "sourceCategory": "public-repo"
+        }
+      ],
+      "sourceReading": [
+        "hook-config",
+        "rules",
+        "validate",
+        "input",
+        "decision",
+        "entry"
+      ],
+      "keySymbols": [
+        {
+          "name": "main",
+          "sourceRef": "input"
+        },
+        {
+          "name": "_validate_command",
+          "sourceRef": "validate"
+        }
+      ],
+      "execution": [
+        {
+          "kind": "fact",
+          "text": "1. __main__ 分支调用 main；main 尝试 json.load(sys.stdin)，JSON 解析错误时写 stderr 并退出 1。",
+          "sourceRefs": [
+            "entry",
+            "input"
+          ],
+          "sourceCategory": "public-repo"
+        },
+        {
+          "kind": "fact",
+          "text": "2. tool_name 不是 Bash 或 command 为空时退出 0；否则调用 _validate_command。",
+          "sourceRefs": [
+            "input",
+            "decision"
+          ],
+          "sourceCategory": "public-repo"
+        },
+        {
+          "kind": "fact",
+          "text": "3. _validate_command 遍历两条规则，用 re.search 收集匹配消息，再返回 issues。",
+          "sourceRefs": [
+            "rules",
+            "validate"
+          ],
+          "sourceCategory": "public-repo"
+        },
+        {
+          "kind": "fact",
+          "text": "4. issues 非空时逐条写 stderr 并退出 2；无匹配时函数自然结束。这条示例路径没有实际执行被检查的命令。",
+          "sourceRefs": [
+            "decision",
+            "entry"
+          ],
+          "sourceCategory": "public-repo"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "fact",
+          "text": "公开文件调用链：__main__ → main → json.load / _validate_command → re.search；issues 回到 main 决定输出与退出。",
+          "sourceRefs": [
+            "entry",
+            "input",
+            "decision",
+            "validate"
+          ],
+          "sourceCategory": "public-repo"
+        }
+      ],
+      "scenario": "教学推演：收到 tool_name=Bash、tool_input.command=\"grep TODO app.py\"。在不运行 Hook 的前提下，沿规则预测 issues 非空并退出 2；再比较 \"rg TODO app.py\"。这只证明示例脚本的文本校验行为，实际 Hook 调用时机另读官方文档快照。",
+      "designRationale": [
+        {
+          "kind": "inference",
+          "text": "把规则与入口分开，使规则匹配可以独立阅读；这是由函数结构推断的作用，不是作者动机的完整说明。",
+          "sourceRefs": [
+            "rules",
+            "validate",
+            "input"
+          ],
+          "sourceCategory": "public-repo"
+        },
+        {
+          "kind": "advice",
+          "text": "自己的 Hook 应区分格式错误、无关工具和校验拒绝；若要做安全控制，还需类型校验、shell 语义分析与平台测试，不能照搬两条正则当作沙箱。",
+          "sourceRefs": [
+            "input",
+            "rules",
+            "decision"
+          ],
+          "sourceCategory": "public-repo"
+        }
+      ],
+      "faq": [
+        {
+          "question": "这能证明 Claude Code 内部怎样执行工具吗？",
+          "answer": {
+            "kind": "advice",
+            "text": "不能。本章只说明该公开文件的行为；产品 Hook 协议见独立官方文档阅读卡，内部调度、权限与沙箱保留为待验证问题。",
+            "sourceRefs": [
+              "hook-config",
+              "input"
+            ],
+            "sourceCategory": "public-repo"
+          }
+        },
+        {
+          "question": "带管道的 grep 一定会被第一条规则拒绝吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "不能这样概括：第一条规则含负向前瞻，出现管道字符时不会匹配这一规则。它不是完整的 shell 解析。",
+            "sourceRefs": [
+              "rules"
+            ],
+            "sourceCategory": "public-repo"
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "validator-result",
+          "kind": "single-choice",
+          "prompt": "示例收到 Bash 命令 grep TODO app.py 时，哪条路径符合该版本公开代码？",
+          "options": [
+            {
+              "id": "block",
+              "text": "收集规则消息，写 stderr，退出 2"
+            },
+            {
+              "id": "execute",
+              "text": "直接执行 grep，再转给模型"
+            },
+            {
+              "id": "internal",
+              "text": "进入公开源码中的内部模型调度器"
+            }
+          ],
+          "correctOption": "block",
+          "explanation": {
+            "kind": "fact",
+            "text": "grep 开头且没有管道符合第一条规则；_validate_command 返回 issues，main 非空分支输出并退出 2。",
+            "sourceRefs": [
+              "rules",
+              "validate",
+              "decision"
+            ],
+            "sourceCategory": "public-repo"
+          }
+        }
+      ],
+      "summary": [
+        {
+          "kind": "fact",
+          "text": "本章能验证的是公开 Hook 示例的输入、正则和退出路径；文档协议、SDK 客户端及未验证内部机制有各自边界。",
+          "sourceRefs": [
+            "hook-config",
+            "input",
+            "validate",
+            "decision"
+          ],
+          "sourceCategory": "public-repo"
+        }
+      ]
+    }
+  ]
+}
