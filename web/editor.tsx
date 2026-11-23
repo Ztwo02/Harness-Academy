@@ -27,15 +27,19 @@ export default function EditorPane({
   start,
   end,
   change,
+  navigate,
 }: {
   file: FileView;
   start: number;
   end: number;
   change: (a: number, b: number) => void;
+  navigate: (symbol: string, kind: "definition" | "reference") => void;
 }) {
   const container = useRef<HTMLDivElement>(null),
-    notify = useRef(change);
+    notify = useRef(change),
+    navigation = useRef(navigate);
   notify.current = change;
+  navigation.current = navigate;
   useEffect(() => {
     if (!container.current) return;
     const model = monaco.editor.createModel(
@@ -77,7 +81,22 @@ export default function EditorPane({
     const listener = editor.onDidChangeCursorSelection((e) =>
       notify.current(e.selection.startLineNumber, e.selection.endLineNumber),
     );
+    const actions = (["definition", "reference"] as const).map((kind) =>
+      editor.addAction({
+        id: "academy." + kind,
+        label: kind === "definition" ? "查找定义候选" : "查找引用候选",
+        keybindings: [
+          kind === "definition" ? monaco.KeyCode.F12 : monaco.KeyMod.Shift | monaco.KeyCode.F12,
+        ],
+        run: () => {
+          const position = editor.getPosition();
+          const word = position && model.getWordAtPosition(position);
+          if (word) navigation.current(word.word, kind);
+        },
+      }),
+    );
     return () => {
+      actions.forEach((action) => action.dispose());
       listener.dispose();
       editor.dispose();
       model.dispose();

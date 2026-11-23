@@ -1,5 +1,4 @@
 import { execFile } from "node:child_process";
-import { promisify } from "node:util";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import {
@@ -19,7 +18,6 @@ import type { DatabaseSync } from "node:sqlite";
 import { Problem, requireThat, transaction } from "./base.ts";
 import type { CatalogSource, Evidence, FileView, TreePage } from "../shared/types.ts";
 
-const run = promisify(execFile);
 export const oidPattern = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/;
 const MAX_FILE = 1024 * 1024;
 const MAX_OBJECT_BYTES = 2 * 1024 ** 3;
@@ -29,7 +27,12 @@ const objectMessage = "无法读取固定提交的 Git 对象，请从仓库管�
 async function git(
   dir: string,
   args: string[],
-  options: { protocol?: "file" | "https"; timeout?: number } = {},
+  options: {
+    protocol?: "file" | "https";
+    timeout?: number;
+    input?: string;
+    maxBuffer?: number;
+  } = {},
 ) {
   const env: NodeJS.ProcessEnv = {
     PATH: process.env.PATH,
@@ -45,37 +48,130 @@ async function git(
     LC_ALL: "C",
   };
   try {
-    const { stdout } = await run(
-      "git",
-      [
-        "-c",
-        "core.hooksPath=/dev/null",
-        "-c",
-        "credential.helper=",
-        "-c",
-        "http.followRedirects=false",
-        "-c",
-        "fetch.recurseSubmodules=false",
-        "-c",
-        "gc.auto=0",
-        "-c",
-        "maintenance.auto=false",
-        "--git-dir=" + dir,
-        ...args,
-      ],
-      {
-        cwd: path.dirname(dir),
-        env,
-        windowsHide: true,
-        timeout: options.timeout ?? 15_000,
-        maxBuffer: 16 * 1024 ** 2,
-        encoding: "buffer",
-      },
-    );
+    const stdout = await new Promise<Buffer>((resolve, reject) => {
+      const child = execFile(
+        "git",
+        [
+          "-c",
+          "core.hooksPath=/dev/null",
+          "-c",
+          "credential.helper=",
+          "-c",
+          "http.followRedirects=false",
+          "-c",
+          "fetch.recurseSubmodules=false",
+          "-c",
+          "gc.auto=0",
+          "-c",
+          "maintenance.auto=false",
+          "--git-dir=" + dir,
+          ...args,
+        ],
+        {
+          cwd: path.dirname(dir),
+          env,
+          windowsHide: true,
+          timeout: options.timeout ?? 15_000,
+          maxBuffer: options.maxBuffer ?? 16 * 1024 ** 2,
+          encoding: "buffer",
+        },
+        (error, output) => (error ? reject(error) : resolve(output)),
+      );
+      child.stdin?.on("error", () => {
+        /* A failed child is handled by its callback. */
+      });
+      child.stdin?.end(options.input);
+    });
     return stdout;
   } catch (cause) {
     throw new Problem(422, "git_object", objectMessage, { cause });
   }
+}
+
+// Ordinary source blobs only; no checkout, attributes, symlinks, filters or upstream config.
+// The caller searches the decoded in-memory corpus with ripgrep over stdin.
+export async function sourceCorpus(dir: string, sha: string) {
+  const raw = (await git(dir, ["ls-tree", "-rz", "--full-tree", sha])).toString("utf8");
+  const entries = raw
+    .split("\0")
+    .filter(Boolean)
+    .flatMap((row) => {
+      const tab = row.indexOf("\t"),
+        [mode, , oid] = row.slice(0, tab).split(" "),
+        name = row.slice(tab + 1);
+      if (!/^100(644|755)$/.test(mode) || !/\.(?:[cm]?[jt]sx?|rs|py)$/.test(name)) return [];
+      if (name.split("/").some((s) => ["node_modules", "vendor", "dist"].includes(s))) return [];
+      checkPath(name);
+      return [{ path: name, oid }];
+    });
+  requireThat(
+    entries.length <= 4000,
+    422,
+    "index_budget",
+    "源码索引超过 4000 文件预算，请缩小来源。可继续通过课程证据阅读。",
+  );
+  if (!entries.length) return [];
+  const sizes = (
+    await git(dir, ["cat-file", "--batch-check=%(objectsize)"], {
+      input: entries.map((e) => e.oid).join("\n") + "\n",
+    })
+  )
+    .toString()
+    .trim()
+    .split("\n")
+    .map(Number);
+  requireThat(
+    sizes.length === entries.length && sizes.every((n) => Number.isSafeInteger(n) && n >= 0),
+    422,
+    "index_blob",
+    objectMessage,
+  );
+  const selected = entries.filter((_, i) => sizes[i] <= MAX_FILE);
+  const total = sizes.reduce((sum, n) => sum + (n <= MAX_FILE ? n : 0), 0);
+  requireThat(
+    total <= 32 * 1024 ** 2,
+    422,
+    "index_budget",
+    "源码索引超过 32 MiB 预算。可继续通过课程证据阅读。",
+  );
+  if (!selected.length) return [];
+  const bytes = await git(dir, ["cat-file", "--batch"], {
+    input: selected.map((e) => e.oid).join("\n") + "\n",
+    timeout: 20000,
+    maxBuffer: total + 1024 ** 2,
+  });
+  let offset = 0;
+  return selected.flatMap((entry) => {
+    const newline = bytes.indexOf(10, offset),
+      header = bytes.subarray(offset, newline).toString().split(" ");
+    const size = Number(header[2]);
+    requireThat(
+      header[0] === entry.oid &&
+        header[1] === "blob" &&
+        Number.isSafeInteger(size) &&
+        size <= MAX_FILE,
+      422,
+      "index_blob",
+      objectMessage,
+    );
+    const body = bytes.subarray(newline + 1, newline + 1 + size);
+    offset = newline + 1 + size + 1;
+    requireThat(
+      createHash(sha.length === 40 ? "sha1" : "sha256")
+        .update("blob " + size + "\0")
+        .update(body)
+        .digest("hex") === entry.oid,
+      422,
+      "damaged_blob",
+      objectMessage,
+    );
+    try {
+      const content = new TextDecoder("utf-8", { fatal: true }).decode(body).replace(/\r\n/g, "\n");
+      return /[\r\0]/.test(content) ? [] : [{ ...entry, content }];
+    } catch {
+      return [];
+    }
+  });
 }
 async function initBare(dir: string, sha: string) {
   await git(dir, [
@@ -110,7 +206,8 @@ async function localObjects(locator: string, target: string, sha: string) {
   let bytes = 0,
     files = 0;
   for (const group of await readdir(source, { withFileTypes: true })) {
-    if (!(group.name === "pack" || /^[0-9a-f]{2}$/.test(group.name)) || !group.isDirectory()) continue;
+    if (!(group.name === "pack" || /^[0-9a-f]{2}$/.test(group.name)) || !group.isDirectory())
+      continue;
     const from = path.join(source, group.name);
     const to = path.join(target, "objects", group.name);
     await mkdir(to, { recursive: true });
@@ -140,10 +237,17 @@ async function localObjects(locator: string, target: string, sha: string) {
   return parent;
 }
 
-async function verifyLocalIdentity(db: DatabaseSync, source: CatalogSource, dir: string, sha: string) {
+async function verifyLocalIdentity(
+  db: DatabaseSync,
+  source: CatalogSource,
+  dir: string,
+  sha: string,
+) {
   if (
     sha === source.baselineCommit ||
-    db.prepare("SELECT 1 FROM revision WHERE repository_id=? AND commit_sha=?").get(source.repositoryId, sha)
+    db
+      .prepare("SELECT 1 FROM revision WHERE repository_id=? AND commit_sha=?")
+      .get(source.repositoryId, sha)
   )
     return;
   // Tie a different local revision to the registered project by Git ancestry, never by folder name.
@@ -235,7 +339,9 @@ export async function importRevision(
     if (generation) {
       try {
         const current = path.join(objects, generation);
-        const pin = (await git(current, ["rev-parse", "--verify", "refs/heads/pin"])).toString().trim();
+        const pin = (await git(current, ["rev-parse", "--verify", "refs/heads/pin"]))
+          .toString()
+          .trim();
         requireThat(pin === sha, 422, "damaged_pin", objectMessage);
         await git(current, ["fsck", "--full", "--no-reflogs", sha], {
           timeout: 120000,
@@ -326,27 +432,37 @@ async function lookup(dir: string, sha: string, value: string): Promise<Item> {
   }
   return item;
 }
-export async function treePage(dir: string, sha: string, value: string, offset: number): Promise<TreePage> {
+export async function treePage(
+  dir: string,
+  sha: string,
+  value: string,
+  offset: number,
+): Promise<TreePage> {
   const tree = await lookup(dir, sha, value);
   requireThat(tree.mode === "040000", 422, "not_tree", "请选择普通目录。");
   const rows = (await list(dir, tree.oid)).sort(
-    (a, b) => Number(b.mode === "040000") - Number(a.mode === "040000") || a.name.localeCompare(b.name, "en"),
+    (a, b) =>
+      Number(b.mode === "040000") - Number(a.mode === "040000") ||
+      a.name.localeCompare(b.name, "en"),
   );
   return {
-    entries: rows
-      .slice(offset, offset + 100)
-      .map((x) => ({
-        name: x.name,
-        path: value ? value + "/" + x.name : x.name,
-        kind: x.mode === "040000" ? "tree" : /^100(644|755)$/.test(x.mode) ? "file" : "other",
-      })),
+    entries: rows.slice(offset, offset + 100).map((x) => ({
+      name: x.name,
+      path: value ? value + "/" + x.name : x.name,
+      kind: x.mode === "040000" ? "tree" : /^100(644|755)$/.test(x.mode) ? "file" : "other",
+    })),
     next: offset + 100 < rows.length ? offset + 100 : null,
   };
 }
 export async function readFileAt(dir: string, sha: string, value: string): Promise<FileView> {
   checkPath(value);
   const obj = await lookup(dir, sha, value);
-  requireThat(/^100(644|755)$/.test(obj.mode), 422, "not_file", "仅支持普通文件，链接与子模块不可读取。");
+  requireThat(
+    /^100(644|755)$/.test(obj.mode),
+    422,
+    "not_file",
+    "仅支持普通文件，链接与子模块不可读取。",
+  );
   const size = Number((await git(dir, ["cat-file", "-s", obj.oid])).toString().trim());
   const meta = { path: value, oid: obj.oid, size, content: null, lineCount: 0 };
   if (size > MAX_FILE) return { ...meta, reason: "文件超过 1 MiB 的阅读上限。" };
@@ -376,7 +492,9 @@ export function verifyExcerpt(file: FileView, evidence: Evidence) {
     label + " 文件摘要不符或不是受支持的文本。",
   );
   requireThat(
-    evidence.startLine >= 1 && evidence.endLine >= evidence.startLine && evidence.endLine <= file.lineCount,
+    evidence.startLine >= 1 &&
+      evidence.endLine >= evidence.startLine &&
+      evidence.endLine <= file.lineCount,
     422,
     "line_range",
     label + " 行号越界，请复核固定版本。",

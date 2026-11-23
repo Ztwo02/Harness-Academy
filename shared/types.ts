@@ -123,6 +123,53 @@ export interface Attempt {
 export interface Review {
   entries: Entry[];
   attempts: Attempt[];
+  statistics: {
+    chapters: number;
+    completed: number;
+    exercises: number;
+    attempted: number;
+    firstCorrect: number;
+    latestCorrect: number;
+    pending: number;
+    recovered: number;
+    attempts: number;
+    correctAttempts: number;
+  };
+  questions: {
+    releaseId: number;
+    version: number;
+    lessonId: string;
+    exerciseId: string;
+    prompt: string;
+    grading: "server" | "self";
+    attempts: number;
+    first: "correct" | "incorrect" | null;
+    latest: "correct" | "incorrect" | null;
+  }[];
+}
+export interface SymbolCandidate {
+  path: string;
+  line: number;
+  column: number;
+  text: string;
+  kind: "definition" | "reference";
+  basis: string;
+}
+export interface SymbolSearch {
+  symbol: string;
+  candidates: SymbolCandidate[];
+  truncated: boolean;
+  scope: string;
+}
+export interface TutorCard {
+  lessonId: string;
+  title: string;
+  symbols: string[];
+  responsibilities: Claim[];
+  calls: Claim[];
+  dataFlow: Claim[];
+  scenario: string;
+  questions: { question: string; answer: Claim }[];
 }
 export interface FileView {
   path: string;

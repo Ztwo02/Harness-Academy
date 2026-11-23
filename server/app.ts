@@ -4,8 +4,16 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 import { catalog, openStore, parseJson, Problem, requireThat, root } from "./base.ts";
-import { importRevision, oidPattern, readFileAt, snapshotPath, treePage, verifyExcerpt } from "./git.ts";
-import { evidenceFor, getLesson, getRelease, piCourse, publish } from "./courses.ts";
+import {
+  importRevision,
+  oidPattern,
+  readFileAt,
+  snapshotPath,
+  treePage,
+  verifyExcerpt,
+} from "./git.ts";
+import { evidenceFor, getLesson, getRelease, piCourses, publish } from "./courses.ts";
+import { findSymbol, tutor } from "./navigation.ts";
 import { chapterPage, projects, recordAnswer, review } from "./study.ts";
 import type { CatalogSource, Course, ImportJob } from "../shared/types.ts";
 
@@ -53,15 +61,21 @@ function integer(value: unknown, min = 1) {
   return Number(value);
 }
 function stringParam(value: unknown) {
-  requireThat(typeof value === "string" && value.length <= 4096, 400, "parameter", "路径或查询参数无效。");
+  requireThat(
+    typeof value === "string" && value.length <= 4096,
+    400,
+    "parameter",
+    "路径或查询参数无效。",
+  );
   return value;
 }
 
 export function createAcademy(
   dataDir: string,
   sources: CatalogSource[] = catalog,
-  bundled: Course = piCourse,
+  bundled: Course | Course[] = piCourses,
 ) {
+  const bundles = Array.isArray(bundled) ? bundled : [bundled];
   const db = openStore(dataDir),
     app = express(),
     token = randomBytes(32).toString("hex");
@@ -73,7 +87,12 @@ export function createAcademy(
     const allowed = ["localhost", "127.0.0.1"].map(
       (name) => name + (req.socket.localPort === 80 ? "" : ":" + req.socket.localPort),
     );
-    requireThat(host && allowed.includes(host.toLowerCase()), 403, "host", "请使用启动时输出的本机地址。");
+    requireThat(
+      host && allowed.includes(host.toLowerCase()),
+      403,
+      "host",
+      "请使用启动时输出的本机地址。",
+    );
     requireThat(
       !req.headers.origin || req.headers.origin === "http://" + host,
       403,
@@ -100,7 +119,12 @@ export function createAcademy(
   api.use((req, res, next) => {
     res.set("Cache-Control", "no-store");
     if (!["GET", "HEAD"].includes(req.method)) {
-      requireThat(req.get("X-Academy-Token") === token, 403, "session", "本地会话已更新，请刷新页面重试。");
+      requireThat(
+        req.get("X-Academy-Token") === token,
+        403,
+        "session",
+        "本地会话已更新，请刷新页面重试。",
+      );
       requireThat(req.is("application/json"), 415, "content_type", "请提交 application/json。");
     }
     next();
@@ -123,14 +147,20 @@ export function createAcademy(
       "正在导入一个仓库，请等待当前任务完成。",
     );
     if (jobs.size >= 32) jobs.delete(jobs.keys().next().value!);
-    const job: ImportJob = { id: randomUUID(), status: "working", message: "正在获取并核对 Git 对象…" };
+    const job: ImportJob = {
+      id: randomUUID(),
+      status: "working",
+      message: "正在获取并核对 Git 对象…",
+    };
     jobs.set(job.id, job);
     void (async () => {
       try {
         await importRevision(db, dataDir, source, body.kind, body.locator, body.commit);
-        if (body.repositoryId === bundled.repositoryId && body.commit === bundled.commit) {
+        for (const course of bundles.filter(
+          (c) => body.repositoryId === c.repositoryId && body.commit === c.commit,
+        )) {
           job.message = "已固定源码，正在验证课程证据…";
-          job.releaseId = await publish(db, dataDir, bundled);
+          job.releaseId = await publish(db, dataDir, course);
         }
         job.status = "done";
         job.message = job.releaseId
@@ -149,7 +179,35 @@ export function createAcademy(
     requireThat(job, 404, "job", "任务已结束或服务已重启，请刷新仓库列表。");
     res.json(job);
   });
-  api.post("/releases", async (req, res) => res.json({ releaseId: await publish(db, dataDir, req.body) }));
+  api.post("/releases", async (req, res) =>
+    res.json({ releaseId: await publish(db, dataDir, req.body) }),
+  );
+  api.post("/bundled-releases", async (_req, res) => {
+    let releaseId: number | undefined;
+    for (const course of bundles) releaseId = await publish(db, dataDir, course);
+    res.json({ releaseId });
+  });
+  api.get("/releases/:rid/symbols", async (req, res) => {
+    const kind = z.enum(["definition", "reference"]).parse(req.query.kind ?? "definition");
+    res.json(
+      await findSymbol(db, dataDir, integer(req.params.rid), stringParam(req.query.symbol), kind),
+    );
+  });
+  api.get("/releases/:rid/tutor", async (req, res) => {
+    const query = z
+      .string()
+      .max(160)
+      .parse(req.query.q ?? "");
+    res.json(
+      await tutor(
+        db,
+        dataDir,
+        integer(req.params.rid),
+        req.query.lesson === undefined ? undefined : id.parse(req.query.lesson),
+        query,
+      ),
+    );
+  });
   api.get("/releases/:rid/lessons/:lesson", (req, res) =>
     res.json(chapterPage(db, integer(req.params.rid), req.params.lesson)),
   );
@@ -157,7 +215,10 @@ export function createAcademy(
     const rid = integer(req.params.rid),
       lesson = req.params.lesson;
     const { state, opening } = z
-      .object({ state: z.enum(["reading", "completed", "unstarted"]), opening: z.literal(true).optional() })
+      .object({
+        state: z.enum(["reading", "completed", "unstarted"]),
+        opening: z.literal(true).optional(),
+      })
       .strict()
       .parse(req.body);
     getLesson(getRelease(db, rid), lesson);
@@ -168,7 +229,9 @@ export function createAcademy(
       WHERE ?=0 OR lesson_progress.state='unstarted'`,
     ).run(rid, lesson, state, opening ? 1 : 0);
     res.json(
-      db.prepare("SELECT state FROM lesson_progress WHERE release_id=? AND lesson_id=?").get(rid, lesson),
+      db
+        .prepare("SELECT state FROM lesson_progress WHERE release_id=? AND lesson_id=?")
+        .get(rid, lesson),
     );
   });
   api.get("/releases/:rid/tree", async (req, res) => {
@@ -195,7 +258,11 @@ export function createAcademy(
   api.get("/releases/:rid/evidence/:eid", async (req, res) => {
     const c = getRelease(db, integer(req.params.rid)),
       e = evidenceFor(c, req.params.eid);
-    const file = await readFileAt(snapshotPath(db, dataDir, c.repositoryId, c.commit), c.commit, e.path);
+    const file = await readFileAt(
+      snapshotPath(db, dataDir, c.repositoryId, c.commit),
+      c.commit,
+      e.path,
+    );
     verifyExcerpt(file, e);
     res.json({ evidence: e, file });
   });
@@ -222,14 +289,18 @@ export function createAcademy(
     if (b.evidenceId)
       requireThat(
         db
-          .prepare("SELECT 1 FROM lesson_evidence WHERE release_id=? AND lesson_id=? AND evidence_id=?")
+          .prepare(
+            "SELECT 1 FROM lesson_evidence WHERE release_id=? AND lesson_id=? AND evidence_id=?",
+          )
           .get(b.releaseId, b.lessonId, b.evidenceId),
         422,
         "citation",
         "选择本章引用的证据。",
       );
     const row = db
-      .prepare("INSERT INTO learning_entry(release_id,lesson_id,evidence_id,kind,body) VALUES (?,?,?,?,?)")
+      .prepare(
+        "INSERT INTO learning_entry(release_id,lesson_id,evidence_id,kind,body) VALUES (?,?,?,?,?)",
+      )
       .run(b.releaseId, b.lessonId, b.evidenceId ?? null, b.kind, b.body);
     res.status(201).json({ id: Number(row.lastInsertRowid) });
   });
@@ -283,19 +354,19 @@ export function createAcademy(
       return;
     }
     if (err instanceof z.ZodError) {
-      res
-        .status(400)
-        .json({
-          code: "input",
-          message: "请检查输入：" + err.issues.map((x) => x.path.join(".")).join("、"),
-        });
+      res.status(400).json({
+        code: "input",
+        message: "请检查输入：" + err.issues.map((x) => x.path.join(".")).join("、"),
+      });
       return;
     }
     if (err.type === "entity.too.large") {
       res.status(413).json({ code: "size", message: "请求超过 2 MiB 上限。" });
       return;
     }
-    res.status(500).json({ code: "internal", message: "本地服务未能完成操作，请检查数据目录并重试。" });
+    res
+      .status(500)
+      .json({ code: "internal", message: "本地服务未能完成操作，请检查数据目录并重试。" });
   };
   app.use(errors);
   return { app, db };

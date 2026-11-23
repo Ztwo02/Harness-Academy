@@ -4,7 +4,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import path from "node:path";
 import { tmpdir } from "node:os";
 import { catalog } from "../server/base.ts";
-import { piCourse } from "../server/courses.ts";
+import { piCourses } from "../server/courses.ts";
 import { launch } from "./fixture.ts";
 
 test(
@@ -32,11 +32,31 @@ test(
       );
       assert.equal(result.status, "done", result.message);
       ids.push(result.releaseId!);
-      for (const [id, e] of Object.entries(piCourse.sourceEvidence)) {
-        const page = await app.call("/releases/" + result.releaseId + "/evidence/" + id);
-        assert.equal(page.status, 200, id);
-        assert.equal(page.body.file.oid, e.blobOid);
+      const editions = (await app.call("/projects")).body[0].editions;
+      assert.equal(editions.length, 2);
+      for (const course of piCourses) {
+        const edition = editions.find((e: { version: number }) => e.version === course.version);
+        for (const [id, e] of Object.entries(course.sourceEvidence)) {
+          const page = await app.call("/releases/" + edition.id + "/evidence/" + id);
+          assert.equal(page.status, 200, id);
+          assert.equal(page.body.file.oid, e.blobOid);
+        }
+        for (const lesson of course.lessons) {
+          const tutor = await app.call(`/releases/${edition.id}/tutor?lesson=${lesson.id}`);
+          assert.equal(tutor.status, 200, JSON.stringify(tutor.body));
+          assert.equal(tutor.body.cards[0].title, lesson.title);
+        }
       }
+      const navigation = await app.call(
+        `/releases/${result.releaseId}/symbols?symbol=prepareToolCall&kind=definition`,
+      );
+      assert.equal(navigation.status, 200, JSON.stringify(navigation.body));
+      assert.ok(
+        navigation.body.candidates.some(
+          (c: { path: string; line: number }) =>
+            c.path === "packages/agent/src/agent-loop.ts" && c.line === 607,
+        ),
+      );
       const { body } = await app.call("/releases/" + result.releaseId + "/evidence/entry");
       assert.deepEqual(
         [body.evidence.startLine, body.evidence.endLine, body.evidence.blobOid],

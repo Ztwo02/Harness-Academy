@@ -12,13 +12,31 @@ import {
 } from "lucide-react";
 import type { Backlink, Evidence, FileView, TreePage } from "../shared/types";
 import { useData } from "./api";
-import { chapterUrl, Disclosure, Failure, Loading, PageTitle, useAcademy, useNarrow, Version } from "./ui";
+import { SymbolNavigation } from "./navigation";
+import {
+  chapterUrl,
+  Disclosure,
+  Failure,
+  Loading,
+  PageTitle,
+  useAcademy,
+  useNarrow,
+  Version,
+} from "./ui";
 
 const EditorPane = lazy(() => import("./editor"));
 function parent(p: string) {
   return p.split("/").slice(0, -1).join("/");
 }
-function Tree({ rid, initial, select }: { rid: number; initial: string; select: (p: string) => void }) {
+function Tree({
+  rid,
+  initial,
+  select,
+}: {
+  rid: number;
+  initial: string;
+  select: (p: string) => void;
+}) {
   const narrow = useNarrow("(max-width:700px)");
   const [dir, setDir] = useState(parent(initial)),
     [offset, setOffset] = useState(0);
@@ -92,7 +110,10 @@ function Tree({ rid, initial, select }: { rid: number; initial: string; select: 
               <button disabled={!offset} onClick={() => setOffset(Math.max(0, offset - 100))}>
                 上一页
               </button>
-              <button disabled={result.data.next === null} onClick={() => setOffset(result.data!.next!)}>
+              <button
+                disabled={result.data.next === null}
+                onClick={() => setOffset(result.data!.next!)}
+              >
                 下一页
               </button>
             </div>
@@ -123,6 +144,10 @@ function SourceView({
   select: (p: string) => void;
 }) {
   const [range, setRange] = useState([start, end]);
+  const [symbol, setSymbol] = useState<{ symbol: string; kind: "definition" | "reference" }>({
+    symbol: "",
+    kind: "definition",
+  });
   const result = useData<Backlink[]>(
     `/releases/${rid}/backlinks?` +
       new URLSearchParams({ path: file.path, start: String(range[0]), end: String(range[1]) }),
@@ -146,7 +171,16 @@ function SourceView({
             </div>
           ) : (
             <Suspense fallback={<Loading />}>
-              <EditorPane file={file} start={start} end={end} change={(a, b) => setRange([a, b])} />
+              <EditorPane
+                file={file}
+                start={start}
+                end={end}
+                change={(a, b) => setRange([a, b])}
+                navigate={(word, kind) => {
+                  setSymbol({ symbol: word, kind });
+                  document.getElementById("symbol-navigation")?.scrollIntoView({ block: "start" });
+                }}
+              />
             </Suspense>
           )}
           <footer>
@@ -156,6 +190,9 @@ function SourceView({
             </span>
           </footer>
         </section>
+      </div>
+      <div id="symbol-navigation">
+        <SymbolNavigation rid={rid} from={from} seed={symbol} />
       </div>
       <div className="two-col reader-bottom">
         <section className="sheet">
@@ -209,7 +246,10 @@ function SourceView({
             </dl>
           </details>
           {from && (
-            <Link className="text-link" to={chapterUrl(rid, from) + (eid ? "#cite-" + eid : "#source")}>
+            <Link
+              className="text-link"
+              to={chapterUrl(rid, from) + (eid ? "#cite-" + eid : "#source")}
+            >
               返回原章
               <ArrowRight size={15} />
             </Link>
@@ -246,7 +286,10 @@ export default function Reader() {
   return (
     <>
       {from && (
-        <Link className="back" to={chapterUrl(Number(rid), from) + (eid ? "#cite-" + eid : "#source")}>
+        <Link
+          className="back"
+          to={chapterUrl(Number(rid), from) + (eid ? "#cite-" + eid : "#source")}
+        >
           <ArrowLeft size={15} />
           返回章节
         </Link>

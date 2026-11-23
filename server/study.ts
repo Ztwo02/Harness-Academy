@@ -15,7 +15,9 @@ import { getLesson, getRelease } from "./courses.ts";
 export function projects(db: DatabaseSync, sources: CatalogSource[]): Project[] {
   return sources.map((source) => {
     const releases = db
-      .prepare("SELECT id,document FROM course_release WHERE project_id=? ORDER BY course_id,version DESC")
+      .prepare(
+        "SELECT id,document FROM course_release WHERE project_id=? ORDER BY course_id,version DESC",
+      )
       .all(source.projectId);
     return {
       ...source,
@@ -163,5 +165,58 @@ export function review(db: DatabaseSync, releaseId?: number, projectId?: string)
           : item.answer,
     };
   });
-  return { entries, attempts };
+  const releases = db
+    .prepare("SELECT r.id,r.document FROM course_release r" + clause)
+    .all(...filters);
+  const statistics: Review["statistics"] = {
+    chapters: 0,
+    completed: 0,
+    exercises: 0,
+    attempted: 0,
+    firstCorrect: 0,
+    latestCorrect: 0,
+    pending: 0,
+    recovered: 0,
+    attempts: attempts.length,
+    correctAttempts: attempts.filter((a) => a.result === "correct").length,
+  };
+  const questions: Review["questions"] = [];
+  const groups = new Map<string, Attempt[]>();
+  for (const a of attempts) {
+    const key = JSON.stringify([a.releaseId, a.lessonId, a.exerciseId]);
+    groups.set(key, [...(groups.get(key) ?? []), a]);
+  }
+  for (const row of releases) {
+    const course = JSON.parse(String(row.document)) as Course;
+    statistics.chapters += course.lessons.length;
+    statistics.completed += Number(
+      db
+        .prepare("SELECT count(*) n FROM lesson_progress WHERE release_id=? AND state='completed'")
+        .get(row.id)?.n,
+    );
+    for (const lesson of course.lessons)
+      for (const q of lesson.exercises) {
+        const answers = groups.get(JSON.stringify([Number(row.id), lesson.id, q.id])) ?? [];
+        const first = answers.at(-1)?.result ?? null,
+          latest = answers[0]?.result ?? null;
+        questions.push({
+          releaseId: Number(row.id),
+          version: course.version,
+          lessonId: lesson.id,
+          exerciseId: q.id,
+          prompt: q.prompt,
+          grading: q.kind === "trace" ? "self" : "server",
+          attempts: answers.length,
+          first,
+          latest,
+        });
+        statistics.exercises++;
+        if (answers.length) statistics.attempted++;
+        if (first === "correct") statistics.firstCorrect++;
+        if (latest === "correct") statistics.latestCorrect++;
+        if (latest === "incorrect") statistics.pending++;
+        if (first === "incorrect" && latest === "correct") statistics.recovered++;
+      }
+  }
+  return { entries, attempts, statistics, questions };
 }
