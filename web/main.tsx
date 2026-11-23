@@ -20,6 +20,7 @@ import {
   Monitor,
   NotebookPen,
   PanelLeftClose,
+  FlaskConical,
 } from "lucide-react";
 import { useData } from "./api";
 import { Academy, chapterUrl, evidenceUrl, Failure, Loading, useAcademy } from "./ui";
@@ -31,6 +32,7 @@ import { Records } from "./records";
 import "./style.css";
 
 const Reader = lazy(() => import("./reader"));
+const Lab = lazy(() => import("./lab").then((m) => ({ default: m.Lab })));
 function PortableChapter() {
   const { project, course, version, lesson } = useParams();
   const { projects } = useAcademy();
@@ -47,7 +49,10 @@ function PortableChapter() {
     );
   const key = new URLSearchParams(search).get("evidence");
   return (
-    <Navigate replace to={key ? evidenceUrl(edition.id, key, lesson) : chapterUrl(edition.id, lesson)} />
+    <Navigate
+      replace
+      to={key ? evidenceUrl(edition.id, key, lesson) : chapterUrl(edition.id, lesson)}
+    />
   );
 }
 function Shell() {
@@ -63,7 +68,9 @@ function Shell() {
     ? "仓库管理"
     : loc.pathname.startsWith("/review")
       ? "学习记录"
-      : "学习中心";
+      : loc.pathname.startsWith("/lab")
+        ? "源码导师与实验"
+        : "学习中心";
   const leaf = loc.pathname.endsWith("/source")
     ? "源码阅读器"
     : loc.pathname.includes("/lessons/")
@@ -98,12 +105,16 @@ function Shell() {
             <NotebookPen />
             学习记录
           </NavLink>
+          <NavLink to="/lab">
+            <FlaskConical />
+            源码导师与实验
+          </NavLink>
         </nav>
         <div className="rail-foot">
           <Monitor size={17} />
           <div>
             <strong>本地工作区</strong>
-            <small>Harness Academy · v0.1</small>
+            <small>Harness Academy · v0.2</small>
           </div>
         </div>
       </aside>
@@ -143,15 +154,24 @@ function Shell() {
           ) : !projects ? (
             <Loading />
           ) : (
-            <Academy.Provider value={{ projects, revision, refresh: () => setRevision((n) => n + 1) }}>
+            <Academy.Provider
+              value={{ projects, revision, refresh: () => setRevision((n) => n + 1) }}
+            >
               <Suspense fallback={<Loading />}>
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/projects/:id" element={<ProjectPage />} />
                   <Route path="/repositories" element={<Repositories />} />
                   <Route path="/review" element={<Records />} />
-                  <Route path="/learn/:project/:course/:version/:lesson" element={<PortableChapter />} />
-                  <Route path="/releases/:rid/lessons/:lesson" element={<Chapter key={loc.pathname} />} />
+                  <Route path="/lab" element={<Lab />} />
+                  <Route
+                    path="/learn/:project/:course/:version/:lesson"
+                    element={<PortableChapter />}
+                  />
+                  <Route
+                    path="/releases/:rid/lessons/:lesson"
+                    element={<Chapter key={loc.pathname} />}
+                  />
                   <Route path="/releases/:rid/source" element={<Reader key={loc.pathname} />} />
                   <Route
                     path="*"

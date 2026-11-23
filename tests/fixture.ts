@@ -6,7 +6,7 @@ import { once } from "node:events";
 import type { AddressInfo } from "node:net";
 import { catalog } from "../server/base.ts";
 import { createAcademy } from "../server/app.ts";
-import { piCourse } from "../server/courses.ts";
+import { piCourse, piCourses } from "../server/courses.ts";
 import type { CatalogSource, Course, ImportJob } from "../shared/types";
 
 export function git(dir: string, ...args: string[]) {
@@ -38,7 +38,8 @@ export function makeFixture(dir: string) {
   git(repo, "update-index", "--add", "--cacheinfo", "120000," + link + ",sample-link");
   git(repo, "update-index", "--add", "--cacheinfo", "160000," + first + ",submodule");
   mkdirSync(path.join(repo, "many"));
-  for (let i = 0; i < 103; i++) writeFileSync(path.join(repo, "many", String(i).padStart(3, "0")), "file");
+  for (let i = 0; i < 103; i++)
+    writeFileSync(path.join(repo, "many", String(i).padStart(3, "0")), "file");
   git(repo, "add", "--", "many");
   git(repo, "commit", "-m", "tree fixture");
   const sha = git(repo, "rev-parse", "HEAD");
@@ -52,13 +53,19 @@ export function makeFixture(dir: string) {
       startLine: 1,
       endLine: 3,
       blobOid: git(repo, "rev-parse", "HEAD:" + file),
-      excerptSha256: createHash("sha256").update("export function sample() {\n  return 1;\n}").digest("hex"),
+      excerptSha256: createHash("sha256")
+        .update("export function sample() {\n  return 1;\n}")
+        .digest("hex"),
     });
   }
   course.lessons[0].keySymbols = [{ name: "sample", sourceRef: "entry" }];
   return { repo, sha, course, file, source: { ...catalog[0], baselineCommit: sha } };
 }
-export async function launch(dir: string, sources: CatalogSource[] = catalog, course: Course = piCourse) {
+export async function launch(
+  dir: string,
+  sources: CatalogSource[] = catalog,
+  course: Course | Course[] = piCourses,
+) {
   const { app, db } = createAcademy(dir, sources, course),
     server = app.listen(0, "127.0.0.1");
   await once(server, "listening");

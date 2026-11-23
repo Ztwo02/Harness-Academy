@@ -2,4 +2,5 @@ node_modules/
 dist/
 coverage/
 .phase1-qa/
+.phase2-qa/
 *.tsbuildinfo

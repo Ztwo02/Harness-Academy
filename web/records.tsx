@@ -10,6 +10,7 @@ const tabs = [
   ["questions", "疑问"],
   ["mistakes", "待复习错题"],
   ["history", "作答历史"],
+  ["statistics", "阶段复习与统计"],
 ] as const;
 export function Records() {
   const { projects, revision, refresh } = useAcademy(),
@@ -30,7 +31,9 @@ export function Records() {
     if (k === "projectId") next.delete("releaseId");
     setQuery(next);
   }
-  const rows = (result.data?.entries ?? []).filter((e) => e.kind === (tab === "notes" ? "note" : "question"));
+  const rows = (result.data?.entries ?? []).filter(
+    (e) => e.kind === (tab === "notes" ? "note" : "question"),
+  );
   const attempts = (result.data?.attempts ?? []).filter(
     (a) => tab === "history" || (a.latest && a.result === "incorrect"),
   );
@@ -89,6 +92,91 @@ export function Records() {
         <Failure text={result.error} />
       ) : !result.data ? (
         <Loading />
+      ) : tab === "statistics" ? (
+        <section className="sheet review-statistics">
+          <h2>当前筛选范围的学习成果</h2>
+          <p>
+            版次分别计数；首次与最近结果按同版同章同题比较，未作答不计入正确率。追踪题包含学习者自评。
+          </p>
+          <dl className="statistics-grid">
+            <div>
+              <dt>章节完成</dt>
+              <dd>
+                {result.data.statistics.completed} / {result.data.statistics.chapters}
+              </dd>
+            </div>
+            <div>
+              <dt>已答题目</dt>
+              <dd>
+                {result.data.statistics.attempted} / {result.data.statistics.exercises}
+              </dd>
+            </div>
+            <div>
+              <dt>首次正确 / 已答</dt>
+              <dd>
+                {result.data.statistics.firstCorrect} / {result.data.statistics.attempted}
+              </dd>
+            </div>
+            <div>
+              <dt>最近正确 / 已答</dt>
+              <dd>
+                {result.data.statistics.latestCorrect} / {result.data.statistics.attempted}
+              </dd>
+            </div>
+            <div>
+              <dt>首次错 → 最近对</dt>
+              <dd>{result.data.statistics.recovered}</dd>
+            </div>
+            <div>
+              <dt>待复习题目</dt>
+              <dd>{result.data.statistics.pending}</dd>
+            </div>
+          </dl>
+          <p>
+            累计 {result.data.statistics.attempts} 次作答，其中{" "}
+            {result.data.statistics.correctAttempts} 次正确。重试同一请求不重复计数。
+          </p>
+          <h3>逐题复习</h3>
+          {!result.data.questions.length ? (
+            <p className="empty">此范围暂无已发布题目。导入 Pi 后可开始学习。</p>
+          ) : (
+            <div className="review-table-wrap">
+              <table className="review-table">
+                <thead>
+                  <tr>
+                    <th>原题与版次</th>
+                    <th>判定方式</th>
+                    <th>首次</th>
+                    <th>最近</th>
+                    <th>次数</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result.data.questions.map((q) => (
+                    <tr key={[q.releaseId, q.lessonId, q.exerciseId].join(":")}>
+                      <td>
+                        <Link
+                          to={chapterUrl(q.releaseId, q.lessonId) + "#exercise-" + q.exerciseId}
+                        >
+                          {q.prompt}
+                        </Link>
+                        <small>v{q.version}</small>
+                      </td>
+                      <td>{q.grading === "self" ? "自评" : "单选判定"}</td>
+                      <td>
+                        {q.first === null ? "未作答" : q.first === "correct" ? "正确" : "错误"}
+                      </td>
+                      <td>
+                        {q.latest === null ? "未作答" : q.latest === "correct" ? "正确" : "需复习"}
+                      </td>
+                      <td>{q.attempts}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
       ) : (
         <section className="sheet records">
           {study
@@ -97,7 +185,8 @@ export function Records() {
                   <div className="record-meta">
                     <span>
                       {e.kind === "note" ? <NotebookPen size={14} /> : <CircleHelp size={14} />}{" "}
-                      {e.kind === "note" ? "笔记" : e.resolved ? "已解决" : "待解疑问"} · v{e.version}
+                      {e.kind === "note" ? "笔记" : e.resolved ? "已解决" : "待解疑问"} · v
+                      {e.version}
                     </span>
                     <time>{e.updatedAt} UTC</time>
                   </div>
@@ -135,7 +224,10 @@ export function Records() {
                   </div>
                   <h3>{a.prompt}</h3>
                   <p>你的答案 · {a.answer}</p>
-                  <Link className="text-link" to={chapterUrl(a.releaseId, a.lessonId) + "#exercises"}>
+                  <Link
+                    className="text-link"
+                    to={chapterUrl(a.releaseId, a.lessonId) + "#exercise-" + a.exerciseId}
+                  >
                     返回原题
                     <ArrowUpRight size={14} />
                   </Link>

@@ -1,6 +1,14 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { ArrowLeft, ArrowUpRight, BookOpen, CheckCircle, Code2, FileCode2, NotebookPen } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  BookOpen,
+  CheckCircle,
+  Code2,
+  FileCode2,
+  NotebookPen,
+} from "lucide-react";
 import type { ChapterPage, Claim, PublicExercise, Review, State } from "../shared/types";
 import { api, message, useData } from "./api";
 import {
@@ -95,7 +103,8 @@ function ExerciseView({ q, page }: { q: PublicExercise; page: ChapterPage }) {
     setError("");
     setBusy(true);
     const payload = JSON.stringify([answer, grade]);
-    if (request.current?.payload !== payload) request.current = { payload, key: crypto.randomUUID() };
+    if (request.current?.payload !== payload)
+      request.current = { payload, key: crypto.randomUUID() };
     try {
       const result = await api<{ result: string; explanation: Claim }>("/attempts", "POST", {
         releaseId: page.releaseId,
@@ -115,7 +124,7 @@ function ExerciseView({ q, page }: { q: PublicExercise; page: ChapterPage }) {
     }
   }
   return (
-    <form className="exercise" onSubmit={submit}>
+    <form className="exercise" id={"exercise-" + q.id} tabIndex={-1} onSubmit={submit}>
       <fieldset disabled={busy}>
         <legend>{q.prompt}</legend>
         {q.kind === "single-choice" ? (
@@ -218,7 +227,11 @@ function Notebook({ page }: { page: ChapterPage }) {
           <button type="button" aria-pressed={kind === "note"} onClick={() => setKind("note")}>
             笔记
           </button>
-          <button type="button" aria-pressed={kind === "question"} onClick={() => setKind("question")}>
+          <button
+            type="button"
+            aria-pressed={kind === "question"}
+            onClick={() => setKind("question")}
+          >
             疑问
           </button>
         </div>
@@ -325,6 +338,23 @@ function LessonView({ page }: { page: ChapterPage }) {
       <PageTitle title={l.title} description={page.title + " · v" + page.version}>
         <ProgressState state={status} />
       </PageTitle>
+      <div className="button-row chapter-lab-links">
+        <Link
+          className="button"
+          to={"/lab?" + new URLSearchParams({ releaseId: String(page.releaseId), lesson: l.id })}
+        >
+          本章源码导师
+        </Link>
+        <Link
+          className="button"
+          to={
+            "/lab?" +
+            new URLSearchParams({ releaseId: String(page.releaseId), lesson: l.id, mode: "mock" })
+          }
+        >
+          打开 Mock 实验
+        </Link>
+      </div>
       {narrow && (
         <Disclosure label="本章目录">
           <Contents />

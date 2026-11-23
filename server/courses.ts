@@ -17,6 +17,10 @@ const matchesSchema = ajv.compile<Course>(schema);
 export const piCourse = parseJson(
   readFileSync(path.join(root, "courses/pi-foundations.v1.json"), "utf8"),
 ) as Course;
+export const piCourses = [
+  piCourse,
+  parseJson(readFileSync(path.join(root, "courses/pi-foundations.v2.json"), "utf8")) as Course,
+];
 
 export function getRelease(db: DatabaseSync, id: number) {
   const row = db.prepare("SELECT document FROM course_release WHERE id=?").get(id);
@@ -32,7 +36,8 @@ function reviewLesson(course: Course, lesson: Lesson, previous: Set<string>) {
   const check = (value: unknown, msg: string) =>
     requireThat(value, 422, "course_reference", lesson.id + " · " + msg);
   check(!previous.has(lesson.id), "章节 ID 重复");
-  for (const id of lesson.prerequisiteLessons) check(previous.has(id), "前置章节必须已在前面出现：" + id);
+  for (const id of lesson.prerequisiteLessons)
+    check(previous.has(id), "前置章节必须已在前面出现：" + id);
   const refs = new Set(lesson.sourceReading);
   const claims: Claim[] = [
     ...lesson.concepts,
@@ -45,7 +50,8 @@ function reviewLesson(course: Course, lesson: Lesson, previous: Set<string>) {
   ];
   for (const claim of claims) {
     for (const id of claim.sourceRefs) refs.add(id);
-    for (const id of claim.materialRefs ?? []) check(Object.hasOwn(course.materials, id), "缺少资料：" + id);
+    for (const id of claim.materialRefs ?? [])
+      check(Object.hasOwn(course.materials, id), "缺少资料：" + id);
   }
   for (const symbol of lesson.keySymbols) {
     refs.add(symbol.sourceRef);
@@ -82,7 +88,12 @@ export async function publish(db: DatabaseSync, dataDir: string, input: unknown)
   const repository = db
     .prepare("SELECT project_id,public_url FROM repository WHERE id=?")
     .get(course.repositoryId);
-  requireThat(repository?.project_id === course.projectId, 422, "repository", "课程项目与主仓库不匹配。");
+  requireThat(
+    repository?.project_id === course.projectId,
+    422,
+    "repository",
+    "课程项目与主仓库不匹配。",
+  );
   requireThat(course.projectId === "pi", 422, "planned", "当前阶段仅开放 Pi 课程。");
   const dir = snapshotPath(db, dataDir, course.repositoryId, course.commit);
   const ids = new Set<string>(),
@@ -94,12 +105,16 @@ export async function publish(db: DatabaseSync, dataDir: string, input: unknown)
   for (const [id, material] of Object.entries(course.materials)) {
     const url = new URL(material.url);
     requireThat(
-      !url.username && !url.password && material.url.startsWith(String(repository.public_url) + "/"),
+      !url.username &&
+        !url.password &&
+        material.url.startsWith(String(repository.public_url) + "/"),
       422,
       "material_origin",
       id + "：Pi 补充资料须来自登记的项目仓库。",
     );
-    const bytes = await readFile(path.join(dataDir, "materials", material.sha256)).catch(() => null);
+    const bytes = await readFile(path.join(dataDir, "materials", material.sha256)).catch(
+      () => null,
+    );
     requireThat(
       bytes &&
         createHash("sha256").update(bytes).digest("hex") === material.sha256 &&
@@ -127,7 +142,9 @@ export async function publish(db: DatabaseSync, dataDir: string, input: unknown)
   return transaction(db, () => {
     const key = [course.projectId, course.courseId, course.version] as const;
     const existing = db
-      .prepare("SELECT id,document FROM course_release WHERE project_id=? AND course_id=? AND version=?")
+      .prepare(
+        "SELECT id,document FROM course_release WHERE project_id=? AND course_id=? AND version=?",
+      )
       .get(...key);
     if (existing) {
       requireThat(
@@ -177,6 +194,11 @@ export async function publish(db: DatabaseSync, dataDir: string, input: unknown)
   });
 }
 export function evidenceFor(course: Course, id: string): Evidence {
-  requireThat(Object.hasOwn(course.sourceEvidence, id), 404, "evidence", "这条证据不属于当前版次。");
+  requireThat(
+    Object.hasOwn(course.sourceEvidence, id),
+    404,
+    "evidence",
+    "这条证据不属于当前版次。",
+  );
   return course.sourceEvidence[id];
 }
