@@ -71,3 +71,5 @@ Mock 引擎位于 [shared/lab.ts](../shared/lab.ts)，预生成纯教学事件�
 P3 已接入 Codex，`bundledCourses` 统一登记 Pi 两版与 Codex 一版；`GET /projects` 的 available 表示应用已提供本项目教材。导入只发布同仓库同提交的内置课程；本地课程上传可附 projectId，拒绝与所选项目不符的包。导师按 release 解析所属项目，项目/版次冲突的深链报错，不静默回退 Pi；订单 Mock 仍只映射 Pi。
 
 Codex 的 Rust 声明采用与其他语言一致的文本候选机制，增加 fn、struct、trait、mod 及 let mut 模式。阅读器默认搜索当前目录，scope 经路径校验并通过 Git literal pathspec 限定树枚举，通配符不扩展；范围和预算都显示在反馈中。GitHub 对象获取上限为 240 秒，本机获取仍为 120 秒；Git 工具、协议与脚本执行边界保持不变。
+
+P4 在内置清单中增加 DeepSeek 独立三章课程，开放其课程发布；导入、导师、阅读器与复习继续使用 release 绑定的 repository/commit。TypeScript 方法候选复用现有文本导航，不增加语言级解析器或扩大检索预算。项目入口与各章说明 headless/native 范围及资料缺口，图表只渲染本项目审核过的固定路径。无新增接口、DDL、网络模型或真实执行能力。[公开范围核对](DEEPSEEK_SCOPE.md)

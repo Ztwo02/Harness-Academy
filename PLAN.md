@@ -1,6 +1,6 @@
 # 开发与验收计划
 
-按 P0 → P1 → P2 → P3 → P4 → P5 → P6 顺序交付。每阶段在验收条件、测试结果和 Git 记录齐备后交负责人验收。**P0–P2 已完成，P3 已实现并进入交付评审。** [Phase 1 验收记录](docs/PHASE1_ACCEPTANCE.md) · [Phase 2 验收记录](docs/PHASE2_ACCEPTANCE.md) · [Phase 3 验收记录](docs/PHASE3_ACCEPTANCE.md)
+按 P0 → P1 → P2 → P3 → P4 → P5 → P6 顺序交付。每阶段在验收条件、测试结果和 Git 记录齐备后交负责人验收。**P0–P3 已完成，P4 已实现并进入交付评审。** [Phase 1 验收记录](docs/PHASE1_ACCEPTANCE.md) · [Phase 2 验收记录](docs/PHASE2_ACCEPTANCE.md) · [Phase 3 验收记录](docs/PHASE3_ACCEPTANCE.md) · [Phase 4 验收记录](docs/PHASE4_ACCEPTANCE.md)
 
 | 阶段与依赖 | 明确任务和具体交付物 | 验收标准 | 测试要求 | Git 提交要求 |
 | --- | --- | --- | --- | --- |
@@ -62,3 +62,14 @@ P2 不新增 DDL。实验只驻留内存，统计由已有进度与作答派生�
 | 项目隔离回归 | 同章号、题号、证据键、路径不串库；教材更新绑定所选项目；Codex 损坏/修复、重启后 Pi 记录仍在 | [跨项目测试](tests/phase3.test.ts)；[真实 Codex 回放](tests/codex.test.ts)；旧 Pi 可移植深链 |
 
 P3 保持课程 Schema v1 与数据库 user_version=2。教材独立提交；应用接入和验收说明另行提交。实际命令、初次下载超时与修订后结果、浏览器覆盖和待负责人复核项见 [Phase 3 验收记录](docs/PHASE3_ACCEPTANCE.md)。
+
+## P4 实施与验收清单
+
+| 交付 | 已实现内容 | 验证入口 |
+| --- | --- | --- |
+| 来源与公开组件核对 | 沿用 DeepSeek-ai/deepseek-harness 固定 `2e39e70496aa02986ca6a820c5d497e816b69d7e`；核实插件组合、headless、默认循环、会话投影与原生工具管线 | [组件核对与资料缺口表](docs/DEEPSEEK_SCOPE.md) |
+| 独立课程 | `deepseek-foundations` v1，三章、11 个文件、35 条证据、三道单选与一道追踪自评；每章说明范围与未验证问题 | [课程包](courses/deepseek-foundations.v1.json)；[真实来源全量回放](tests/deepseek.test.ts) |
+| 学习入口与往返 | DeepSeek 可导入并发布；项目范围提示、架构图、阅读器、导师、笔记、练习与复习复用现有组件；订单 Mock 仅对应 Pi | 从首章 followup 进入 agent.ts 第 171–189 行，再返回原证据 |
+| 三项目隔离与恢复 | 同路径、同方法名、同课程/章节/题号/证据键不串项目；错项目/错提交/错 blob 拒绝；修复、重启与新版不覆盖旧记录 | [Phase 4 测试](tests/phase4.test.ts)；Pi/Codex 真实固定来源回归 |
+
+P4 保持课程 Schema v1 与数据库 user_version=2，没有新增持久化或执行上游代码。来源核对、课程、应用接入、验收分别提交。已执行命令、结果和待负责人审稿项见 [Phase 4 验收记录](docs/PHASE4_ACCEPTANCE.md)。

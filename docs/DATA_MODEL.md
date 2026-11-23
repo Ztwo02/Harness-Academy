@@ -47,4 +47,6 @@ P2 保持数据库 `user_version=2`。教材 `pi-foundations` v2 新增 release�
 
 P3 同样保持数据库 `user_version=2`，无需迁移。Codex 使用独立的 project/repository/revision 和 `codex-foundations` v1；内容版次 1 不等同于 Pi 内容版次 1。即使章节、题号、证据 ID 或文件路径同名，也由 release ID 隔离。项目可学状态来自内置课程清单，不改变仓库清单中的 first_phase。内置教材更新显式绑定项目，旧客户端不传项目时保留更新 Pi 的行为。
 
+P4 保持同一数据库版本，增加 DeepSeek 的 `deepseek-foundations` v1 及其独立 repository/revision。课程和练习继续按 release 隔离；没有回填、迁移或覆盖 Pi/Codex 的学习记录。资料缺口保存在课程断言、FAQ 和版本化说明中，不新增用户数据表。
+
 P2 统计按筛选后的每版每章每题计数。首次/最近分别取最小/最大 attempt.id；已答题数为至少有一次作答的题数。首次正确数、最近正确数的分母均为已答题数，未作答显示“未作答”，不产生除零百分比。待复习为最近 incorrect；“首次错 → 最近对”只统计首次 incorrect 且最近 correct。累计作答含所有有效 attempt，重试同一 request_id 不新增次数；追踪题按课程类型标记自评。所有统计从原记录派生，没有计数器回填或迁移。
