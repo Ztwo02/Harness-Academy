@@ -34,6 +34,14 @@
 
 ## 上游升级
 
+### Codex Phase 3 取证
+
+2026-11-23 取得登记的完整提交 `d4014cb19d23614be39c0cf57d981e042ba0763a`，保持原来源与基线不变。`codex-foundations` v1 的三章引用 13 个文件、28 个闭区间，记录各自原路径、符号、blob OID 和选区摘要。范围是本机 `codex exec` 普通用户任务，沿 CLI → 内嵌 app-server → Session 输入队列 → RegularTask → 模型采样与工具产物回填取证；不把默认 TUI、远端路径或服务端未公开实现纳入事实。
+
+例如 [run_turn 原始定义](https://github.com/openai/codex/blob/d4014cb19d23614be39c0cf57d981e042ba0763a/codex-rs/core/src/session/turn.rs#L227-L249) 的 blob 为 `69cf16e774791a1d9b11e38768391e33f027645b`，第 227–249 行摘要为 `10adf0bd362dbf5a03df03824caa0ae24dd5255d1cdb17068092811b931935a7`。上游该提交的 LICENSE 为 Apache-2.0；本仓库提交中文教材和证据元数据，源码对象保存在用户本机，不复制上游工作树。真实双来源回放见 [Phase 3 验收记录](PHASE3_ACCEPTANCE.md)。
+
+### 更新流程
+
 显式获取新 SHA，与旧提交通读相关 diff，在新树重新定位函数与行区间，重新计算两个摘要，人工复核断言和习题。以新课程版次发布，保留旧版、旧对象与学习记录。重命名、拆函数或出现多个候选时进入待复核清单；不能把附近同名行当作已有证据。
 
 ## Claude Code 的资料边界
