@@ -1,6 +1,6 @@
 # 开发与验收计划
 
-按 P0 → P1 → P2 → P3 → P4 → P5 → P6 顺序交付。每阶段在验收条件、测试结果和 Git 记录齐备后交负责人验收。**P0–P4 已完成，P5 已实现并进入交付评审。** [Phase 1 验收记录](docs/PHASE1_ACCEPTANCE.md) · [Phase 2 验收记录](docs/PHASE2_ACCEPTANCE.md) · [Phase 3 验收记录](docs/PHASE3_ACCEPTANCE.md) · [Phase 4 验收记录](docs/PHASE4_ACCEPTANCE.md) · [Phase 5 验收记录](docs/PHASE5_ACCEPTANCE.md)
+按 P0 → P1 → P2 → P3 → P4 → P5 顺序交付。每阶段在验收条件、测试结果和 Git 记录齐备后交负责人验收。**P0–P5 功能已完成，进入统一维护与交付。** [Phase 1 验收记录](docs/PHASE1_ACCEPTANCE.md) · [Phase 2 验收记录](docs/PHASE2_ACCEPTANCE.md) · [Phase 3 验收记录](docs/PHASE3_ACCEPTANCE.md) · [Phase 4 验收记录](docs/PHASE4_ACCEPTANCE.md) · [Phase 5 验收记录](docs/PHASE5_ACCEPTANCE.md)
 
 | 阶段与依赖 | 明确任务和具体交付物 | 验收标准 | 测试要求 | Git 提交要求 |
 | --- | --- | --- | --- | --- |
@@ -10,9 +10,8 @@
 | P3 Codex；依赖 P2 的课程与实验规范 | 在独立来源和固定版次上制作 Codex 架构导读及核心执行路径课程 | 从 Codex 的项目入口定位真实源码并完成练习，Pi 课程与记录仍可用 | 复核 Codex 的路径、符号、版本；回归跨项目隔离和旧 Pi 深链 | 独立课程提交，记录 Codex 仓库、固定 SHA 与审稿结果 |
 | P4 DeepSeek Harness；依赖 P3 的第二项目接入经验 | 核实该仓实际公开的组件，制作独立导读、执行路径、练习与资料缺口表 | 可沿至少一条有证据的真实调用路径学习；资料缺失处在课程范围中说明 | 全量重放该课证据，验证相似符号不会串到其他仓库 | 分开提交来源核对与课程，附其独立 SHA、范围及缺口 |
 | P5 Claude Code；依赖 P4 验收与 P0 来源分级 | 公开仓库课程、单独固定的官方 SDK 教材、带快照的官方文档阅读卡、未验证问题清单 | 每条结论可识别来源类别；SDK 和公开工具行为能回到各自证据；无法验证的内部实现保留为问题 | 抽检文档快照摘要及段落、SDK 行号，尝试跨仓误引及把内部推断标为事实的审稿负例 | 按公开仓库、SDK 和补充资料拆分提交，记录版本和快照 |
-| P6 综合与独立实现；依赖 P2–P5 可复核课程 | 架构对比矩阵、跨项目证据链接、独立 Harness 设计练习及参考验收任务 | 逐格比较有依据的机制与空缺；学习者可提交独立的最小循环、工具结果和状态轨迹并说明取舍 | 审核每个比较格的版本归属；用固定 Mock 输入复核独立练习的输出与终止条件 | 对比材料与自有实现分开提交，记录课程版次及验收轨迹 |
 
-P3–P5 在技术上复用 P1 的版本模型和 P2 的教学方式。它们的课程和用户数据彼此独立，先后顺序由产品路线决定。P6 对比依次覆盖 Agent Loop、Context、Tool System、State、Session、Event、Permission、Sandbox、Memory、Hooks、Plugin、Multi-Agent；每格均注明版本和资料范围。
+P3–P5 在技术上复用 P1 的版本模型和 P2 的教学方式。它们的课程和用户数据彼此独立，先后顺序由产品路线决定。
 
 ## P0 任务索引
 

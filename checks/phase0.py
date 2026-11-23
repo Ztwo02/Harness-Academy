@@ -79,7 +79,7 @@ class DocumentChecks(unittest.TestCase):
         pages = [ROOT / name for name in ("README.md", "PLAN.md", "AGENTS.md")]
         for page in pages + sorted((ROOT / "docs").rglob("*.md")):
             for target in re.findall(r"\[[^\]]+\]\(([^)]+)\)", page.read_text(encoding="utf-8")):
-                if target.startswith(("https://", "#")):
+                if target.startswith(("https://", "http://127.0.0.1:4317/", "#")) or target == "http://127.0.0.1:4317":
                     continue
                 with self.subTest(page=page.name, target=target):
                     self.assertTrue((page.parent / target.split("#")[0]).is_file())
@@ -105,7 +105,7 @@ class DocumentChecks(unittest.TestCase):
             self.assertIn(repo["url"], sources)
             self.assertIn(repo["baselineCommit"][:8], sources)
         plan = (ROOT / "PLAN.md").read_text(encoding="utf-8")
-        for phase in range(7):
+        for phase in range(6):
             self.assertIn(f"| P{phase} ", plan)
 
     def test_phase5_source_contracts(self):
