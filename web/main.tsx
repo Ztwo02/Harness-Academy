@@ -114,7 +114,7 @@ function Shell() {
           <Monitor size={17} />
           <div>
             <strong>本地工作区</strong>
-            <small>Harness Academy · v0.2</small>
+            <small>Harness Academy · v0.3</small>
           </div>
         </div>
       </aside>

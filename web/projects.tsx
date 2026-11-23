@@ -173,8 +173,12 @@ export function Home() {
                     <small>{topics[p.projectId]}</small>
                   </span>
                   <span className="planned">
-                    <LockKeyhole size={12} />
-                    待开放
+                    {p.available ? <BookOpen size={12} /> : <LockKeyhole size={12} />}
+                    {p.available
+                      ? p.editions[0]
+                        ? `${counts(p.editions[0]).done} / ${counts(p.editions[0]).total} 章`
+                        : "可导入学习"
+                      : "待开放"}
                   </span>
                   <span className="phase">Phase {p.phase}</span>
                   <ChevronRight size={16} />
@@ -192,7 +196,9 @@ export function Home() {
               {steps.map((s, i) => (
                 <li
                   key={s.label}
-                  className={s.ready ? "done" : i === steps.findIndex((x) => !x.ready) ? "current" : ""}
+                  className={
+                    s.ready ? "done" : i === steps.findIndex((x) => !x.ready) ? "current" : ""
+                  }
                 >
                   <span className="step-marker">{s.ready ? <Check size={13} /> : i + 1}</span>
                   <Link to={s.to}>
@@ -282,14 +288,14 @@ export function ProjectPage() {
         ) : (
           <div className="empty">
             <Layers3 />
-            <h3>{p.phase === 1 ? "Pi 架构导读" : "课程将在 Phase " + p.phase + " 开放"}</h3>
+            <h3>{p.available ? "导入源码，开始学习" : "课程将在 Phase " + p.phase + " 开放"}</h3>
             <p>
-              {p.phase === 1
-                ? "导入基线提交后，即可学习第一章并打开源码证据。"
+              {p.available
+                ? "导入登记的课程基线提交，自动核对并发布本项目教材。"
                 : "已登记公开仓库与固定版本，可在仓库管理中查看来源。"}
             </p>
             <Link to={"/repositories?project=" + p.projectId} className="button primary">
-              {p.phase === 1 ? "导入 Pi 源码" : "查看来源"}
+              {p.available ? "导入 " + (names[p.projectId] ?? p.name) + " 源码" : "查看来源"}
               <ArrowRight size={15} />
             </Link>
           </div>

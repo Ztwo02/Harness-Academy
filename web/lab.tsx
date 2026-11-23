@@ -227,10 +227,12 @@ function Tutor({
   rid,
   lesson,
   initialQuery,
+  projectId,
 }: {
   rid: number;
   lesson: string;
   initialQuery: string;
+  projectId: string;
 }) {
   const [text, setText] = useState(initialQuery),
     [query, setQuery] = useState(initialQuery);
@@ -251,7 +253,11 @@ function Tutor({
           <input
             value={text}
             maxLength={160}
-            placeholder="例如 prepareToolCall、工具、agent_end"
+            placeholder={
+              projectId === "codex"
+                ? "例如 run_turn、工具、消息"
+                : "例如 prepareToolCall、工具、agent_end"
+            }
             onChange={(e) => setText(e.target.value)}
           />
         </label>
@@ -272,7 +278,7 @@ function Tutor({
       {result.error ? (
         <>
           <Failure text={result.error} />
-          <Link to="/repositories?project=pi">重新导入固定版本</Link>
+          <Link to={"/repositories?project=" + projectId}>重新导入固定版本</Link>
         </>
       ) : !result.data ? (
         <Loading />
@@ -322,7 +328,7 @@ function Tutor({
           {!result.data.cards.length && (
             <Link
               className="text-link"
-              to={lesson ? chapterUrl(rid, lesson) + "#notebook" : "/projects/pi"}
+              to={lesson ? chapterUrl(rid, lesson) + "#notebook" : "/projects/" + projectId}
             >
               返回课程登记疑问
             </Link>
@@ -336,7 +342,19 @@ function Tutor({
 export function Lab() {
   const { projects, refresh } = useAcademy(),
     [params, setParams] = useSearchParams();
-  const editions = projects.find((p) => p.projectId === "pi")?.editions ?? [];
+  const releaseOwner = projects.find((p) =>
+    p.editions.some((e) => String(e.id) === params.get("releaseId")),
+  );
+  const project =
+    releaseOwner ??
+    projects.find((p) => p.projectId === params.get("projectId")) ??
+    projects.find((p) => p.available) ??
+    projects[0];
+  const invalid =
+    !project.available ||
+    (params.has("releaseId") && !releaseOwner) ||
+    (params.has("projectId") && params.get("projectId") !== project?.projectId);
+  const editions = project?.editions ?? [];
   const edition = editions.find((e) => String(e.id) === params.get("releaseId")) ?? editions[0];
   const lesson = edition?.chapters.some((c) => c.id === params.get("lesson"))
     ? params.get("lesson")!
@@ -358,7 +376,9 @@ export function Lab() {
     setBusy(true);
     setError("");
     try {
-      const r = await api<{ releaseId: number }>("/bundled-releases", "POST", {});
+      const r = await api<{ releaseId: number }>("/bundled-releases", "POST", {
+        projectId: project.projectId,
+      });
       refresh();
       setParams({ releaseId: String(r.releaseId) });
     } catch (e) {
@@ -367,6 +387,14 @@ export function Lab() {
       setBusy(false);
     }
   }
+  if (invalid)
+    return (
+      <>
+        <PageTitle title="源码导师与实验" />
+        <Failure text="找不到所选项目或版次，或项目与版次不匹配。请从原项目课程重新进入。" />
+        <Link to="/">返回学习中心</Link>
+      </>
+    );
   return (
     <>
       <PageTitle
@@ -376,12 +404,33 @@ export function Lab() {
         {edition && <Version sha={edition.commit} />}
       </PageTitle>
       {error && <Failure text={error} />}
+      <div className="filters">
+        <label>
+          学习项目
+          <select
+            aria-label="学习项目"
+            value={project.projectId}
+            onChange={(e) => {
+              setError("");
+              setParams({ projectId: e.target.value });
+            }}
+          >
+            {projects
+              .filter((p) => p.available)
+              .map((p) => (
+                <option key={p.projectId} value={p.projectId}>
+                  {p.name}
+                </option>
+              ))}
+          </select>
+        </label>
+      </div>
       {!edition ? (
         <section className="sheet empty">
-          <h2>先导入 Pi 固定源码</h2>
+          <h2>先导入 {project.name} 固定源码</h2>
           <p>本地导师和实验与课程一起使用。</p>
-          <Link className="button primary" to="/repositories?project=pi">
-            导入 Pi 源码
+          <Link className="button primary" to={"/repositories?project=" + project.projectId}>
+            导入项目源码
           </Link>
         </section>
       ) : (
@@ -416,18 +465,19 @@ export function Lab() {
                 ))}
               </select>
             </label>
-            {!editions.some((e) => e.courseId === "pi-foundations" && e.version >= 2) && (
-              <button disabled={busy} onClick={update}>
-                {busy ? "正在核验教材…" : "从已固定源码更新 Phase 2 教材"}
-              </button>
-            )}
+            {project.projectId === "pi" &&
+              !editions.some((e) => e.courseId === "pi-foundations" && e.version >= 2) && (
+                <button disabled={busy} onClick={update}>
+                  {busy ? "正在核验教材…" : "从已固定源码更新 Phase 2 教材"}
+                </button>
+              )}
           </div>
           <div className="tabs">
             <button aria-pressed={mode === "tutor"} onClick={() => set("mode", "tutor")}>
               本地源码导师
             </button>
             <button aria-pressed={mode === "mock"} onClick={() => set("mode", "mock")}>
-              Mock 实验
+              {project.projectId === "pi" ? "Mock 实验" : "Mock 实验（Pi）"}
             </button>
           </div>
           {mode === "tutor" ? (
@@ -436,7 +486,16 @@ export function Lab() {
               rid={edition.id}
               lesson={lesson}
               initialQuery={params.get("q") ?? ""}
+              projectId={project.projectId}
             />
+          ) : project.projectId !== "pi" ? (
+            <section className="sheet">
+              <h2>本课程尚未提供对应 Mock 实验</h2>
+              <p>当前订单 Mock 讲解 Pi 的循环机制。Codex 请通过本地导师与独立源码证据学习。</p>
+              <button className="secondary" onClick={() => set("mode", "tutor")}>
+                查看 Codex 本地导师
+              </button>
+            </section>
           ) : (
             <MockLab
               key={edition.id + lesson}

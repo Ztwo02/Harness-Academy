@@ -88,7 +88,11 @@ function ImportForm({ source }: { source: Project }) {
             <Github size={16} />
             GitHub
           </button>
-          <button type="button" aria-pressed={kind === "directory"} onClick={() => setKind("directory")}>
+          <button
+            type="button"
+            aria-pressed={kind === "directory"}
+            onClick={() => setKind("directory")}
+          >
             <Folder size={16} />
             本机目录
           </button>
@@ -105,7 +109,7 @@ function ImportForm({ source }: { source: Project }) {
               required
               value={folder}
               onChange={(e) => setFolder(e.target.value)}
-              placeholder="D:\\Repositories\\pi-mono"
+              placeholder={"D:\\Repositories\\" + source.repositoryId}
               spellCheck={false}
             />
             <small>可以使用工作树或裸仓库；只导入已提交的文件。</small>
@@ -122,8 +126,8 @@ function ImportForm({ source }: { source: Project }) {
             spellCheck={false}
           />
           <small>
-            {source.phase === 1
-              ? "首章对应下方基线提交。导入后会自动核对并发布 Pi 架构导读。"
+            {source.available
+              ? "课程对应下方基线提交。导入后会自动核对并发布本项目教材。"
               : "此项目已登记，课程将在 Phase " + source.phase + " 开放。"}
           </small>
         </label>
@@ -138,13 +142,20 @@ function ImportForm({ source }: { source: Project }) {
       ) : (
         job && (
           <div role="status" className="notice">
-            {job.status === "done" ? <CheckCircle2 size={17} /> : <LoaderCircle size={17} className="spin" />}
+            {job.status === "done" ? (
+              <CheckCircle2 size={17} />
+            ) : (
+              <LoaderCircle size={17} className="spin" />
+            )}
             {job.message}
           </div>
         )
       )}
       {job?.releaseId && (
-        <Link className="text-link" to={"/projects/" + source.projectId + "?edition=" + job.releaseId}>
+        <Link
+          className="text-link"
+          to={"/projects/" + source.projectId + "?edition=" + job.releaseId}
+        >
           打开项目课程
           <ArrowRight size={15} />
         </Link>
@@ -152,7 +163,7 @@ function ImportForm({ source }: { source: Project }) {
     </form>
   );
 }
-function PublishForm() {
+function PublishForm({ projectId }: { projectId: string }) {
   const { refresh } = useAcademy(),
     [file, setFile] = useState<File | null>(null),
     [error, setError] = useState(""),
@@ -168,7 +179,7 @@ function PublishForm() {
       if (file.size > 2 * 1024 ** 2) throw new Error("课程文件超过 2 MiB。");
       // Preserve raw JSON so the server can detect duplicate property names.
       const { token } = await api<{ token: string }>("/session");
-      const r = await fetch("/api/releases", {
+      const r = await fetch("/api/releases?" + new URLSearchParams({ projectId }), {
         method: "POST",
         headers: { "Content-Type": "application/json", "X-Academy-Token": token },
         body: await file.text(),
@@ -207,7 +218,7 @@ function PublishForm() {
         </button>
         {error && <Failure text={error} />}
         {result && (
-          <Link className="text-link" to={"/projects/pi?edition=" + result}>
+          <Link className="text-link" to={"/projects/" + projectId + "?edition=" + result}>
             已发布，查看课程
             <ArrowRight size={15} />
           </Link>
@@ -263,7 +274,7 @@ export function Repositories() {
           )}
         </section>
       </div>
-      {source.phase === 1 && <PublishForm />}
+      {source.available && <PublishForm key={source.projectId} projectId={source.projectId} />}
     </>
   );
 }

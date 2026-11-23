@@ -10,9 +10,13 @@ import type {
   State,
 } from "../shared/types.ts";
 import { requireThat, transaction } from "./base.ts";
-import { getLesson, getRelease } from "./courses.ts";
+import { bundledCourses, getLesson, getRelease } from "./courses.ts";
 
-export function projects(db: DatabaseSync, sources: CatalogSource[]): Project[] {
+export function projects(
+  db: DatabaseSync,
+  sources: CatalogSource[],
+  bundles: Course[] = bundledCourses,
+): Project[] {
   return sources.map((source) => {
     const releases = db
       .prepare(
@@ -21,6 +25,7 @@ export function projects(db: DatabaseSync, sources: CatalogSource[]): Project[] 
       .all(source.projectId);
     return {
       ...source,
+      available: bundles.some((course) => course.projectId === source.projectId),
       revisions: db
         .prepare("SELECT commit_sha FROM revision WHERE repository_id=? ORDER BY pinned_at DESC")
         .all(source.repositoryId)

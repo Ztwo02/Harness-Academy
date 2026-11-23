@@ -3,4 +3,5 @@ dist/
 coverage/
 .phase1-qa/
 .phase2-qa/
+.phase3-qa/
 *.tsbuildinfo

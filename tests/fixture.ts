@@ -6,7 +6,7 @@ import { once } from "node:events";
 import type { AddressInfo } from "node:net";
 import { catalog } from "../server/base.ts";
 import { createAcademy } from "../server/app.ts";
-import { piCourse, piCourses } from "../server/courses.ts";
+import { bundledCourses, piCourse } from "../server/courses.ts";
 import type { CatalogSource, Course, ImportJob } from "../shared/types";
 
 export function git(dir: string, ...args: string[]) {
@@ -64,7 +64,7 @@ export function makeFixture(dir: string) {
 export async function launch(
   dir: string,
   sources: CatalogSource[] = catalog,
-  course: Course | Course[] = piCourses,
+  course: Course | Course[] = bundledCourses,
 ) {
   const { app, db } = createAcademy(dir, sources, course),
     server = app.listen(0, "127.0.0.1");
@@ -93,7 +93,7 @@ export async function launch(
     });
     if (start.status !== 202) throw new Error(JSON.stringify(start));
     let job: ImportJob = start.body;
-    const until = Date.now() + 150000;
+    const until = Date.now() + (kind === "github" ? 300000 : 150000);
     while (job.status === "working" && Date.now() < until) {
       await new Promise((r) => setTimeout(r, 100));
       job = (await call("/imports/" + job.id)).body;
