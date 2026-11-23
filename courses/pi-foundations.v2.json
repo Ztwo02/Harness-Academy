@@ -1,0 +1,906 @@
+{
+  "schemaVersion": 1,
+  "projectId": "pi",
+  "repositoryId": "pi-mono",
+  "commit": "08dc60bc52d89d6823a9738cc90b1916e5e446e5",
+  "courseId": "pi-foundations",
+  "version": 2,
+  "title": "Pi 架构与运行机制",
+  "sourceEvidence": {
+    "packages": {
+      "path": "README.md",
+      "symbol": null,
+      "startLine": 17,
+      "endLine": 19,
+      "blobOid": "730033651bd95551b5e0c34189ec823d07a174b1",
+      "excerptSha256": "a1a2370820e7bd8d4377ecb85ad65b02a1922957c9cd450df311d6032b8d0165"
+    },
+    "entry": {
+      "path": "packages/agent/src/agent-loop.ts",
+      "symbol": "agentLoop",
+      "startLine": 32,
+      "endLine": 55,
+      "blobOid": "193e3faf9607fee37207c1cd9ec337f1eab8cec5",
+      "excerptSha256": "dd1b3f587884c428ab1ee3f8fc985ad9c622c53f4483ddba949d88e3321ed87a"
+    },
+    "context": {
+      "path": "packages/agent/src/agent-loop.ts",
+      "symbol": "runAgentLoop",
+      "startLine": 96,
+      "endLine": 119,
+      "blobOid": "193e3faf9607fee37207c1cd9ec337f1eab8cec5",
+      "excerptSha256": "b2fa53f6ca7ad03daa6e7ed490a165d126e18adb9911f52d3dee54026bf2ff58"
+    },
+    "turn": {
+      "path": "packages/agent/src/agent-loop.ts",
+      "symbol": null,
+      "startLine": 211,
+      "endLine": 243,
+      "blobOid": "193e3faf9607fee37207c1cd9ec337f1eab8cec5",
+      "excerptSha256": "05791997e71ed8a4c34c879e756112a73c2f762718345f7b5a6d43ba12c49827"
+    },
+    "follow-up": {
+      "path": "packages/agent/src/agent-loop.ts",
+      "symbol": null,
+      "startLine": 257,
+      "endLine": 273,
+      "blobOid": "193e3faf9607fee37207c1cd9ec337f1eab8cec5",
+      "excerptSha256": "f6cb6561184896f2c390ee35fde32d723b15f23ec7bead32636871853c515227"
+    },
+    "stream": {
+      "path": "packages/agent/src/agent-loop.ts",
+      "symbol": "streamAssistantResponse",
+      "startLine": 279,
+      "endLine": 310,
+      "blobOid": "193e3faf9607fee37207c1cd9ec337f1eab8cec5",
+      "excerptSha256": "34cfe3aedcf69593fbb8c380100f5f3553d9499821d5fd07aa4e7337c273e512"
+    },
+    "loop-control": {
+      "path": "packages/agent/src/agent-loop.ts",
+      "symbol": "runLoop",
+      "startLine": 153,
+      "endLine": 273,
+      "blobOid": "193e3faf9607fee37207c1cd9ec337f1eab8cec5",
+      "excerptSha256": "3538b5f4d048cd879a68c6726a2800ddf53fa73f9e86e9c461abc310f341ffc1"
+    },
+    "tool-dispatch": {
+      "path": "packages/agent/src/agent-loop.ts",
+      "symbol": "executeToolCalls",
+      "startLine": 409,
+      "endLine": 424,
+      "blobOid": "193e3faf9607fee37207c1cd9ec337f1eab8cec5",
+      "excerptSha256": "f202173842baf02c9b8d8a4075c55018951d196e8557f8ff05a83fc4e39763e1"
+    },
+    "tool-prepare": {
+      "path": "packages/agent/src/agent-loop.ts",
+      "symbol": "prepareToolCall",
+      "startLine": 607,
+      "endLine": 675,
+      "blobOid": "193e3faf9607fee37207c1cd9ec337f1eab8cec5",
+      "excerptSha256": "ed74806ab08990bd15b958ee49e3523a219211a9c59f2d2d36b60488b00e1383"
+    },
+    "tool-execute": {
+      "path": "packages/agent/src/agent-loop.ts",
+      "symbol": "executePreparedToolCall",
+      "startLine": 677,
+      "endLine": 718,
+      "blobOid": "193e3faf9607fee37207c1cd9ec337f1eab8cec5",
+      "excerptSha256": "86162877851250bd86b4bab607afd4dc2b354f52d735f0162876b194283f04ae"
+    },
+    "tool-finalize": {
+      "path": "packages/agent/src/agent-loop.ts",
+      "symbol": "finalizeExecutedToolCall",
+      "startLine": 720,
+      "endLine": 765,
+      "blobOid": "193e3faf9607fee37207c1cd9ec337f1eab8cec5",
+      "excerptSha256": "6b491ad5ada2a5270d792af84443c9c20acd1f847ca1c25f113a6491a50b798c"
+    },
+    "tool-artifact": {
+      "path": "packages/agent/src/agent-loop.ts",
+      "symbol": "createToolResultMessage",
+      "startLine": 774,
+      "endLine": 803,
+      "blobOid": "193e3faf9607fee37207c1cd9ec337f1eab8cec5",
+      "excerptSha256": "56230526d9a464dcf8852b03da139595e9fc54b8fecca94da63e3a2038cae832"
+    },
+    "parallel-tools": {
+      "path": "packages/agent/src/agent-loop.ts",
+      "symbol": "executeToolCallsParallel",
+      "startLine": 487,
+      "endLine": 561,
+      "blobOid": "193e3faf9607fee37207c1cd9ec337f1eab8cec5",
+      "excerptSha256": "747697a8fcdd27db6722a9ec4994d508ee499a3757f2e48dc9bbcf49b3d086bb"
+    },
+    "agent-events": {
+      "path": "packages/agent/src/agent.ts",
+      "symbol": "processEvents",
+      "startLine": 544,
+      "endLine": 591,
+      "blobOid": "0de7edd83029743e59a174c8b9b994282fd5f8a3",
+      "excerptSha256": "6637a62d067669842761b1e6dd093263e95f1720aa06007c4d5c1ebc5527d855"
+    },
+    "agent-finish": {
+      "path": "packages/agent/src/agent.ts",
+      "symbol": "finishRun",
+      "startLine": 489,
+      "endLine": 543,
+      "blobOid": "0de7edd83029743e59a174c8b9b994282fd5f8a3",
+      "excerptSha256": "312e6f8c2fd4978458088bc823989bafcc29181aa370c7839e6fb84c6b78ae12"
+    }
+  },
+  "materials": {},
+  "lessons": [
+    {
+      "id": "agent-loop",
+      "title": "从输入消息到 Agent Loop",
+      "objectives": [
+        "画出 Pi 的 CLI、Agent 运行时与模型接口三者的职责边界。",
+        "在 agentLoop 的定义中找出事件进入输出流的位置，并解释工具结果怎样进入下一轮。"
+      ],
+      "priorKnowledge": [
+        "会阅读 TypeScript 函数，了解 Promise 与异步事件。"
+      ],
+      "prerequisiteLessons": [],
+      "concepts": [
+        {
+          "kind": "fact",
+          "text": "仓库把交互式 CLI 放在 pi-coding-agent，把工具调用与状态管理放在 pi-agent-core，把多家模型供应商的统一接口放在 pi-ai。",
+          "sourceRefs": [
+            "packages"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "本章选择低层入口 agentLoop。调用者拿到事件流，后台的 runAgentLoop 接收输入消息、上下文、配置和事件接收函数。",
+          "sourceRefs": [
+            "entry"
+          ]
+        }
+      ],
+      "sourceReading": [
+        "entry",
+        "packages",
+        "context",
+        "stream",
+        "turn",
+        "follow-up"
+      ],
+      "keySymbols": [
+        {
+          "name": "agentLoop",
+          "sourceRef": "entry"
+        },
+        {
+          "name": "runAgentLoop",
+          "sourceRef": "context"
+        },
+        {
+          "name": "streamAssistantResponse",
+          "sourceRef": "stream"
+        }
+      ],
+      "execution": [
+        {
+          "kind": "fact",
+          "text": "入口先创建事件流，再启动 runAgentLoop。传给循环的回调会把每个事件推入流，循环完成后以消息列表结束该流。",
+          "sourceRefs": [
+            "entry"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "runAgentLoop 把新输入追加到已有消息之后，发出 agent_start 和 turn_start，并为每条输入发出消息事件，再把当前上下文交给 runLoop。",
+          "sourceRefs": [
+            "context"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "生成一次回复时，streamAssistantResponse 可先变换上下文，再把消息转换成模型接口格式，最后调用传入的 streamFunction。",
+          "sourceRefs": [
+            "stream"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "循环把回复写入上下文，检查停止原因和工具请求。工具返回的消息被追加到 currentContext.messages，随后发出 turn_end。",
+          "sourceRefs": [
+            "turn"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "内层工作结束后，外层还会检查跟进消息。有跟进则继续，否则退出并发出 agent_end。",
+          "sourceRefs": [
+            "follow-up"
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "kind": "fact",
+          "text": "agentLoop → runAgentLoop → runLoop。第一段连接事件流，第二段在准备好消息后启动循环。",
+          "sourceRefs": [
+            "entry",
+            "context"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "runLoop 调用 streamAssistantResponse 取得模型回复。在有工具请求且回复未因错误或中止结束时，循环按停止原因执行工具或生成工具失败结果。",
+          "sourceRefs": [
+            "turn",
+            "stream"
+          ]
+        }
+      ],
+      "scenario": "教学场景：用户问“这个项目用哪个命令构建？”假设模型请求读取 package.json，沿证据查看消息如何进入上下文、工具结果何时写回，以及 UI 从哪里收到事件。",
+      "designRationale": [
+        {
+          "kind": "inference",
+          "text": "从事件回调与模型流函数分别作为参数传入可以推断，两条接口允许上层分别决定怎样展示事件、怎样获取模型回复。",
+          "sourceRefs": [
+            "entry",
+            "stream"
+          ]
+        },
+        {
+          "kind": "advice",
+          "text": "自己实现教学版循环时，可以先记录收到的事件，再替换模型流函数，以便分别检查消息顺序和模型边界。",
+          "sourceRefs": [
+            "entry",
+            "stream"
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "question": "调用 agentLoop 时，要等模型回答完才能拿到事件流吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "不用。入口启动异步任务后直接返回 stream；任务完成时的回调才调用 stream.end。",
+            "sourceRefs": [
+              "entry"
+            ]
+          }
+        },
+        {
+          "question": "一次工具返回就一定表示整次学习场景已经结束吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "工具结果先被加入上下文，外层还会检查跟进消息。turn_end 和 agent_end 在源码中是不同位置发出的事件。",
+            "sourceRefs": [
+              "turn",
+              "follow-up"
+            ]
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "event-bridge",
+          "kind": "single-choice",
+          "prompt": "在 agentLoop 的入口中，哪一步把循环产生的事件交给调用者持有的事件流？",
+          "options": [
+            {
+              "id": "append",
+              "text": "把 prompts 追加到 currentContext.messages"
+            },
+            {
+              "id": "push",
+              "text": "在传给 runAgentLoop 的回调中调用 stream.push(event)"
+            },
+            {
+              "id": "finish",
+              "text": "收到消息列表时调用 stream.end(messages)"
+            }
+          ],
+          "correctOption": "push",
+          "explanation": {
+            "kind": "fact",
+            "text": "第 45–47 行的回调转发每一个事件。追加 prompts 是整理输入，stream.end 则标志异步任务完成。",
+            "sourceRefs": [
+              "entry",
+              "context"
+            ]
+          }
+        }
+      ],
+      "summary": [
+        {
+          "kind": "fact",
+          "text": "从入口的事件流沿 runAgentLoop 进入循环，可以依次看到输入、模型边界、工具结果与终止事件；每一步都能在同一固定版本上复核。",
+          "sourceRefs": [
+            "entry",
+            "context",
+            "stream",
+            "turn",
+            "follow-up"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "loop-control",
+      "title": "工具返回之后，谁决定下一轮？",
+      "objectives": [
+        "沿 runLoop 指出工具结果进入上下文、下一轮开始和退出的位置。",
+        "区分工具错误与 assistant 的 error/aborted 停止原因。"
+      ],
+      "priorKnowledge": [
+        "已读架构导读；理解数组追加与异步函数。"
+      ],
+      "prerequisiteLessons": [
+        "agent-loop"
+      ],
+      "concepts": [
+        {
+          "kind": "fact",
+          "text": "运行时内层循环处理工具调用和 steering 消息；外层在本来要停止时检查 follow-up 队列。",
+          "sourceRefs": [
+            "loop-control"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "AgentMessage 到模型消息的转换发生在 streamAssistantResponse 中，transformContext 先于 convertToLlm。",
+          "sourceRefs": [
+            "stream"
+          ]
+        }
+      ],
+      "sourceReading": [
+        "context",
+        "loop-control",
+        "stream",
+        "follow-up"
+      ],
+      "keySymbols": [
+        {
+          "name": "runLoop",
+          "sourceRef": "loop-control"
+        },
+        {
+          "name": "streamAssistantResponse",
+          "sourceRef": "stream"
+        }
+      ],
+      "execution": [
+        {
+          "kind": "fact",
+          "text": "runAgentLoop 把已有消息与 prompts 组合成 currentContext，并先发出 agent_start、turn_start 和输入消息事件。",
+          "sourceRefs": [
+            "context"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "收到 assistant 回复后，error 或 aborted 直接发出 turn_end、agent_end 并返回，不执行其中工具调用。",
+          "sourceRefs": [
+            "loop-control"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "正常工具结果追加到 currentContext.messages 和 newMessages。hasMoreToolCalls 由工具批次的 terminate 决定；shouldStopAfterTurn 可在轮末提前退出。",
+          "sourceRefs": [
+            "loop-control"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "有下一轮时先应用 prepareNextTurn 的可选快照，再发 turn_start。无工具与 steering 后才检查 follow-up；没有 follow-up 时发 agent_end。",
+          "sourceRefs": [
+            "loop-control"
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "kind": "fact",
+          "text": "runAgentLoop 调用 runLoop；runLoop 调用 streamAssistantResponse 并按 stopReason 选择执行工具或退出。",
+          "sourceRefs": [
+            "context",
+            "loop-control",
+            "stream"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "工具批次通过 executeToolCalls 执行；返回的 messages 被循环消费，而不是由工具自行发起模型请求。",
+          "sourceRefs": [
+            "loop-control",
+            "tool-dispatch"
+          ]
+        }
+      ],
+      "scenario": "教学场景：用户问“订单 42 发货了吗？”模型先请求 lookup_order，工具返回“已发货”，下一轮模型把结果写成中文答复。这里的订单、模型答复和实验输入均为 Mock，不表示 Pi 自带订单工具。",
+      "designRationale": [
+        {
+          "kind": "inference",
+          "text": "把工具产物回填上下文后再请求模型，使下一次推理可以看到查询结果；这是从消息追加顺序推导出的作用。",
+          "sourceRefs": [
+            "loop-control"
+          ]
+        },
+        {
+          "kind": "advice",
+          "text": "实现自己的循环时，分别测试模型失败、工具失败与正常无工具退出，避免把三者共用一个停止分支。",
+          "sourceRefs": [
+            "loop-control",
+            "tool-execute"
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "question": "工具报错一定会结束 Agent 吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "不一定。工具异常先成为 isError 的结果；循环是否继续还取决于批次 terminate、轮末停止回调和后续消息。assistant 的 error/aborted 则走直接退出分支。",
+            "sourceRefs": [
+              "tool-execute",
+              "loop-control"
+            ]
+          }
+        },
+        {
+          "question": "follow-up 和 steering 在哪里分流？",
+          "answer": {
+            "kind": "fact",
+            "text": "steering 在进入循环和轮末被轮询；follow-up 在内层循环结束后被轮询，若有消息就再次进入内层。",
+            "sourceRefs": [
+              "loop-control"
+            ]
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "next-turn",
+          "kind": "single-choice",
+          "prompt": "订单工具正常返回后，谁把结果加入下一次模型调用的上下文？",
+          "options": [
+            {
+              "id": "loop",
+              "text": "runLoop 把 toolResults 追加到 currentContext.messages"
+            },
+            {
+              "id": "tool",
+              "text": "工具自行调用模型"
+            },
+            {
+              "id": "ui",
+              "text": "用户界面重新发送全部历史"
+            }
+          ],
+          "correctOption": "loop",
+          "explanation": {
+            "kind": "fact",
+            "text": "循环在工具批次结束后逐个追加结果，之后内层循环可开始下一轮。",
+            "sourceRefs": [
+              "loop-control"
+            ]
+          }
+        }
+      ],
+      "summary": [
+        {
+          "kind": "fact",
+          "text": "读路径：输入 → streamAssistantResponse → 工具批次 → 结果回填 → 下一轮或退出。",
+          "sourceRefs": [
+            "context",
+            "stream",
+            "loop-control"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "业务推演应同时说明工具、停止回调与消息队列的条件。",
+          "sourceRefs": [
+            "loop-control"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tool-results",
+      "title": "工具怎样把成功和异常变成消息？",
+      "objectives": [
+        "追踪工具查找、参数校验、execute、结果封装四个环节。",
+        "指出并行完成顺序与工具消息输出顺序的区别。"
+      ],
+      "priorKnowledge": [
+        "已理解循环消费工具结果；会阅读 try/catch。"
+      ],
+      "prerequisiteLessons": [
+        "loop-control"
+      ],
+      "concepts": [
+        {
+          "kind": "fact",
+          "text": "executeToolCalls 根据配置或工具 executionMode 选择顺序执行；否则走并行分支。",
+          "sourceRefs": [
+            "tool-dispatch"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "prepareToolCall 按名字查找工具，再准备并校验参数；工具不存在会立即得到错误结果。",
+          "sourceRefs": [
+            "tool-prepare"
+          ]
+        }
+      ],
+      "sourceReading": [
+        "tool-dispatch",
+        "tool-prepare",
+        "tool-execute",
+        "tool-finalize",
+        "parallel-tools",
+        "tool-artifact"
+      ],
+      "keySymbols": [
+        {
+          "name": "executeToolCalls",
+          "sourceRef": "tool-dispatch"
+        },
+        {
+          "name": "prepareToolCall",
+          "sourceRef": "tool-prepare"
+        },
+        {
+          "name": "executePreparedToolCall",
+          "sourceRef": "tool-execute"
+        },
+        {
+          "name": "createToolResultMessage",
+          "sourceRef": "tool-artifact"
+        }
+      ],
+      "execution": [
+        {
+          "kind": "fact",
+          "text": "工具存在后先 prepareArguments 和 validateToolArguments，再执行可选 beforeToolCall；阻止执行或取消会得到 immediate 错误结果。",
+          "sourceRefs": [
+            "tool-prepare"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "executePreparedToolCall 调用 tool.execute，并转发执行中的 partialResult。成功得到 isError=false，抛错在 catch 中变为 isError=true；promise 结束后不再接纳更新。",
+          "sourceRefs": [
+            "tool-execute"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "finalizeExecutedToolCall 可通过 afterToolCall 覆盖结果字段及 isError；该回调抛错也会转为错误结果。",
+          "sourceRefs": [
+            "tool-finalize"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "emitToolExecutionEnd 携带最终 isError；createToolResultMessage 生成 role=toolResult 的消息，随后发 message_start 与 message_end。",
+          "sourceRefs": [
+            "tool-artifact"
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "kind": "fact",
+          "text": "executeToolCalls 选择 executeToolCallsParallel；该分支按准备顺序安排执行，用 Promise.all 收集结果，按 assistant 原调用顺序发工具消息；执行结束事件可能按完成先后发出。",
+          "sourceRefs": [
+            "tool-dispatch",
+            "parallel-tools"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "封装出的工具消息回到 runLoop，加入上下文后再交给模型。",
+          "sourceRefs": [
+            "tool-artifact",
+            "loop-control"
+          ]
+        }
+      ],
+      "scenario": "教学场景：订单查询工具有三种固定结果：成功返回、抛出“服务暂不可用”、工具名称不存在。实验每次只调用一个 Mock 工具，不模拟并发、参数 Schema、钩子、截断或取消，不能据此验证真实工具实现。",
+      "designRationale": [
+        {
+          "kind": "inference",
+          "text": "将工具异常变成可传回模型的消息，使模型有机会解释失败或选择后续动作；该作用由 catch 与消息回填链共同支持。",
+          "sourceRefs": [
+            "tool-execute",
+            "tool-artifact",
+            "loop-control"
+          ]
+        },
+        {
+          "kind": "advice",
+          "text": "调试并行工具时，同时记录 toolCallId 和两类事件的顺序，不要把完成事件顺序当成上下文消息顺序。",
+          "sourceRefs": [
+            "parallel-tools",
+            "tool-artifact"
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "question": "isError 在哪一步确定？",
+          "answer": {
+            "kind": "fact",
+            "text": "executePreparedToolCall 的成功和异常分支给出初值，finalizeExecutedToolCall 的 afterToolCall 还可覆盖，最终进入结束事件及工具消息。",
+            "sourceRefs": [
+              "tool-execute",
+              "tool-finalize",
+              "tool-artifact"
+            ]
+          }
+        },
+        {
+          "question": "找不到工具会执行 execute 吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "不会。prepareToolCall 在工具查找失败时直接返回 immediate、isError=true。",
+            "sourceRefs": [
+              "tool-prepare"
+            ]
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "tool-error",
+          "kind": "single-choice",
+          "prompt": "不配置 afterToolCall 时，tool.execute 抛出 Error 会怎样？",
+          "options": [
+            {
+              "id": "throw",
+              "text": "必须让整个循环抛出并停止"
+            },
+            {
+              "id": "result",
+              "text": "封装错误结果，isError=true"
+            },
+            {
+              "id": "ignore",
+              "text": "丢弃该工具调用"
+            }
+          ],
+          "correctOption": "result",
+          "explanation": {
+            "kind": "fact",
+            "text": "catch 把异常信息交给 createErrorToolResult，并返回 isError=true。",
+            "sourceRefs": [
+              "tool-execute"
+            ]
+          }
+        },
+        {
+          "id": "trace-result",
+          "kind": "trace",
+          "prompt": "追踪订单查询失败怎样到达下一轮模型。请写出至少三个函数或消费位置。",
+          "rubric": [
+            "prepareToolCall 找工具并校验参数",
+            "executePreparedToolCall 捕获工具异常",
+            "createToolResultMessage 保留 isError",
+            "runLoop 把工具消息追加到 currentContext.messages"
+          ],
+          "explanation": {
+            "kind": "fact",
+            "text": "按准备、执行、封装、回填四步对照源码；此题采用自评，不代表自动验证了文字答案。",
+            "sourceRefs": [
+              "tool-prepare",
+              "tool-execute",
+              "tool-artifact",
+              "loop-control"
+            ]
+          }
+        }
+      ],
+      "summary": [
+        {
+          "kind": "fact",
+          "text": "工具成功和异常都可成为 toolResult，错误标记和结果内容共同进入事件及上下文。",
+          "sourceRefs": [
+            "tool-execute",
+            "tool-artifact"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "并行工具的完成事件与消息产物有不同的排序规则。",
+          "sourceRefs": [
+            "parallel-tools"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "events-state",
+      "title": "事件怎样更新 Agent 状态？",
+      "objectives": [
+        "对照 processEvents 解释流式消息、正式历史与待执行工具集合的变化。",
+        "区分 agent_end 事件与 Agent 真正空闲的时刻。"
+      ],
+      "priorKnowledge": [
+        "已理解工具生命周期事件；了解 Set 与监听回调。"
+      ],
+      "prerequisiteLessons": [
+        "tool-results"
+      ],
+      "concepts": [
+        {
+          "kind": "fact",
+          "text": "Agent.processEvents 根据事件类型更新状态，然后依次 await 所有 listener。",
+          "sourceRefs": [
+            "agent-events"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "运行开始时 isStreaming=true；executor 结束后 finally 调用 finishRun，清理流式状态和 pendingToolCalls 并结束 activeRun。",
+          "sourceRefs": [
+            "agent-finish"
+          ]
+        }
+      ],
+      "sourceReading": [
+        "entry",
+        "tool-artifact",
+        "agent-events",
+        "agent-finish"
+      ],
+      "keySymbols": [
+        {
+          "name": "processEvents",
+          "sourceRef": "agent-events"
+        },
+        {
+          "name": "finishRun",
+          "sourceRef": "agent-finish"
+        }
+      ],
+      "execution": [
+        {
+          "kind": "fact",
+          "text": "message_start 和 message_update 设置 streamingMessage；message_end 清空 streamingMessage 并把消息加入正式 messages。",
+          "sourceRefs": [
+            "agent-events"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "tool_execution_start 将调用 ID 加入 pendingToolCalls 的新集合；tool_execution_end 从新集合移除该 ID。",
+          "sourceRefs": [
+            "agent-events"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "turn_end 可保存 assistant 的 errorMessage；agent_end 清空 streamingMessage，然后仍要等待监听器完成。",
+          "sourceRefs": [
+            "agent-events"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "finishRun 才把 isStreaming 设为 false，清空待执行工具并释放 activeRun。不能仅凭收到 agent_end 就认定所有运行工作已结束。",
+          "sourceRefs": [
+            "agent-finish",
+            "agent-events"
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "kind": "fact",
+          "text": "低层 agentLoop 把 runAgentLoop 事件推入 EventStream；Agent 类的 processEvents 则承担内部状态归约和监听通知。两种入口的职责需要区分。",
+          "sourceRefs": [
+            "entry",
+            "agent-events"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "工具的执行结束事件与工具消息事件分别触发待执行集合变化和历史追加。",
+          "sourceRefs": [
+            "tool-artifact",
+            "agent-events"
+          ]
+        }
+      ],
+      "scenario": "教学场景：界面显示“查询中”，工具完成后解除该工具的等待标记，收到正式消息后加入历史。本地实验展示的是简化教学状态；其 phase 和 toolResult 并非 Pi AgentState 字段，也不复现 awaited listener 的结算过程。",
+      "designRationale": [
+        {
+          "kind": "inference",
+          "text": "先归约状态再通知 listener，让监听回调能观察本次事件更新后的状态；这一解释来自 processEvents 的语句顺序。",
+          "sourceRefs": [
+            "agent-events"
+          ]
+        },
+        {
+          "kind": "advice",
+          "text": "实现自己的界面时，用消息生命周期管理临时显示，用工具 ID 管理等待项，并明确事件结束与异步清理结束的差别。",
+          "sourceRefs": [
+            "agent-events",
+            "agent-finish"
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "question": "agent_end 就代表 isStreaming=false 吗？",
+          "answer": {
+            "kind": "fact",
+            "text": "不代表。processEvents 的 agent_end 分支仅清空 streamingMessage；awaited listeners 完成、executor 返回后，finishRun 才清理 isStreaming。",
+            "sourceRefs": [
+              "agent-events",
+              "agent-finish"
+            ]
+          }
+        },
+        {
+          "question": "工具结果何时成为正式消息？",
+          "answer": {
+            "kind": "fact",
+            "text": "工具产物发出 message_end 后，processEvents 把 event.message 追加到 messages。工具执行结束事件本身只更新 pendingToolCalls。",
+            "sourceRefs": [
+              "tool-artifact",
+              "agent-events"
+            ]
+          }
+        }
+      ],
+      "exercises": [
+        {
+          "id": "idle-boundary",
+          "kind": "single-choice",
+          "prompt": "Agent 收到 agent_end，但它的异步 listener 还未完成，此时应如何理解 isStreaming？",
+          "options": [
+            {
+              "id": "idle",
+              "text": "立即为 false"
+            },
+            {
+              "id": "settling",
+              "text": "仍可能为 true，要等 finishRun"
+            },
+            {
+              "id": "unknown",
+              "text": "工具结果一定丢失"
+            }
+          ],
+          "correctOption": "settling",
+          "explanation": {
+            "kind": "fact",
+            "text": "状态清理由 executor 的 finally 调用 finishRun 完成；processEvents 会先 await 监听回调。",
+            "sourceRefs": [
+              "agent-finish",
+              "agent-events"
+            ]
+          }
+        }
+      ],
+      "summary": [
+        {
+          "kind": "fact",
+          "text": "消息事件维护临时与正式消息；工具事件维护待执行集合。",
+          "sourceRefs": [
+            "agent-events"
+          ]
+        },
+        {
+          "kind": "fact",
+          "text": "agent_end 是最后一个循环事件，运行空闲边界由 finishRun 定义。",
+          "sourceRefs": [
+            "agent-events",
+            "agent-finish"
+          ]
+        }
+      ]
+    }
+  ]
+}
