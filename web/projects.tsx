@@ -30,7 +30,7 @@ const names: Record<string, string> = {
 const topics: Record<string, string> = {
   pi: "Agent 运行时与事件流",
   codex: "命令行编码助手",
-  deepseek: "Harness 执行路径",
+  deepseek: "插件架构、模型 step 与原生工具结果",
   claude: "公开仓库与官方 SDK",
 };
 const icons = { pi: Boxes, codex: Terminal, deepseek: GitBranch, claude: Sparkles };
@@ -242,7 +242,13 @@ export function ProjectPage() {
         <ProjectIcon id={p.projectId} />
       </PageTitle>
       <section className="sheet">
-        <div className="section-head">
+        {p.projectId === "deepseek" && (
+          <p className="notice">
+            内置课程沿固定公开版本的 headless 新会话与原生工具路径学习。
+            各章注明资料缺口；模型服务端内部、其他 profile 与平台安全实测不在本课范围。
+          </p>
+        )}
+        <div className="section-head project-map-head">
           <h2>
             <Map size={19} />
             知识地图

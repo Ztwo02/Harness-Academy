@@ -7,16 +7,20 @@ mermaid.initialize({
   theme: "neutral",
   flowchart: { htmlLabels: false },
 });
-export default function FlowDiagram({ project = "pi" }: { project?: "pi" | "codex" }) {
+export default function FlowDiagram({ project = "pi" }: { project?: "pi" | "codex" | "deepseek" }) {
   const id = "flow" + useId().replace(/[^a-z0-9]/gi, "");
   const text =
-    project === "codex"
-      ? "CLI exec → 内嵌 app-server → core Session → RegularTask → run_turn"
-      : "agentLoop → runAgentLoop → runLoop";
+    project === "deepseek"
+      ? "headless run → followup → send → wakeDriver → kick → turn → step"
+      : project === "codex"
+        ? "CLI exec → 内嵌 app-server → core Session → RegularTask → run_turn"
+        : "agentLoop → runAgentLoop → runLoop";
   const graph =
-    project === "codex"
-      ? "flowchart LR\n A[CLI exec] --> B[内嵌 app-server] --> C[core Session] --> D[RegularTask] --> E[run_turn]"
-      : "flowchart LR\n A[agentLoop] --> B[runAgentLoop] --> C[runLoop]";
+    project === "deepseek"
+      ? "flowchart LR\n A[headless run] --> B[followup / send] --> C[wakeDriver / kick] --> D[turn / preStep] --> E[step]"
+      : project === "codex"
+        ? "flowchart LR\n A[CLI exec] --> B[内嵌 app-server] --> C[core Session] --> D[RegularTask] --> E[run_turn]"
+        : "flowchart LR\n A[agentLoop] --> B[runAgentLoop] --> C[runLoop]";
   const [svg, setSvg] = useState("");
   useEffect(() => {
     let active = true;

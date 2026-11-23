@@ -383,6 +383,14 @@ function LessonView({ page }: { page: ChapterPage }) {
           </Section>
           <Section title="架构与概念" id="concepts">
             <Claims list={l.concepts} page={page} />
+            {page.projectId === "deepseek" &&
+              page.commit === "2e39e70496aa02986ca6a820c5d497e816b69d7e" &&
+              l.id === "architecture" &&
+              page.evidence.entry?.symbol === "run" && (
+                <Suspense fallback={<Loading />}>
+                  <FlowDiagram project="deepseek" />
+                </Suspense>
+              )}
             {page.projectId === "codex" &&
               page.commit === "d4014cb19d23614be39c0cf57d981e042ba0763a" &&
               l.id === "architecture" &&

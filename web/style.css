@@ -554,6 +554,29 @@ main {
   color: var(--muted);
   font-size: 13px;
 }
+.project-map-head {
+  flex-wrap: wrap;
+}
+.project-map-head > h2 {
+  flex-shrink: 0;
+}
+.project-map-head > label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+.project-map-head select {
+  flex: 1;
+}
+@media (max-width: 700px) {
+  .project-map-head > label {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+}
 .pi-panel {
   color: #fff;
   background: var(--navy);

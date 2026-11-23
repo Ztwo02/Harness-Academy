@@ -256,7 +256,9 @@ function Tutor({
             placeholder={
               projectId === "codex"
                 ? "例如 run_turn、工具、消息"
-                : "例如 prepareToolCall、工具、agent_end"
+                : projectId === "deepseek"
+                  ? "例如 followup、step、工具"
+                  : "例如 prepareToolCall、工具、agent_end"
             }
             onChange={(e) => setText(e.target.value)}
           />
